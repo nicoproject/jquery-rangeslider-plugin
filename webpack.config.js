@@ -2,24 +2,29 @@
  * Webpack main configuration file
  */
 
-const path = require('path');
-const fs = require('fs');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HTMLWebpackPlugin = require('html-webpack-plugin');
-const ImageMinPlugin = require('imagemin-webpack-plugin').default;
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require('path')
+const fs = require('fs')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HTMLWebpackPlugin = require('html-webpack-plugin')
+const ImageMinPlugin = require('imagemin-webpack-plugin').default
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
-const environment = require('./configuration/environment');
+const environment = require('./configuration/environment')
 
-const templateFiles = fs.readdirSync(path.resolve(__dirname, environment.paths.source, 'templates'));
-const htmlPluginEntries = templateFiles.map((template) => new HTMLWebpackPlugin({
-  inject: true,
-  hash: false,
-  filename: template,
-  template: path.resolve(environment.paths.source, 'templates', template),
-  favicon: path.resolve(environment.paths.source, 'images', 'favicon.ico'),
-}));
+const templateFiles = fs.readdirSync(
+  path.resolve(__dirname, environment.paths.source, 'templates')
+)
+const htmlPluginEntries = templateFiles.map(
+  (template) =>
+    new HTMLWebpackPlugin({
+      inject: true,
+      hash: false,
+      filename: template,
+      template: path.resolve(environment.paths.source, 'templates', template),
+      favicon: path.resolve(environment.paths.source, 'images', 'favicon.ico'),
+    })
+)
 
 module.exports = {
   entry: {
@@ -33,7 +38,17 @@ module.exports = {
     rules: [
       {
         test: /\.((c|sa|sc)ss)$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        use: 'ts-loader',
       },
       {
         test: /\.js$/,
@@ -90,4 +105,4 @@ module.exports = {
     }),
   ].concat(htmlPluginEntries),
   target: 'web',
-};
+}

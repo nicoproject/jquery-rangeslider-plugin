@@ -1,14 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const { merge } = require('webpack-merge');
+const { merge } = require('webpack-merge')
 
-const webpackConfiguration = require('../webpack.config');
-const environment = require('./environment');
+const webpackConfiguration = require('../webpack.config')
+const environment = require('./environment')
 
 module.exports = merge(webpackConfiguration, {
   mode: 'development',
 
   /* Manage source maps generation process */
-  devtool: 'eval-source-map',
+  // devtool: 'eval-source-map',
+  devtool: 'inline-source-map',
 
   /* Development Server Configuration */
   devServer: {
@@ -35,4 +36,4 @@ module.exports = merge(webpackConfiguration, {
 
   /* Additional plugins configuration */
   plugins: [],
-});
+})

@@ -1,40 +1,90 @@
-body {
-  background: $body-background-color;
-  color: $foreground-color;
-  font-family: 'DINP-R', arial, serif;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-header {
-  font-size: 2em;
-  margin: 20px;
-  color: $caption-color;
-  text-align: center;
-  background: $foreground-color url('../images/design/heading.png') center 20px no-repeat;
-  padding: 60px 30px 30px;
-  background-size: 160px;
+html {
+  font-family: sans-serif;
+  font-size: 1rem;
+  color: #444;
 }
 
-main {
-  color: $foreground-color;
-  text-align: center;
-  padding: 10px;
+#root {
+  max-width: 450px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
-.badges {
-  img {
-    display: inline;
-  }
+form {
+  display: flex;
+  margin-bottom: 2rem;
 }
 
-a {
-  color: $link-color;
+[type='text'],
+button {
+  display: inline-block;
+  -webkit-appearance: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 4px;
 }
 
-address {
-  color: $accent-color;
+button {
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  border: 2px solid #007bff;
+  margin: 0 0.5rem;
 }
 
-.logo {
-  margin: 0 auto;
-  display: block;
+[type='text'] {
+  width: 100%;
+}
+
+[type='text']:active,
+[type='text']:focus {
+  outline: 0;
+  border: 2px solid #007bff;
+}
+
+[type='checkbox'] {
+  margin-right: 1rem;
+  font-size: 2rem;
+}
+
+h1 {
+  color: #222;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f4f4f4;
+  border-radius: 4px;
+}
+
+li span {
+  display: inline-block;
+  padding: 0.5rem;
+  width: 250px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+li span:hover {
+  background: rgba(179, 215, 255, 0.52);
+}
+
+li span:focus {
+  outline: 0;
+  border: 2px solid #007bff;
+  background: rgba(179, 207, 255, 0.52);
 }

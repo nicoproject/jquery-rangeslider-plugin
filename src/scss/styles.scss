@@ -1,0 +1,60 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  background-color: #ccc;
+}
+
+.message {
+  width: 300px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.runner {
+  cursor: pointer;
+  position: absolute;
+  top: 65px;
+  left: 0;
+  width: 75px;
+  height: 100px;
+  background: url(../images/design/runner-cropped.gif) no-repeat;
+  background-size: contain;
+}
+
+[data-distance]:before {
+  content: attr(data-distance) 'км';
+  background: url(../images/design/tooltip.png) no-repeat;
+  background-color: #ccc;
+  background-size: cover;
+  width: 55px;
+  height: 50px;
+  z-index: 2;
+  position: absolute;
+  color: black;
+  text-align: center;
+  line-height: 50px;
+  font-weight: bold;
+  left: 25px;
+  top: -53px;
+  font-size: 12px;
+}
+
+.finish {
+  background: url(../images/design/finish-line.png) no-repeat;
+  background-size: contain;
+  position: absolute;
+  left: 150px;
+  width: 230px;
+  height: 115px;
+  z-index: 1;
+}
+
+.congratulations-message {
+  font-family: 'DINP-R';
+  font-size: 30px;
+  position: absolute;
+  top: 170px;
+  left: 75px;
+  border: 5px dotted orange;
+}
