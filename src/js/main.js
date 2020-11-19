@@ -1,7 +1,6 @@
 import Presenter from './Presenter'
 
-const app = new Presenter()
+const app1 = new Presenter()
+app1.run()
 
-app.run()
 
-app.view.autoFinish(1)

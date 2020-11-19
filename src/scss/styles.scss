@@ -3,6 +3,13 @@ body {
   background-color: #ccc;
 }
 
+.range-slider__main-wrapper {
+  position: relative;
+  background: url(../images/design/panorama-city-background.jpg) repeat-x;
+  background-size: contain;
+  height: 220px;
+}
+
 .message {
   width: 300px;
   text-align: center;
@@ -11,10 +18,17 @@ body {
   margin-top: 10px;
 }
 
+.scale__wrapper {
+  position: absolute;
+  background: black;
+  bottom: 0;
+  height: 15px;
+}
+
 .runner {
   cursor: pointer;
   position: absolute;
-  top: 65px;
+  bottom: 15px;
   left: 0;
   width: 75px;
   height: 100px;
@@ -22,8 +36,8 @@ body {
   background-size: contain;
 }
 
-[data-distance]:before {
-  content: attr(data-distance) 'км';
+[data-position]:before {
+  content: attr(data-position) 'км';
   background: url(../images/design/tooltip.png) no-repeat;
   background-color: #ccc;
   background-size: cover;
@@ -36,7 +50,7 @@ body {
   line-height: 50px;
   font-weight: bold;
   left: 25px;
-  top: -53px;
+  top: -55px;
   font-size: 12px;
 }
 
