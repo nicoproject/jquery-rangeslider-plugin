@@ -5,7 +5,9 @@ const defaultOptions = {
     min: 0,
     max: 150,
   },
+  type: 'single',
+  orientation: 'horizontal',
+  skin: 'city',
 }
 
 export default defaultOptions
-

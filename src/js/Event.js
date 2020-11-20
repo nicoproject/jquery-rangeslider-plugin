@@ -5,13 +5,13 @@ class Event {
 
   addListener(listener) {
     this.listeners.push(listener)
-    console.log('Event: Listener added:', listener)
+    // console.log('Event: Listener added:', listener)
   }
 
   trigger(params) {
     this.listeners.forEach((listener) => {
       listener(params)
-      console.log(`listener ${listener} triggered w ${params}`)
+      console.log(`Event. Listener ${listener} triggered with ${params}`)
     })
     
   }

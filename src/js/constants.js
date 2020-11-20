@@ -1,22 +1,19 @@
 const runners = [
   {
     id: 1,
-    type: 'single',
-    position: 0,
+    position: 30,
     showTooltip: true,
   },
   {
     id: 2,
-    type: 'single',
-    position: 100,
+    position: 180,
     showTooltip: true,
   },
-  // {
-  //   id: 3,
-  //   type: 'single',
-  //   distance: 200,
-  //   showTooltip: true,
-  // },
+  {
+    id: 3,
+    position: 500,
+    showTooltip: true,
+  },
 ]
 
 export default runners
