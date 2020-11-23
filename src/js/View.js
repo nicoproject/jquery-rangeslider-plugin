@@ -1,40 +1,52 @@
 import Event from './Event'
 
 class View {
-  constructor() {
+  constructor(skin, runners) {
+    // EVENTS
     this.moveRunnerEvent = new Event()
     this.getRunnersEvent = new Event()
     this.boostRunnersEvent = new Event()
+    this.createBarEvent = new Event()
 
+    // OPTIONS
+    this.skin = skin
     this.getRunners()
+    this.bar = {}
+
+    // DOM ELEMENTS CREATION/BINDINGS
     this.$mainWrapper = this.createSliderWrapper()
+    this.$runners = this.createRunners(runners)
 
     // this.startBackgroundLoop(this.$mainWrapper)
   }
 
-  // TODO: REFACTOR W ARRAY OR OBJECT METHOD INSTEAD OF WHILE
-  removeAllChildNodes(parent) {
-    while (parent.firstChild) {
-      console.dir(parent.firstChild)
-      parent.removeChild(parent.firstChild)
-    }
-  }
-
   render(updatedRunners) {
-    Array.from(document.body.querySelectorAll('.runner')).forEach((element) => {
-      element.remove()
-    })
-    // this.removeAllChildNodes(this.$mainWrapper)
-    // console.log('View. render cleared this.runners: ', this.runners);
-    // this.getRunners()
-    // console.log('View. render get this.runners: ', this.runners);
+    if (typeof this.$runners !== 'undefined') {
+      // console.log('this.$runners recieved: ', this.$runners)
+
+      this.$runners.forEach(($node, i) => {
+        // console.log('recieved $node:', $node)
+        $node.remove()
+        $node = ''
+        // console.log('cleared $node:', $node)
+      })
+      this.$runners.length = 0
+
+      // console.log('this.$runners cleared: ', this.$runners)
+    }
+    // TODO: REFACTOR CALL CREATERUNNERS
+    this.$runners = this.createRunners(updatedRunners)
     this.createRunners(updatedRunners)
+
+    this.$mainWrapper.append(...this.$runners)
   }
 
   // SLIDER METHODS
+
+  
   createSliderWrapper() {
     let $mainWrapper = document.createElement('div')
-    $mainWrapper.className = 'range-slider__main-wrapper'
+    $mainWrapper.className = `range-slider__main-wrapper ${this.skin}`
 
     document.body.appendChild($mainWrapper)
     return $mainWrapper
@@ -57,11 +69,17 @@ class View {
 
     scaleWrapper.style.width = +scale.max + +scale.min + 'px'
 
+    this.$mainWrapper.scaleWrapper = scaleWrapper
     this.$mainWrapper.appendChild(scaleWrapper)
   }
 
   // BAR METHODS
   createBar(bar) {
+    this.createBarEvent.trigger()
+    if (this.$mainWrapper.progressBar) {
+      this.$mainWrapper.removeChild(this.$mainWrapper.progressBar)
+    }
+
     let progressBar = document.createElement('div')
     progressBar.className = 'bar__wrapper'
     progressBar.dataset.startPoint = bar.startPoint
@@ -71,6 +89,7 @@ class View {
     //TODO REDO FOR CONDITIONAL ORIENTATION
     progressBar.style.left = +bar.startPoint + 'px'
 
+    this.$mainWrapper.progressBar = progressBar
     this.$mainWrapper.appendChild(progressBar)
   }
 
@@ -80,8 +99,16 @@ class View {
     return this.runners
   }
 
-  createRunners(runners = [{ id: 0, position: 0, showTooltip: true }]) {
-    // console.log('View. CreateRunner runners', runners)
+  createRunners(
+    runners = [
+      {
+        id: 0,
+        position: 0,
+        showTooltip: true,
+      },
+    ]
+  ) {
+    this.$runners = []
     runners.forEach((runner, i) => {
       // TODO: REFACTOR runner = doc.createEl... + this.runners.push(runner)
       // TOOLTIP
@@ -96,63 +123,72 @@ class View {
       runner[i].addEventListener('click', (event) => {
         this.boostRunnersEvent.trigger(event.target.dataset.id)
       })
+      let isLocked = false
+      let id = runner.id
+      runner[i].onmousedown = (event) => {
+        isLocked = true
+        let parentThis = this
+        // console.log('parentThis: ', parentThis)
+        event.preventDefault() // предотвратить запуск выделения (действие браузера)
 
-      this.$mainWrapper.appendChild(runner[i])
+        let shiftX = event.clientX - runner[i].getBoundingClientRect().left
+        // shiftY здесь не нужен, слайдер двигается только по горизонтали
+
+        document.addEventListener('mousemove', onMouseMove)
+        document.addEventListener('mouseup', onMouseUp)
+
+        function onMouseMove(event) {
+          let runner = parentThis.runners[id - 1]
+          let newLeft =
+            event.clientX -
+            shiftX -
+            parentThis.$mainWrapper.scaleWrapper.getBoundingClientRect().left
+
+          if (newLeft < 0) {
+            newLeft = 0
+          }
+          let rightEdge =
+            parentThis.$mainWrapper.offsetWidth - runner[id - 1].offsetWidth
+
+          if (newLeft > rightEdge) {
+            newLeft = rightEdge
+          }
+          parentThis.moveRunnerEvent.trigger({
+            id: runner.id,
+            distance: newLeft,
+          })
+        }
+
+        function onMouseUp() {
+          isLocked = false
+          document.removeEventListener('mouseup', onMouseUp)
+          document.removeEventListener('mousemove', onMouseMove)
+        }
+      }
+
+      this.$runners.push(runner[i])
+
+      return this.$runners
     })
-    // console.log(this)
   }
 
   getRunners() {
     this.getRunnersEvent.trigger()
-    return this
+    return this.$runners
   }
-
-  boostRunners() {
-    console.log('View. boostRunners this.runners: ', this.runners)
-    // this.render(this.runners)
-  }
-
-  // Runner position
-  // this.runnerPosition
-  // if (!this.runner.style.left) {
-  //   this.runnerPosition = 0
-  // } else {
-  //   this.runnerPosition = parseInt(this.runner.style.left, 10)
-  // }
-
-  // console.log('View. this.runners in constructor: ', this.runners)
 
   moveRunner(params) {
-    console.log('View. moveRunner method initiated w params: ', params)
-    // if (this.runnerPosition >= 150) {
-    //   this.showFinish()
-    // } else {
-    //   this.runner.style.left = +this.runnerPosition + step + 'px'
-    // }
-
-    // this.runnerPosition = +this.runnerPosition + step
-    // this.runner.dataset.distance = this.runnerPosition
-    // console.log(this.runner.dataset.distance)
-    // return this.runnerPosition
+    let id = params.id
+    let distance = params.distance
+    this.$runners.forEach((runner) => {
+      if (runner.id === id) {
+        runner.dataset.position = distance
+        runner.style.left = distance + 'px'
+      }
+      return runner
+    })
+    this.moveRunnerEvent.trigger(params)
   }
-
-  // showFinish() {
-  //   let $congratsMessage = document.createElement('div')
-  //   $congratsMessage.innerText = 'Поздравляем, Поздравляем'
-  //   $congratsMessage.className = 'congratulations-message'
-  //   document.body.appendChild($congratsMessage)
-  // }
-
-  // autoFinish(step) {
-  //   if (this.runnerPosition <= 150) {
-  //     setTimeout(() => {
-  //       this.moveRunner(step)
-  //       console.log('View: RunnerPosition:', this.runnerPosition)
-  //       console.log('View: step:', step)
-  //       this.autoFinish(step)
-  //     }, 1000)
-  //   }
-  // }
 }
 
 export default View

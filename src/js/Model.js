@@ -1,4 +1,3 @@
-import runners from './constants'
 import defaultOptions from './defaultOptions'
 import Event from './Event'
 
@@ -20,15 +19,13 @@ class Slider {
     } else {
       this.options = {}
     }
-
     this.runners = {
       set runners(array) {},
       get runners() {
-        return this.runners
+        return this.options.runners
       },
     }
-    this.runners = runners
-
+    this.runners = this.options.runners
     this.id = this.options.id
     this.step = this.options.step
     this.scale = this.options.scale
@@ -36,54 +33,43 @@ class Slider {
 
     // INIT
     this.init()
-
-    // console.log(
-    //   this.createRunnerEvent,
-    //   this.getRunnerEvent,
-    //   this.moveRunnerEvent,
-    //   this.createScaleEvent,
-    //   this.createBarEvent
-    // )
-    // console.log('Model.constructor this.bar', this.bar)
   }
   // ------------ CLASS METHODS --------------
 
   init() {
-    this.createBarEvent.trigger(this.bar)
-    // console.log('Model.init this.bar: ', this.bar)
   }
 
   // BAR METHODS
   createBar() {
+    // SORT RUNNERS ARRAY BY POSITION
+    this.runners.sort((a, b) =>
+      a.position > b.position ? 1 : b.position > a.position ? -1 : 0
+    )
     if (this.runners.length >= 2) {
       let lastIndex = this.runners.length - 1
       this.bar = {
         width: +this.runners[lastIndex].position - +this.runners[0].position,
         startPoint: +this.runners[0].position,
       }
-      // this.createBarEvent.trigger(this.bar)
-      return this.bar
     } else if (this.runners.length < 2) {
       this.bar = {
         width: this.runners[0].position - this.options.scale.min,
         startPoint: 0,
       }
-      // this.createBarEvent.trigger(this.bar)
-      return this.bar
     } else if (typeof this.bar === 'undefined') {
       this.bar = {
         width: 200,
         startPoint: 0,
       }
-      // this.createBarEvent.trigger(this.bar)
-      return this.bar
     }
+    this.createBarEvent.trigger(this.bar)
+    return this.bar
+    
   }
   // RUNNER METHODS
   createRunner(runner = {}) {
     this.runners.push(runner)
     this.createRunnerEvent.trigger(runner)
-    // console.log('Model. createRunner this.runners: ', this.runners)
     return this.runners
   }
 
@@ -94,11 +80,14 @@ class Slider {
 
   moveRunner(params = {}) {
     if (params) {
-      this.moveRunnerEvent.trigger(params)
-      // console.log('Model. Move runner by params: ', params)
-    }
+      let id = params.id - 1
+      let distance = params.distance
+      this.runners[id].position = distance
 
-    return params
+      this.moveRunnerEvent.trigger(params)
+
+      return this.runners
+    }
   }
 
   boostRunner(boostedId) {
