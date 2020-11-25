@@ -3,6 +3,16 @@ body {
   background-color: #ccc;
 }
 
+// Common styles for all slider containers
+
+.range-slider__main-wrapper {
+  position: relative;
+  background: url(../images/design/panorama-city-background.jpg) repeat-x;
+  background-size: contain;
+  height: 215px;
+  width: 700px;
+}
+
 .message {
   width: 300px;
   text-align: center;
@@ -11,40 +21,151 @@ body {
   margin-top: 10px;
 }
 
-.runner {
-  cursor: pointer;
+.scale__wrapper {
   position: absolute;
-  top: 65px;
-  left: 0;
-  width: 75px;
-  height: 100px;
-  background: url(../images/design/runner-cropped.gif) no-repeat;
-  background-size: contain;
+  background: black;
+  bottom: 0;
+  height: 15px;
 }
 
-[data-distance]:before {
-  content: attr(data-distance) 'км';
-  background: url(../images/design/tooltip.png) no-repeat;
-  background-color: #ccc;
-  background-size: cover;
-  width: 55px;
-  height: 50px;
-  z-index: 2;
+.runner {
   position: absolute;
-  color: black;
-  text-align: center;
-  line-height: 50px;
-  font-weight: bold;
-  left: 25px;
-  top: -53px;
-  font-size: 12px;
+  background: red;
+  border-radius: 7px;
+  height: 15px;
+  width: 15px;
+  bottom: 0;
+  &:active {
+    transition: all 1s ease-in-out;
+    transform: translate(0, -45px);
+  }
+}
+
+.bar__wrapper {
+  position: absolute;
+  bottom: 0;
+  height: 15px;
+}
+
+// SKINS STYLES
+
+// City skin
+.city {
+  .range-slider__main-wrapper {
+    background: url(../images/design/panorama-city-background.jpg) repeat-x;
+  }
+
+  .runner {
+    cursor: pointer;
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 75px;
+    height: 100px;
+    background: url(../images/design/runner-cropped.gif) no-repeat;
+    background-size: contain;
+  }
+
+  .runner:before {
+    content: attr(data-position) 'м';
+    background: url(../images/design/tooltip.png) no-repeat;
+    background-color: #ccc;
+    background-size: cover;
+    width: 55px;
+    height: 50px;
+    z-index: 2;
+    position: absolute;
+    color: black;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    left: 25px;
+    top: -55px;
+    font-size: 12px;
+  }
+
+  [data-tooltip='false']:before {
+    display: none;
+  }
+
+  .bar__wrapper {
+    background: greenyellow;
+    background-size: contain;
+  }
+}
+
+.sonic {
+  &.range-slider__main-wrapper {
+    background: url(../images/design/sonic-loop-background.png) repeat-x;
+    background-size: 90%;
+  }
+
+  .runner {
+    cursor: pointer;
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 75px;
+    height: 85px;
+    background: url(../images/design/sonic_runner.gif) no-repeat;
+    background-size: contain;
+  }
+
+  .bar__wrapper {
+    background: url(../images/design/burning-road_cropped.gif) repeat-x;
+    background-size: contain;
+  }
+}
+
+.mario {
+  &.range-slider__main-wrapper {
+    background: url(../images/design/mario-loop-background.jpg) repeat-x;
+    background-size: contain;
+  }
+
+  .runner {
+    cursor: pointer;
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 75px;
+    height: 85px;
+    background: url(../images/design/mario_runner.gif) no-repeat;
+    background-size: contain;
+  }
+  .bar__wrapper {
+    background: red;
+    background-size: contain;
+  }
+}
+.impostor {
+  &.range-slider__main-wrapper {
+    background: url(../images/design/mario-loop-background.jpg) repeat-x;
+    background-size: contain;
+  }
+
+  .runner {
+    cursor: pointer;
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 75px;
+    height: 85px;
+    background: url(../images/design/impostor_runner.gif) no-repeat;
+    background-size: contain;
+  }
+  .bar__wrapper {
+    background: red;
+    background-size: contain;
+  }
 }
 
 .finish {
   background: url(../images/design/finish-line.png) no-repeat;
   background-size: contain;
   position: absolute;
-  left: 150px;
+  left: 650px;
+  top: 70px;
   width: 230px;
   height: 115px;
   z-index: 1;
