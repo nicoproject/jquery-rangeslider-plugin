@@ -11,7 +11,7 @@ class Event {
   trigger(params) {
     this.listeners.forEach((listener) => {
       listener(params)
-      // console.log(`Event. Listener ${listener} triggered with ${params}`)
+      console.log(`Event. Listener ${listener} triggered with ${params}`)
     })
     
   }

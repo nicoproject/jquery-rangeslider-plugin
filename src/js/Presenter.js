@@ -2,9 +2,14 @@ import Slider from './Model'
 import View from './View'
 
 class Presenter {
-  constructor(options, skin) {
-    this.model = new Slider(options)
-    this.view = new View(skin, this.model.options.runners)
+  constructor(modelOptions, viewData) {
+    this.model = new Slider(modelOptions)
+    this.view = new View(viewData)
+
+    // VIEW EVENTS LISTENING
+    this.view.TooltipChangedEvent.addListener((TooltipChangedEvent) => {
+      console.log('TooltipChangedEvent:', TooltipChangedEvent)
+    })
 
     // this.view.barCreatedEvent.addListener((viewGetBar) => {
     //   let bar = this.model.createBar()
@@ -25,6 +30,10 @@ class Presenter {
     this.model.createRunnerEvent.addListener((modelCreateRunner) => {
       this.view.createRunner(this.model.runners)
     })
+    this.model.initTooltipEvent.addListener((initMessage) => {
+      console.log(initMessage)
+      console.log(this.model.runners)
+    })
     this.model.getRunnerEvent.addListener((modelGetRunners) => {
       this.view.setRunners(this.model.runners)
     })
@@ -32,17 +41,13 @@ class Presenter {
       this.view.createBar(this.model.createBar())
       this.view.render(this.model.runners)
     })
-    this.model.boostRunnerEvent.addListener((modelBoostRunner) => {
-      this.view.setRunners(this.model.runners)
-      this.view.createBar(this.model.createBar())
+    this.model.createBarEvent.addListener((modelCreateBar) => {})
 
-      this.view.render(this.view.runners)
-    })
-    this.model.createBarEvent.addListener((modelCreateBar) => {
-      // this.view.bar = this.model.createBar()
-      // this.view.createBar(this.view.bar)
-      // console.log('Presenter. this.view.bar: ', this.view.bar)
-    })
+
+    // CHECK MODEL SETTING
+    this.model.init()
+    
+
   }
 
   run() {

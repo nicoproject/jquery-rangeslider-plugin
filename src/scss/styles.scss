@@ -3,6 +3,8 @@ body {
   background-color: #ccc;
 }
 
+// Common styles for all slider containers
+
 .range-slider__main-wrapper {
   position: relative;
   background: url(../images/design/panorama-city-background.jpg) repeat-x;
@@ -27,12 +29,16 @@ body {
 }
 
 .runner {
+  position: absolute;
   background: red;
   border-radius: 7px;
   height: 15px;
   width: 15px;
-  position: absolute;
   bottom: 0;
+  &:active {
+    transition: all 1s ease-in-out;
+    transform: translate(0, -45px);
+  }
 }
 
 .bar__wrapper {
@@ -40,6 +46,8 @@ body {
   bottom: 0;
   height: 15px;
 }
+
+// SKINS STYLES
 
 // City skin
 .city {
@@ -58,7 +66,7 @@ body {
     background-size: contain;
   }
 
-  .runner[data-position]:before {
+  .runner:before {
     content: attr(data-position) 'м';
     background: url(../images/design/tooltip.png) no-repeat;
     background-color: #ccc;
@@ -76,7 +84,7 @@ body {
     font-size: 12px;
   }
 
-  .runner__tooltip_false[data-position]:before {
+  [data-tooltip='false']:before {
     display: none;
   }
 
@@ -91,7 +99,7 @@ body {
     background: url(../images/design/sonic-loop-background.png) repeat-x;
     background-size: 90%;
   }
-  
+
   .runner {
     cursor: pointer;
     position: absolute;

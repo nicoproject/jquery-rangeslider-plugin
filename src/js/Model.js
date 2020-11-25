@@ -4,6 +4,8 @@ import Event from './Event'
 class Slider {
   constructor(options) {
     // REGISTER EVENTS COLLECTION, TODO: REFACTOR
+    this.initTooltipEvent = new Event()
+
     this.createRunnerEvent = new Event()
     this.getRunnerEvent = new Event()
     this.moveRunnerEvent = new Event()
@@ -32,11 +34,21 @@ class Slider {
     this.bar = this.createBar()
 
     // INIT
-    this.init()
+    // this.init()
   }
   // ------------ CLASS METHODS --------------
 
   init() {
+    // TOOLTIP INIT TEST & EVENT.TRIGGER 
+    if (this.runners.length !== 0) {
+      this.runners.forEach((runner) => {
+        console.log(
+          `Model. Expect tooltip ${runner.id} data to be set:`,
+          runner.showTooltip
+        )
+      })
+      this.initTooltipEvent.trigger('Model tooltips data initiated and ready')
+    }
   }
 
   // BAR METHODS
@@ -64,7 +76,6 @@ class Slider {
     }
     this.createBarEvent.trigger(this.bar)
     return this.bar
-    
   }
   // RUNNER METHODS
   createRunner(runner = {}) {
