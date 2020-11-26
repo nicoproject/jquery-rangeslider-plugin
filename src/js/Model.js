@@ -3,17 +3,14 @@ import Event from './Event'
 
 class Slider {
   constructor(options) {
-    // REGISTER EVENTS COLLECTION, TODO: REFACTOR
-    this.initTooltipEvent = new Event()
-
-    this.createRunnerEvent = new Event()
-    this.getRunnerEvent = new Event()
-    this.moveRunnerEvent = new Event()
-    this.boostRunnerEvent = new Event()
-    this.createScaleEvent = new Event()
+    /** Register events collection
+     * @todo Refactor
+     */
     this.createBarEvent = new Event()
 
-    // OPTIONS
+    /** Validate incoming Options array
+     *  @todo Remove to utils
+     */
     if (options) {
       this.options = options
     } else if (typeof defaultOptions !== 'undefined') {
@@ -32,33 +29,30 @@ class Slider {
     this.step = this.options.step
     this.scale = this.options.scale
     this.bar = this.createBar()
-
-    // INIT
-    // this.init()
   }
+
   // ------------ CLASS METHODS --------------
 
+  /** Tests if  Model.Options are set and Presenters.Listeners are ready
+   *  @method init()
+   *  @todo Delegate all initial tests to Jest test instead of console
+   */
   init() {
-    // TOOLTIP INIT TEST & EVENT.TRIGGER 
     if (this.runners.length !== 0) {
-      this.runners.forEach((runner) => {
-        console.log(
-          `Model. Expect tooltip ${runner.id} data to be set:`,
-          runner.showTooltip
-        )
-      })
-      this.initTooltipEvent.trigger('Model tooltips data initiated and ready')
+      console.log('Model. Initiated: ', this)
     }
   }
 
-  // BAR METHODS
+  /** Creates Bar object, by sorting runners and defining startPoint and width
+   * @todo Refactor with use of variable instead of this.runners[lastIndex].position
+   */
   createBar() {
-    // SORT RUNNERS ARRAY BY POSITION
     this.runners.sort((a, b) =>
       a.position > b.position ? 1 : b.position > a.position ? -1 : 0
     )
+
     if (this.runners.length >= 2) {
-      let lastIndex = this.runners.length - 1
+      const lastIndex = this.runners.length - 1
       this.bar = {
         width: +this.runners[lastIndex].position - +this.runners[0].position,
         startPoint: +this.runners[0].position,
@@ -76,40 +70,6 @@ class Slider {
     }
     this.createBarEvent.trigger(this.bar)
     return this.bar
-  }
-  // RUNNER METHODS
-  createRunner(runner = {}) {
-    this.runners.push(runner)
-    this.createRunnerEvent.trigger(runner)
-    return this.runners
-  }
-
-  getRunnerPosition() {
-    let runnerPosition = this.getRunnerEvent.trigger()
-    return runnerPosition
-  }
-
-  moveRunner(params = {}) {
-    if (params) {
-      let id = params.id - 1
-      let distance = params.distance
-      this.runners[id].position = distance
-
-      this.moveRunnerEvent.trigger(params)
-
-      return this.runners
-    }
-  }
-
-  boostRunner(boostedId) {
-    if (typeof boostedId === 'undefined') return
-    let boostedRunner = this.runners[boostedId - 1]
-    boostedRunner.position = +boostedRunner.position + 15
-    this.boostRunnerEvent.trigger()
-
-    // console.log('Model. this.runners: ', this.runners)
-    // console.log('Model. boostRunner boostedId: ', boostedId)
-    // console.log('Model. boostedRunner: ', boostedRunner)
   }
 }
 

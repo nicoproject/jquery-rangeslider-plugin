@@ -1,5 +1,3 @@
-import Event from './Event'
-
 class ViewTooltip {
   constructor($el, state) {
     this.$el = $el
