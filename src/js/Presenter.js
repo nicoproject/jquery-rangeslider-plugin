@@ -6,9 +6,13 @@ class Presenter {
     this.model = new Slider(modelState)
     this.view = new View(modelState)
 
-    /** View data state listeners
+    console.log('1', this.view)
+    /** View user events listeners
      *
      */
+    this.view.clickScaleEvent.addListener((clickViewScale) => {
+      console.log('Presenter. view,clickViewScale: ', clickViewScale)
+    })
 
     /** Model data state listeners
      *

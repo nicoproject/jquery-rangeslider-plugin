@@ -38,9 +38,7 @@ class Slider {
    *  @todo Delegate all initial tests to Jest test instead of console
    */
   init() {
-    if (this.runners.length !== 0) {
-      console.log('Model. Initiated: ', this)
-    }
+    console.log('Model. Initiated: ', this)
   }
 
   /** Creates Bar object, by sorting runners and defining startPoint and width
