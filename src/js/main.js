@@ -5,7 +5,7 @@ const mockSliderOptions = {
   step: 25,
   scale: {
     min: 0,
-    max: 10000,
+    max: 2000,
   },
   type: 'single',
   orientation: 'vertical',
@@ -13,12 +13,12 @@ const mockSliderOptions = {
   runners: [
     {
       id: 1,
-      position: 1000,
+      position: 50,
       showTooltip: true,
     },
     {
       id: 2,
-      position: 8000,
+      position: 100,
       showTooltip: true,
     },
     // {

@@ -5,26 +5,21 @@ import ViewTooltip from './view_components/ViewTooltip'
 
 class View {
   constructor(modelState = {}) {
+
     /** Options */
-    this.skin = modelState.skin
-    this.scale = modelState.scale
-    this.step = modelState.step
-    this.runners = modelState.runners
-    this.bar = modelState.bar
-    this.orientation = modelState.orientation
+    this.skin = modelState.options.skin
+    this.scale = modelState.options.scale
+    this.step = modelState.options.step
+    this.runners = modelState.options.runners
+    this.bar = modelState.options.bar
+    this.orientation = modelState.options.orientation
+    this.range = modelState.range
+    this.hasNegative = modelState.hasNegative
 
     /** DOM Elements creation/bindings */
     this.$mainWrapper = this.createSliderWrapper()
-    this.$scale = document.createElement('div')
 
-    /** Prepare options obj for Scale render */
-    this.$scaleOptions = {
-      $el: this.$mainWrapper,
-      min: this.scale.min,
-      max: this.scale.max,
-      step: this.step,
-      orientation: this.orientation,
-    }
+
     this._scale = this.createScale(this.$scaleOptions)
 
     /** Prepare Array for Runners Nodes */
@@ -51,17 +46,28 @@ class View {
     return $mainWrapper
   }
 
-/** Scale methods  */ 
-  /** Creates scale element and appends to slider
-   * @param {} options
+  /** Scale methods  */
+  /** Creates scale element and appends to $parentEl
+   * @param {Object} options
    */
-  createScale(options = {}) {
-    const scale = new ViewScale(options)
+  createScale() {
+    /** Prepare options obj for Scale render */
+    const scaleOptions = {
+      $el: this.$mainWrapper,
+      min: this.scale.min,
+      max: this.scale.max,
+      step: this.step,
+      orientation: this.orientation,
+      range: this.range,
+      hasNegative: this.hasNegative,
+    }
+
+    const scale = new ViewScale(scaleOptions)
     this.$mainWrapper.appendChild(scale.$scaleWrapper)
     return scale
   }
 
-  // TOOLTIP METHODS
+  /** Tooltip methods */
   /** Sets tooltips value and visibility classes
    * @param {Node} $runners
    */
@@ -79,7 +85,7 @@ class View {
 
   // RENDER METHODS
   /** Creates DOM nodes
-   * @todo Refactor recieve options object with runners inside
+   * @todo Refactor receive options object with runners inside
    * @param {*} updatedRunners
    */
   render(updatedRunners) {
@@ -87,7 +93,7 @@ class View {
      * @todo Move to separate function clearNodes
      * @todo build links to all changeable DOM Elements and change
      * their parameters and rerender only specific element
-     * so to avoid rerender each mousemove
+     * to avoid rerender each mousemove
      */
     if (typeof this.$runners !== 'undefined' && this.$runners.length !== 0) {
       this.$runners.forEach(($node, i) => {
@@ -161,8 +167,8 @@ class View {
       console.log('runnerPxPosition: ', runnerPxPosition)
 
       $runner.addEventListener('click', (event) => {
-        this.boostRunnersEvent.trigger(event.target.dataset.id)
-        this.TooltipChangedEvent.trigger(event.target.dataset.id)
+        // this.boostRunnersEvent.trigger(event.target.dataset.id)
+        // this.TooltipChangedEvent.trigger(event.target.dataset.id)
       })
 
       this.$runners.push($runner)

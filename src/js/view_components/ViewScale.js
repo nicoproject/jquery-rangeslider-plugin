@@ -1,8 +1,10 @@
+import { createElement } from '../core/dom'
 import Event from '../Event'
 
 class ViewScale {
   /** Creates scale with canvas ruler from options object
-   * @param {} options 
+   * @param {} options
+   * @todo Validate options, provide defaults if empty/undefined
    */
   constructor(options = {}) {
     /** Register events collection
@@ -10,22 +12,14 @@ class ViewScale {
      */
     this.clickScaleEvent = new Event()
 
+    /** Set initial options values */
     this.$el = options.$el
     this.min = options.min
     this.max = options.max
-    this.hasNegative = false
-    if (this.min < 0 || this.max < 0) {
-      this.range = Math.abs(min) + Math.abs(max)
-      this.hasNegative = true
-    } else {
-      this.range = options.max - options.min
-    }
-    console.log('ViewScale. constructor this.hasNegative: ', this.hasNegative)
     this.step = options.step
     this.orientation = options.orientation
-    this.$scaleWrapper = document.createElement('div')
-    this._intervalCount = 0
-    this._spacing = 0
+    this.range = options.range
+    this.hasNegative = options.hasNegative
 
     this.init()
   }
@@ -36,49 +30,44 @@ class ViewScale {
      * with classes and dataset array
      * @todo
      */
+    this.createScaleWrapper()
+    this.createChildCanvas(this.$el)
+  }
+
+  createScaleWrapper() {
+    this.$scaleWrapper = document.createElement('div')
     this.$scaleWrapper.className = 'scale__wrapper'
     this.$scaleWrapper.dataset.min = this.min
     this.$scaleWrapper.dataset.max = this.max
     this.$scaleWrapper.dataset.step = this.step
 
     this.$scaleWrapper.addEventListener('click', (event) => {
-      const clientCoords = this.orientation === 'vertical' ? event.clientY : event.clientX
-      this.clickScaleEvent.trigger(clientCoords, this.orientation)
+      const clientCoords =
+        this.orientation === 'vertical' ? event.clientY : event.clientX
 
-      // console.log('clientCoords', clientCoords)
-      console.log('event', event.offsetY)
+      this.clickScaleEvent.trigger({
+        clientCoords,
+        orientation: this.orientation,
+      })
+
     })
-
-    this.drawRuler(this.$el)
-
-    console.log('ViewScale. init() this: ', this.clickScaleEvent )
-    return this
   }
 
-  drawRuler($parentEl) {
-    const canvas = document.createElement('canvas')
-    canvas.className = 'scale__ruler'
+  /** Draws ruler in Canvas element */
+  createChildCanvas($parentEl = HTMLElement) {
+    const canvas = createElement('canvas', 'scale__ruler')
+
     const calculationValue =
       this.orientation === 'vertical'
         ? $parentEl.offsetHeight
         : $parentEl.offsetWidth
-    console.log('ViewScale. drawRuler calculationValue: ', calculationValue)
-    let spacing = this.step
+
     const lineWidth = 1
-    let intervalCount = this.range / spacing
-    this._intervalCount = intervalCount
-    this._spacing = (calculationValue / this._intervalCount).toFixed()
-    if (intervalCount >= 20) {
-      intervalCount = 20
-    }
-    spacing = (calculationValue / intervalCount).toFixed()
-    console.log(
-      'ViewScale. drawRuler() intervalCount: ',
-      intervalCount,
-      this._intervalCount,
-      spacing,
-      this._spacing
-    )
+   
+    let intervalCount = this.range / this.step
+    if (intervalCount >= 20) intervalCount = 20
+   
+    let spacing = (calculationValue / intervalCount).toFixed()
 
     const context = canvas.getContext('2d')
     context.lineWidth = lineWidth
@@ -86,14 +75,9 @@ class ViewScale {
 
     if (this.orientation === 'vertical') {
       // ---------------------- START VERTICAL ----------------------- //
-      console.log(
-        'ViewScale drawRuler $parentEl.offsetHeight: ',
-        $parentEl.offsetHeight
-      )
       context.canvas.height = $parentEl.offsetHeight
       // Draw start point value
       context.beginPath()
-      const text = this.min
       context.moveTo(0, 0)
       context.lineTo(100, 0)
       context.font = '24px Arial'
@@ -106,7 +90,8 @@ class ViewScale {
         context.moveTo(0, 0)
 
         // Draw vertical line on each step
-        const intervalValue = ((intervalCount - interval) * this.range).toFixed() / intervalCount
+        const intervalValue =
+          ((intervalCount - interval) * this.range).toFixed() / intervalCount
         if (intervalValue !== 0) {
           context.moveTo(0, interval * spacing + lineWidth)
           context.lineTo(75, interval * spacing + lineWidth)

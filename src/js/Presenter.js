@@ -4,7 +4,7 @@ import View from './View'
 class Presenter {
   constructor(modelState) {
     this.model = new Slider(modelState)
-    this.view = new View(modelState)
+    this.view = new View(this.model)
 
     console.log('1', this.view)
     /** View user events listeners

@@ -8,7 +8,6 @@ class ViewTooltip {
 
   init() {
     this.$el.dataset.tooltip = this.state
-    return this 
   }
 }
 
