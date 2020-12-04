@@ -18,6 +18,7 @@ class Slider {
     this.id = this.options.id
     this.step = this.options.step
     this.scale = this.options.scale
+    this.orientation = this.options.orientation
 
     /** Set additional (calculated) options */
     this.hasNegative = this.hasNegative()
@@ -41,6 +42,8 @@ class Slider {
     console.log('Model. Initiated: ', this)
   }
 
+  // RUNNERS -------------------------------------------------
+
   setupRunners(arr = []) {
     arr.forEach((runner) => {
       this.validateRunnerPosition(runner)
@@ -50,11 +53,12 @@ class Slider {
   }
 
   validateRunnerPosition(obj = {}) {
-    const isRunnerOnScale = obj.position < this.scale.max && obj.position > this.scale.min
+    const isRunnerOnScale =
+      obj.position < this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
       obj.position = 0
       return
-    } 
+    }
   }
 
   sortRunnersByPosition(arr) {
@@ -63,40 +67,38 @@ class Slider {
     )
   }
 
-  /** Creates Bar object, by sorting runners and defining startPoint and width
+  /** Returns Bar object, calculated  startPoint, length, passed orientation
    * @todo Refactor with use of variable instead of this.runners[lastIndex].position
-   * @todo Refactor separate sort function
    */
   createBar() {
-    let bar
+    let length
+    let startPoint = 0
     if (this.runners.length >= 2) {
       const lastIndex = this.runners.length - 1
-      bar = {
-        width: +this.runners[lastIndex].position - +this.runners[0].position,
-        startPoint: +this.runners[0].position,
-      }
+      length = +this.runners[lastIndex].position - +this.runners[0].position
+      startPoint = +this.runners[0].position
     } else if (this.runners.length < 2) {
-      bar = {
-        width: this.runners[0].position - this.options.scale.min,
-        startPoint: 0,
-      }
+      length = this.runners[0].position - this.options.scale.min
     } else if (typeof this.bar === 'undefined') {
-      bar = {
-        width: 200,
-        startPoint: 0,
-      }
+      length = 200
     }
-    return bar
+    return {
+      length,
+      startPoint,
+      orientation: this.orientation,
+    }
   }
 
-  /** Returns true if scale has negative values */
+  //SCALE -------------------------------------------------
+
+  /** Returns true if scale has negative values
+   * @todo Refactor change name to scaleHasNegative
+   */
   hasNegative() {
     return this.options.scale.min < 0 || this.options.scale.max < 0
   }
 
-  /** Returns range value
-   * @todo Separate if conditions
-   */
+  /** Returns range value */
   calculateRange() {
     const min = this.options.scale.min
     const max = this.options.scale.max

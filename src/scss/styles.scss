@@ -39,6 +39,11 @@ h1 {
       }
     }
 
+    .bar__wrapper {
+      right: 55px;
+      width: 15px;
+  }
+
     .runner {
       cursor: pointer;
       position: absolute;
@@ -90,10 +95,10 @@ h1 {
   height: 15px;
   width: 15px;
   bottom: 0;
-  &:active {
-    transition: all 1s ease-in-out;
-    transform: translate(0, -45px);
-  }
+  // &:active {
+  //   transition: all 1s ease-in-out;
+  //   transform: translate(0, -45px);
+  // }
 }
 
 .bar__wrapper {

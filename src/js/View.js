@@ -1,29 +1,37 @@
 import { convertRange } from './core/utils'
+import { setAttributes, createElement } from './core/dom'
 
 import ViewScale from './view_components/ViewScale'
+import ViewBar from './view_components/ViewBar'
 import ViewTooltip from './view_components/ViewTooltip'
+import ViewRunners from './view_components/ViewRunners'
 
 class View {
   constructor(modelState = {}) {
-
     /** Options */
     this.skin = modelState.options.skin
     this.scale = modelState.options.scale
     this.step = modelState.options.step
     this.runners = modelState.options.runners
-    this.bar = modelState.options.bar
+    this.bar = modelState.bar
     this.orientation = modelState.options.orientation
     this.range = modelState.range
+
+    /** @todo Refactor define those in ViewScale init */
     this.hasNegative = modelState.hasNegative
+    this.isVisible = modelState.options.scale.isVisible
 
     /** DOM Elements creation/bindings */
     this.$mainWrapper = this.createSliderWrapper()
 
-
-    this._scale = this.createScale(this.$scaleOptions)
+    /** Store Scale component */
+    this._scale = this.createScale()
 
     /** Prepare Array for Runners Nodes */
     this.$runners = []
+
+    /** Store Bar component */
+    this._bar = this.createBar()
 
     /** Register events
      * @todo Refactor
@@ -33,6 +41,33 @@ class View {
 
     this.render(this.runners)
   }
+
+
+  /** Render methods */
+  /** Creates DOM nodes
+   * @todo Refactor receive options object with runners inside
+   * @param {*} updatedRunners
+   */
+  render(updatedRunners) {
+    /** Clears Runners nodes to recreate new Runners
+     * @todo Move to separate function clearNodes
+     * @todo build links to all changeable DOM Elements and change
+     * their parameters and rerender only specific element
+     * to avoid rerender each mousemove
+     */
+    if (typeof this.$runners !== 'undefined' && this.$runners.length !== 0) {
+      this.$runners.forEach(($node, i) => {
+        $node.remove()
+        $node = ''
+      })
+      this.$runners.length = 0
+    }
+    this.$runners = this.createRunners(updatedRunners)
+    this.setTooltips(this.$runners)
+
+    this.$mainWrapper.append(...this.$runners)
+  }
+  
 
   /** Slider methods */
   createSliderWrapper() {
@@ -60,6 +95,7 @@ class View {
       orientation: this.orientation,
       range: this.range,
       hasNegative: this.hasNegative,
+      isVisible: this.isVisible,
     }
 
     const scale = new ViewScale(scaleOptions)
@@ -69,7 +105,7 @@ class View {
 
   /** Tooltip methods */
   /** Sets tooltips value and visibility classes
-   * @param {Node} $runners
+   * @param {HTMLElement} $runners
    */
   setTooltips($runners) {
     $runners.forEach(($runner) => {
@@ -83,49 +119,39 @@ class View {
     })
   }
 
-  // RENDER METHODS
-  /** Creates DOM nodes
-   * @todo Refactor receive options object with runners inside
-   * @param {*} updatedRunners
+  /** Bar methods  */
+  /** Creates Bar element and appends to $parentEl
+   * @param {Object} options
    */
-  render(updatedRunners) {
-    /** Clears Runners nodes to recreate new Runners
-     * @todo Move to separate function clearNodes
-     * @todo build links to all changeable DOM Elements and change
-     * their parameters and rerender only specific element
-     * to avoid rerender each mousemove
-     */
-    if (typeof this.$runners !== 'undefined' && this.$runners.length !== 0) {
-      this.$runners.forEach(($node, i) => {
-        $node.remove()
-        $node = ''
-      })
-      this.$runners.length = 0
+  createBar() {
+    /** Prepare options obj for Scale render */
+    const barOptions = {
+      $el: this.$mainWrapper,
+      barLength: this.bar.length,
+      barStartPoint: this.bar.startPoint,
+      orientation: this.orientation,
+      range: this.range,
+      $scaleWrapper: this._scale.$scaleWrapper,
     }
-    this.createRunners(updatedRunners)
-    this.setTooltips(this.$runners)
 
-    this.$mainWrapper.append(...this.$runners)
+    const bar = new ViewBar(barOptions)
+    // this.$mainWrapper.appendChild(bar.$el)
+    return bar
   }
 
-  // BAR METHODS
-  createBar(bar) {
-    this.createBarEvent.trigger()
-    if (this.$mainWrapper.progressBar) {
-      this.$mainWrapper.removeChild(this.$mainWrapper.progressBar)
+  createRunners() {
+    /** Prepare options obj for Runners render */
+    const runnersOptions = {
+      $el: this.$mainWrapper,
+      runners: this.runners,
+      orientation: this.orientation,
+      range: this.range,
+      $scaleWrapper: this._scale.$scaleWrapper,
     }
 
-    const progressBar = document.createElement('div')
-    progressBar.className = 'bar__wrapper'
-    progressBar.dataset.startPoint = bar.startPoint
-    progressBar.dataset.width = bar.width
+    this._runners = new ViewRunners(runnersOptions)
 
-    progressBar.style.width = +bar.width + 'px'
-    //TODO REDO FOR CONDITIONAL ORIENTATION
-    progressBar.style.left = +bar.startPoint + 'px'
-
-    this.$mainWrapper.progressBar = progressBar
-    this.$mainWrapper.appendChild(progressBar)
+    return this._runners.$runners
   }
 
   // RUNNERS METHODS
@@ -134,47 +160,6 @@ class View {
     return this.runners
   }
 
-  createRunners(
-    runners = [
-      {
-        id: 0,
-        position: 0,
-        showTooltip: true,
-      },
-    ]
-  ) {
-    for (const runner of runners) {
-      // TODO: REFACTOR runner = doc.createEl... + this.runners.push(runner)
-      const $runner = document.createElement('div')
-      $runner.className = `runner runner-id-${runner.id}`
-      $runner.dataset.id = runner.id
-      $runner.dataset.position = runner.position
-
-      const cssProp = this.orientation === 'vertical' ? 'bottom' : 'left'
-      console.log('view for loop this.orientation: ', this.orientation)
-      const ccsPropArgs = {
-        max: this._scale.range,
-        pixels:
-          this.orientation === 'vertical'
-            ? this._scale.$scaleWrapper.offsetHeight
-            : this._scale.$scaleWrapper.offsetWidth,
-        clientCoords: 1,
-        direction: 'range2pix',
-      }
-      const runnerPxPosition = runner.position * convertRange(ccsPropArgs)
-
-      $runner.style.setProperty(cssProp, runnerPxPosition + 'px')
-      console.log('runnerPxPosition: ', runnerPxPosition)
-
-      $runner.addEventListener('click', (event) => {
-        // this.boostRunnersEvent.trigger(event.target.dataset.id)
-        // this.TooltipChangedEvent.trigger(event.target.dataset.id)
-      })
-
-      this.$runners.push($runner)
-    }
-    return this.$runners
-  }
 }
 
 export default View

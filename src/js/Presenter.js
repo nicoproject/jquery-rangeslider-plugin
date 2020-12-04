@@ -2,7 +2,7 @@ import Slider from './Model'
 import View from './View'
 
 class Presenter {
-  constructor(modelState) {
+  constructor(modelState = {}) {
     this.model = new Slider(modelState)
     this.view = new View(this.model)
 

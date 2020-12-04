@@ -1,8 +1,8 @@
 function convertRange(args) {
-  if (args.direction === 'pix2range') {
-    return (args.max / args.pixels) * args.clientCoords
+  if (args.direction === 'range2pix') {
+    return args.pixels / args.max
   } else {
-    return (args.pixels / args.max) * args.clientCoords
+    return args.max / args.pixels
   }
 }
 
@@ -14,4 +14,17 @@ function startBackgroundLoop($mainWrapper) {
   }, 10)
 }
 
-export { convertRange, startBackgroundLoop }
+function debounce(fn, wait) {
+  let timeout
+  return function (...args) {
+    const later = () => {
+      clearTimeout(timeout)
+      // eslint-disable-next-line no-invalid-this
+      fn.apply(this, args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
+
+export { convertRange, startBackgroundLoop, debounce }
