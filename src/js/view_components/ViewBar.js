@@ -4,6 +4,7 @@ import { convertRange } from '../core/utils'
 class ViewBar {
   constructor(args) {
     /** Set initial values */
+
     this.$el = args.$el || HTMLElement
     this.$scaleWrapper = args.$scaleWrapper
     this.barLength = args.barLength
@@ -65,6 +66,10 @@ class ViewBar {
 
     /** @todo Refactor separate and group all append operations */
     this.$el.appendChild($progressBar)
+  }
+
+  updateBar() {
+    
   }
 }
 

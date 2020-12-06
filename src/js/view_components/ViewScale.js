@@ -1,4 +1,5 @@
 import { createElement, setAttributes } from '../core/dom'
+import { convertRange } from '../core/utils'
 import Event from '../Event'
 import { drawRuler } from './ViewScale.functions'
 
@@ -60,10 +61,23 @@ class ViewScale {
       const clientCoords =
         this.orientation === 'vertical' ? event.clientY : event.clientX
 
-      this.clickScaleEvent.trigger({
-        clientCoords,
-        orientation: this.orientation,
-      })
+      const clientPropArgs = {
+        max: this.range,
+        pixels:
+          this.orientation === 'vertical'
+            ? this.$scaleWrapper.offsetHeight
+            : this.$scaleWrapper.offsetWidth,
+        direction: 'pix2range',
+      }
+
+      let clickPoint
+      if (this.orientation === 'vertical') {
+        clickPoint = convertRange(clientPropArgs) * clientCoords
+      } else {
+        clickPoint = convertRange(clientPropArgs) * clientCoords
+      }
+
+      this.clickScaleEvent.trigger(clickPoint)
     })
   }
 

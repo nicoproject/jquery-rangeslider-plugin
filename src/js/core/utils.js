@@ -27,4 +27,12 @@ function debounce(fn, wait) {
   }
 }
 
-export { convertRange, startBackgroundLoop, debounce }
+function getClosest(arr = [], goal) {
+  const output = arr.reduce((prev, curr) =>
+  Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
+  )
+
+  return output
+}
+
+export { convertRange, startBackgroundLoop, getClosest, debounce }

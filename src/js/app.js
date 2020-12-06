@@ -15,27 +15,27 @@ const mockSliderInitialState = {
   runners: [
     {
       id: 1,
-      position: 5,
+      position: 4,
       showTooltip: true,
     },
     {
       id: 2,
-      position: 14,
+      position: 10,
+      showTooltip: true,
+    },
+    {
+      id: 3,
+      position: 15,
       showTooltip: true,
     },
     // {
-    //   id: 3,
-    //   position: 15,
-    //   showTooltip: true,
-    // },
-    // {
     //   id: 4,
-    //   position: 1,
+    //   position: 8,
     //   showTooltip: true,
     // },
     // {
     //   id: 5,
-    //   position: 7000,
+    //   position: 10,
     //   showTooltip: true,
     // },
   ],
