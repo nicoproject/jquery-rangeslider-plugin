@@ -65,7 +65,11 @@ function drawRuler(args) {
         // stepValues don't work with negative numbers
         if (!this.hasNegative) {
           this.context.font = '8px Arial'
-          this.context.fillText(intervalValue.toFixed(), interval * this.spacing, 65)
+          this.context.fillText(
+            intervalValue.toFixed(),
+            interval * this.spacing,
+            65
+          )
         }
         this.context.stroke()
       }

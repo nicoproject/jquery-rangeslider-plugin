@@ -1,20 +1,22 @@
+import { drawRuler } from './ViewScale.functions'
+import Event from '../Event'
 import { createElement, setAttributes } from '../core/dom'
 import { convertRange } from '../core/utils'
-import Event from '../Event'
-import { drawRuler } from './ViewScale.functions'
 
 class ViewScale {
   /** Creates scale with canvas ruler from options object
-   * @param {} options
-   * @todo Validate options, provide defaults if empty/undefined
+   * @param {Object} options
    */
-  constructor(options = {}) {
-    /** Register events collection
-     * @todo Refactor
-     */
+  constructor(options) {
+    if (!options) {
+      throw new Error(
+        'ViewScale component critical error: Options Object has to be provided'
+      )
+    }
+    /** Register events collection */
     this.clickScaleEvent = new Event()
 
-    /** Set initial options values */
+    /** Set initial received options values */
     this.$el = options.$el
     this.min = options.min
     this.max = options.max
@@ -23,62 +25,46 @@ class ViewScale {
     this.orientation = options.orientation
     this.range = options.range
     this.hasNegative = options.hasNegative
+
+    /** Set calculated options values and create DOM elements */
     this.$canvas = createElement('canvas', 'scale__ruler')
     this.lineWidth = 1
     this.context = this.$canvas.getContext('2d')
     this.context.lineWidth = this.lineWidth
     this.context.strokeStyle = '#ff000'
 
-    /** Set calculated options values */
     this.scaleLength = this.getScaleLength(this.$el)
     this.intervalCount = this.getIntervalCount()
     this.spacing = (this.scaleLength / this.intervalCount).toFixed()
-
-    /** Implicit this binding to drawRuler function */
+    this.$scaleWrapper = this.createScaleWrapper()
+    this.clientCoordsArgs = {
+      max: this.range,
+      pixels:
+        this.orientation === 'vertical'
+          ? this.$el.offsetHeight
+          : this.$el.offsetWidth,
+      direction: 'pix2range',
+    }
+    if (this.isVisible) {
+      this.bindScaleWrapperClick()
+    }
+    /** Explicit this binding to drawRuler function */
     this.drawRuler = drawRuler
 
     this.init()
   }
 
   init() {
-    this.createScaleWrapper()
-    if (this.isVisible) {
-      this.drawRuler({ $el: this.$el, orientation: this.orientation })
+    if (this.$el.tagName !== 'DIV') {
+      throw new Error('Scale parent element should be provided')
+    } else if (this.isVisible) {
+      this.render()
     }
-    this.$scaleWrapper.append(this.$canvas)
   }
 
-  createScaleWrapper() {
-    this.$scaleWrapper = createElement('div', 'scale__wrapper')
-
-    setAttributes(this.$scaleWrapper, {
-      'data-min': this.min,
-      'data-max': this.max,
-      'data-step': this.step,
-    })
-
-    this.$scaleWrapper.addEventListener('click', (event) => {
-      const clientCoords =
-        this.orientation === 'vertical' ? event.clientY : event.clientX
-
-      const clientPropArgs = {
-        max: this.range,
-        pixels:
-          this.orientation === 'vertical'
-            ? this.$scaleWrapper.offsetHeight
-            : this.$scaleWrapper.offsetWidth,
-        direction: 'pix2range',
-      }
-
-      let clickPoint
-      if (this.orientation === 'vertical') {
-        clickPoint = convertRange(clientPropArgs) * clientCoords
-      } else {
-        clickPoint = convertRange(clientPropArgs) * clientCoords
-      }
-
-      this.clickScaleEvent.trigger(clickPoint)
-    })
+  render() {
+    this.drawRuler({ $el: this.$el, orientation: this.orientation })
+    this.$scaleWrapper.append(this.$canvas)
   }
 
   getScaleLength($parentEl) {
@@ -90,6 +76,38 @@ class ViewScale {
   getIntervalCount() {
     let intervalCount = this.range / this.step
     return intervalCount >= 20 ? (intervalCount = 20) : intervalCount
+  }
+
+  createScaleWrapper() {
+    let $scaleWrapper = createElement('div', 'scale__wrapper')
+
+    setAttributes($scaleWrapper, {
+      'data-min': this.min,
+      'data-max': this.max,
+      'data-step': this.step,
+    })
+
+    return $scaleWrapper
+  }
+
+  bindScaleWrapperClick() {
+    this.$scaleWrapper.addEventListener('click', (event) => {
+      /** For vertical orientation make scale Y coords upside down (inverted) */
+      const clientCoords =
+        this.orientation === 'vertical'
+          ? Math.abs(event.clientY - this.clientCoordsArgs.pixels)
+          : event.clientX
+
+      let clickPoint = convertRange(this.clientCoordsArgs) * clientCoords
+
+      if (this.hasNegative) {
+        clickPoint = this.min + clickPoint
+      }
+
+      this.clickScaleEvent.trigger(clickPoint)
+      /** @todo Remove this */
+      console.log('viewScale clickPoint: ', clickPoint)
+    })
   }
 }
 

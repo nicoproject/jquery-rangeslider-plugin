@@ -32,7 +32,6 @@ class View {
     this.$runners = []
     this.$runners = this.createRunners()
     // this.bindRunnerClickEvent(this.$runners)
-    console.log('View this.$runners: ', this.$runners)
 
     /** Store Bar component */
     this._bar = this.createBar()
@@ -40,12 +39,11 @@ class View {
     /** Register events
      * @todo Refactor
      */
-    /** Link child event to same name Parent Event */
+    /** Link Child Events to same name Parent Events */
     this.clickScaleEvent = this._scale.clickScaleEvent
     this.moveRunnerEvent = this.$runners.moveRunnerEvent
 
     this.render()
-    console.log('View this', this)
   }
 
   /** Render methods */
@@ -93,6 +91,12 @@ class View {
    * @param {Object} options
    */
   createScale() {
+    /** Scale should always be removed before render */
+    if (typeof this._scale !== 'undefined') {
+      this.$el.removeChild(this._scale.$scaleWrapper)
+    }
+
+
     /** Prepare options obj for Scale render */
     const scaleOptions = {
       $el: this.$mainWrapper,
@@ -133,7 +137,7 @@ class View {
    * @param {Object} options
    */
   createBar() {
-    /** Prepare options obj for Scale render */
+    /** Prepare options obj for Bar render */
     const barOptions = {
       $el: this.$mainWrapper,
       $scaleWrapper: this._scale.$scaleWrapper,

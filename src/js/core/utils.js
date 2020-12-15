@@ -6,14 +6,6 @@ function convertRange(args) {
   }
 }
 
-function startBackgroundLoop($mainWrapper) {
-  const x = 0
-  setInterval(function () {
-    x -= 1
-    $mainWrapper.style.backgroundPosition = x + 'px 0'
-  }, 10)
-}
-
 function debounce(fn, wait) {
   let timeout
   return function (...args) {
@@ -33,6 +25,15 @@ function getClosest(arr = [], goal) {
   )
 
   return output
+}
+
+
+function startBackgroundLoop($mainWrapper) {
+  const x = 0
+  setInterval(function () {
+    x -= 1
+    $mainWrapper.style.backgroundPosition = x + 'px 0'
+  }, 10)
 }
 
 export { convertRange, startBackgroundLoop, getClosest, debounce }

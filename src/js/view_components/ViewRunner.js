@@ -112,7 +112,7 @@ class ViewRunner {
     }
 
     if (this.orientation === 'vertical') {
-      this.$el.style.top = convertRange(movePropArgs) * args.position + 'px'
+      this.$el.style.bottom = convertRange(movePropArgs) * args.position + 'px'
     } else {
       this.$el.style.left = convertRange(movePropArgs) * args.position + 'px'
     }
