@@ -1,61 +1,62 @@
+import { getClosest } from './core/utils'
+
 import Slider from './Model'
 import View from './View'
 
 class Presenter {
-  constructor(modelOptions, viewData) {
-    this.model = new Slider(modelOptions)
-    this.view = new View(viewData)
+  constructor(modelState = {}) {
+    this.model = new Slider(modelState)
+    this.view = new View(this.model)
 
-    // VIEW EVENTS LISTENING
-    this.view.TooltipChangedEvent.addListener((TooltipChangedEvent) => {
-      console.log('TooltipChangedEvent:', TooltipChangedEvent)
+    /** View user events listeners
+     *
+     */
+
+    /** @TODO HEAVY REFACTOR */
+    this.view.clickScaleEvent.addListener((clickViewScale) => {
+      let runnersPositionsArray = this.model.runners
+      runnersPositionsArray = runnersPositionsArray.map(
+        (element) => element.position
+      )
+
+      let closestRunner = getClosest(runnersPositionsArray, clickViewScale)
+      closestRunner = this.model.runners.find(
+        (runner) => runner.position === closestRunner
+      )
+      closestRunner.position = clickViewScale
+      this.view.$runners.$runners[closestRunner.id - 1].moveRunner({
+        id: closestRunner.id - 1,
+        position: closestRunner.position,
+      })
+      
+      let bar = this.model.createBar()
+      this.view.bar = bar
+      this.view.createBar()
     })
 
-    // this.view.barCreatedEvent.addListener((viewGetBar) => {
-    //   let bar = this.model.createBar()
-    //   this.view.createBar(bar)
-    //   this.view.render()
-    // })
-    this.view.moveRunnerEvent.addListener((viewMoveRunner) => {
-      this.model.moveRunner(viewMoveRunner)
-    })
-    this.view.getRunnersEvent.addListener((viewGetRunners) => {
-      // console.log('View.getRunnersEvent triggered: ', this.model.runners)
-    })
-    this.view.boostRunnersEvent.addListener((viewBoostRunner) => {
-      this.model.boostRunner(viewBoostRunner)
-      // console.log('Presenter.view triggered viewBoostRunner:', viewBoostRunner )
+    this.view.moveRunnerEvent.addListener((moveViewRunner) => {
+      this.model.runners[moveViewRunner.id - 1].position =
+        moveViewRunner.position
+      this.model.runners = this.model.setupRunners(this.model.runners)
+      this.model.bar = this.model.createBar()
+      this.view.bar = this.model.bar
+      this.view.createBar()
     })
 
-    this.model.createRunnerEvent.addListener((modelCreateRunner) => {
-      this.view.createRunner(this.model.runners)
-    })
-    this.model.initTooltipEvent.addListener((initMessage) => {
-      console.log(initMessage)
-      console.log(this.model.runners)
-    })
-    this.model.getRunnerEvent.addListener((modelGetRunners) => {
-      this.view.setRunners(this.model.runners)
-    })
-    this.model.moveRunnerEvent.addListener((modelMoveRunner) => {
-      this.view.createBar(this.model.createBar())
-      this.view.render(this.model.runners)
-    })
-    this.model.createBarEvent.addListener((modelCreateBar) => {})
+    /** Model data state listeners
+     *
+     */
 
-
-    // CHECK MODEL SETTING
+    /** Check if model ready
+     * @todo Delegate to Jest and TS
+     */
     this.model.init()
-    
-
   }
 
-  run() {
-    this.view.createScale(this.model.scale)
-    this.view.createBar(this.model.bar)
-    this.view.setRunners(this.model.runners)
-    this.view.render(this.model.runners)
-  }
+  /** Runs the app
+   *  @todo Refactor all
+   */
+  run() {}
 
   destroy() {}
 }

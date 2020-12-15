@@ -1,194 +1,188 @@
-import Event from './Event'
-import EventObserver from './EventObserver'
-import ViewTooltip from './ViewTooltip'
+import { convertRange } from './core/utils'
+import { setAttributes, createElement } from './core/dom'
+
+import ViewScale from './view_components/ViewScale'
+import ViewBar from './view_components/ViewBar'
+import ViewTooltip from './view_components/ViewTooltip'
+import ViewRunners from './view_components/ViewRunners'
+import ViewRunner from './view_components/ViewRunner'
 
 class View {
-  constructor(viewData) {
-    // EVENTS
-    this.TooltipChangedEvent = new Event()
+  constructor(modelState = {}) {
+    /** Options */
+    this.skin = modelState.options.skin
+    this.scale = modelState.options.scale
+    this.step = modelState.options.step
+    this.runners = modelState.options.runners
+    this.bar = modelState.bar
+    this.orientation = modelState.options.orientation
+    this.range = modelState.range
 
-    this.moveRunnerEvent = new Event()
-    this.getRunnersEvent = new Event()
-    this.boostRunnersEvent = new Event()
-    this.createBarEvent = new Event()
+    /** @todo Refactor define those in ViewScale init */
+    this.hasNegative = modelState.hasNegative
+    this.isVisible = modelState.options.scale.isVisible
 
-    // OPTIONS
-    this.runners = viewData.runners
-    this.skin = viewData.skin
-    this.bar = {}
-
-    // DOM ELEMENTS CREATION/BINDINGS
+    /** DOM Elements creation/bindings */
     this.$mainWrapper = this.createSliderWrapper()
+
+    /** Store Scale component */
+    this._scale = this.createScale()
+
+    /** Create Runners Nodes from Array  REFACTOR */
     this.$runners = []
+    this.$runners = this.createRunners()
+    // this.bindRunnerClickEvent(this.$runners)
 
-    // this.startBackgroundLoop(this.$mainWrapper)
+    /** Store Bar component */
+    this._bar = this.createBar()
 
-    // RENDER ON CREATE
-    this.render(this.runners)
-    console.log('View. this: ', this)
+    /** Register events
+     * @todo Refactor
+     */
+    /** Link Child Events to same name Parent Events */
+    this.clickScaleEvent = this._scale.clickScaleEvent
+    this.moveRunnerEvent = this.$runners.moveRunnerEvent
+
+    this.render()
   }
 
-  render(updatedRunners) {
-    // !TODO: Move to separate function clearNodes
-    if (typeof this.$runners !== 'undefined' && this.$runners.length !== 0) {
-      this.$runners.forEach(($node, i) => {
-        $node.remove()
-        $node = ''
-      })
-      this.$runners.length = 0
-    }
-    this.createRunners(updatedRunners)
-    this.setTooltips(this.$runners)
+  /** Render methods */
+  /** Creates DOM nodes
+   * @todo Refactor receive options object with runners inside
+   * @param {Object} runners
+   */
+  render() {
+    /** Clears Runners nodes to recreate new Runners
+     * @todo Move to separate function clearNodes
+     * @todo build links to all changeable DOM Elements and change
+     * their parameters and rerender only specific element
+     * to avoid rerender each mousemove
+     */
 
-    this.$mainWrapper.append(...this.$runners)
+    // if (typeof this.$runners !== 'undefined' && this.$runners.length !== 0 ) {
+    //   this.$runners.forEach(($node, i) => {
+    //     console.log('typeof $node' + i, typeof $node)
+    //     if (typeof $node === 'HTMLElement') {
+    //       $node.remove()
+    //       $node = ''
+    //     }
+    //   })
+    //   this.$runners.length = 0
+    // }
+
+    // this.setTooltips(this.$runners)
+    // this.$mainWrapper.append(...this.$runners)
   }
 
-  // SLIDER METHODS
-
+  /** Slider methods */
   createSliderWrapper() {
-    let $mainWrapper = document.createElement('div')
-    $mainWrapper.className = `range-slider__main-wrapper ${this.skin}`
-
+    let verticalClass = ''
+    if (this.orientation === 'vertical') {
+      verticalClass = 'range-slider_vertical'
+    }
+    const $mainWrapper = document.createElement('div')
+    $mainWrapper.className = `range-slider__main-wrapper ${verticalClass} ${this.skin}`
     document.body.appendChild($mainWrapper)
     return $mainWrapper
   }
 
-  startBackgroundLoop($mainWrapper) {
-    let x = 0
-    setInterval(function () {
-      x -= 1
-      $mainWrapper.style.backgroundPosition = x + 'px 0'
-    }, 10)
-  }
-
-  // SCALE METHODS
-  createScale(scale = {}) {
-    let scaleWrapper = document.createElement('div')
-    scaleWrapper.className = 'scale__wrapper'
-    scaleWrapper.dataset.min = scale.min
-    scaleWrapper.dataset.max = scale.max
-
-    scaleWrapper.style.width = +scale.max + +scale.min + 'px'
-
-    this.$mainWrapper.scaleWrapper = scaleWrapper
-    this.$mainWrapper.appendChild(scaleWrapper)
-  }
-
-  // BAR METHODS
-  createBar(bar) {
-    this.createBarEvent.trigger()
-    if (this.$mainWrapper.progressBar) {
-      this.$mainWrapper.removeChild(this.$mainWrapper.progressBar)
+  /** Scale methods  */
+  /** Creates scale element and appends to $parentEl
+   * @param {Object} options
+   */
+  createScale() {
+    /** Scale should always be removed before render */
+    if (typeof this._scale !== 'undefined') {
+      this.$el.removeChild(this._scale.$scaleWrapper)
     }
 
-    let progressBar = document.createElement('div')
-    progressBar.className = 'bar__wrapper'
-    progressBar.dataset.startPoint = bar.startPoint
-    progressBar.dataset.width = bar.width
 
-    progressBar.style.width = +bar.width + 'px'
-    //TODO REDO FOR CONDITIONAL ORIENTATION
-    progressBar.style.left = +bar.startPoint + 'px'
+    /** Prepare options obj for Scale render */
+    const scaleOptions = {
+      $el: this.$mainWrapper,
+      min: this.scale.min,
+      max: this.scale.max,
+      step: this.step,
+      orientation: this.orientation,
+      range: this.range,
+      hasNegative: this.hasNegative,
+      isVisible: this.isVisible,
+    }
 
-    this.$mainWrapper.progressBar = progressBar
-    this.$mainWrapper.appendChild(progressBar)
+    const scale = new ViewScale(scaleOptions)
+    this.$mainWrapper.appendChild(scale.$scaleWrapper)
+    return scale
   }
 
-  // TOOLTIP METHODS
-  setTooltips($runners) {
+  /** Tooltip methods */
+  /** Sets tooltips value and visibility classes
+   * @param {HTMLElement} $runners
+   */
+  setTooltips($runners = []) {
     $runners.forEach(($runner) => {
-      let showTooltip = this.runners[$runner.dataset.id - 1].showTooltip
-      // USE OF TOOLTIP CLASS
-      new ViewTooltip($runner, showTooltip)
-    })
-  }
-
-  getTooltipEvents() {}
-
-  // RUNNERS METHODS
-  setRunners(modelRunners) {
-    this.runners = modelRunners
-    return this.runners
-  }
-
-  createRunners(runners = [{ id: 0, position: 0, showTooltip: true }]) {
-    for (let runner of runners) {
-      // TODO: REFACTOR runner = doc.createEl... + this.runners.push(runner)
-      let $runner = document.createElement('div')
-      $runner.className = `runner runner-id-${runner.id}`
-      $runner.dataset.id = runner.id
-      $runner.dataset.position = runner.position
-      $runner.style.left = runner.position + 'px'
-      $runner.addEventListener('click', (event) => {
-        this.boostRunnersEvent.trigger(event.target.dataset.id)
-        this.TooltipChangedEvent.trigger(event.target.dataset.id)
-      })
-
-      this.$runners.push($runner)
-    }
-    return this.$runners
-  }
-
-  getRunners() {
-    this.getRunnersEvent.trigger()
-    return this.$runners
-  }
-
-  moveRunner(params) {
-    let id = params.id
-    let distance = params.distance
-    this.$runners.forEach((runner) => {
-      if (runner.id === id) {
-        runner.dataset.position = distance
-        runner.style.left = distance + 'px'
+      if (typeof $runner.dataset !== 'undefined') {
+        const showTooltip = this.runners[$runner.dataset.id - 1].showTooltip
+        // USE OF TOOLTIP CLASS
+        const tooltipArgs = {
+          $el: $runner,
+          state: showTooltip,
+        }
+        new ViewTooltip(tooltipArgs)
       }
-      return runner
     })
-    this.moveRunnerEvent.trigger(params)
+  }
+
+  /** Bar methods  */
+  /** Creates Bar element and appends to $parentEl
+   * @param {Object} options
+   */
+  createBar() {
+    /** Prepare options obj for Bar render */
+    const barOptions = {
+      $el: this.$mainWrapper,
+      $scaleWrapper: this._scale.$scaleWrapper,
+      barLength: this.bar.length,
+      barStartPoint: this.bar.startPoint,
+      orientation: this.orientation,
+      range: this.range,
+    }
+
+    const bar = new ViewBar(barOptions)
+    // this.$mainWrapper.appendChild(bar.$el)
+    return bar
+  }
+
+  createRunners() {
+    /** Prepare options obj for Runners render */
+    const runnersOptions = {
+      $el: this.$mainWrapper,
+      runners: this.runners,
+      orientation: this.orientation,
+      range: this.range,
+      $scaleWrapper: this._scale.$scaleWrapper,
+    }
+
+    this.$runners = new ViewRunners(runnersOptions)
+
+    return this.$runners
+  }
+
+  /** Bind Drag&Drop handler
+   * @todo Refactor separate omMouseUp function to this - class scope
+   */
+  bindRunnerClickEvent($runners = []) {
+    $runners.forEach(($runner) => {
+      const $runnerOptions = {
+        $el: $runner,
+        orientation: this.orientation,
+        showTooltip: $runner.dataset.tooltip,
+      }
+
+      $runner = new ViewRunner($runnerOptions)
+      this.$runners.push($runner)
+    })
+    return this.$runners
   }
 }
 
 export default View
-
-// DRAG&DROP
-// let isLocked = false
-// let id = runner.id      // runner[i].onmousedown = (event) => {
-//   isLocked = true
-//   let parentThis = this
-//   // console.log('parentThis: ', parentThis)
-//   event.preventDefault() // предотвратить запуск выделения (действие браузера)
-
-//   let shiftX = event.clientX - runner[i].getBoundingClientRect().left
-//   // shiftY здесь не нужен, слайдер двигается только по горизонтали
-
-//   document.addEventListener('mousemove', onMouseMove)
-//   document.addEventListener('mouseup', onMouseUp)
-
-//   function onMouseMove(event) {
-//     let runner = parentThis.runners[id - 1]
-//     let newLeft =
-//       event.clientX -
-//       shiftX -
-//       parentThis.$mainWrapper.scaleWrapper.getBoundingClientRect().left
-
-//     if (newLeft < 0) {
-//       newLeft = 0
-//     }
-//     let rightEdge =
-//       parentThis.$mainWrapper.offsetWidth - runner[id - 1].offsetWidth
-
-//     if (newLeft > rightEdge) {
-//       newLeft = rightEdge
-//     }
-//     parentThis.moveRunnerEvent.trigger({
-//       id: runner.id,
-//       distance: newLeft,
-//     })
-//   }
-
-//   function onMouseUp() {
-//     isLocked = false
-//     document.removeEventListener('mouseup', onMouseUp)
-//     document.removeEventListener('mousemove', onMouseMove)
-//   }
-// }

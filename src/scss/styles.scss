@@ -3,14 +3,66 @@ body {
   background-color: #ccc;
 }
 
+h1 {
+  font-family: Helvetica, Arial, sans-serif;
+  color: #000;
+  font-size: 25px;
+  font-weight: bold;
+}
+
 // Common styles for all slider containers
 
 .range-slider__main-wrapper {
   position: relative;
   background: url(../images/design/panorama-city-background.jpg) repeat-x;
-  background-size: contain;
-  height: 215px;
-  width: 700px;
+  background-size: cover;
+  height: 179px;
+  width: 100%;
+  
+  &.range-slider_vertical {
+    background: url(../images/design/vertical-background.jpg) repeat-y;
+    width: 449px;
+    height: 615px;
+
+    .scale__wrapper {
+      position: absolute;
+      background: black;
+      right: 55px;
+      width: 15px;
+      height: 100%;
+    
+      canvas.scale__ruler {
+        margin: 0 15px;
+        height: 100%;
+        z-index: 2;
+        width: 155px;
+      }
+    }
+
+    .bar__wrapper {
+      right: 55px;
+      width: 15px;
+  }
+
+    .runner {
+      cursor: pointer;
+      position: absolute;
+      right: 81px;
+      left: auto !important;
+      height: 100px;
+      background: url(../images/design/climber-vertical-cropped.png) no-repeat;
+      background-size: contain;
+    }
+
+    .runner:before {
+      content: attr(data-position) "м";
+      background: url(../images/design/tooltip.png) no-repeat;
+      background-size: cover;
+      left: -16px;
+      top: -40px;
+  }
+    
+  }
 }
 
 .message {
@@ -26,6 +78,14 @@ body {
   background: black;
   bottom: 0;
   height: 15px;
+  width: 100%;
+
+  canvas.scale__ruler {
+    margin-top: 15px;
+    width: 100%;
+    // background: red;
+    z-index: 2;
+  }
 }
 
 .runner {
@@ -35,10 +95,10 @@ body {
   height: 15px;
   width: 15px;
   bottom: 0;
-  &:active {
-    transition: all 1s ease-in-out;
-    transform: translate(0, -45px);
-  }
+  // &:active {
+  //   transition: all 1s ease-in-out;
+  //   transform: translate(0, -45px);
+  // }
 }
 
 .bar__wrapper {
