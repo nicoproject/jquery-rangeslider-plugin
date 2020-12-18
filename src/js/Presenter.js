@@ -8,11 +8,10 @@ class Presenter {
     this.model = new Slider(modelState)
     this.view = new View(this.model)
 
-    /** View user events listeners
-     *
-     */
+    /** View user events listeners */
 
-    /** @TODO HEAVY REFACTOR */
+    /** Scale has been clicked on
+     * @TODO HEAVY REFACTOR */
     this.view.clickScaleEvent.addListener((clickViewScale) => {
       let runnersPositionsArray = this.model.runners
       runnersPositionsArray = runnersPositionsArray.map(
@@ -24,28 +23,27 @@ class Presenter {
         (runner) => runner.position === closestRunner
       )
       closestRunner.position = clickViewScale
-      this.view.$runners.$runners[closestRunner.id - 1].moveRunner({
-        id: closestRunner.id - 1,
-        position: closestRunner.position,
-      })
-      
+      this.view.$runners.$runners[closestRunner.id - 1].moveRunner(
+        closestRunner.position
+      )
+
       let bar = this.model.createBar()
       this.view.bar = bar
       this.view.createBar()
     })
 
+    /** Runner has been moved */
     this.view.moveRunnerEvent.addListener((moveViewRunner) => {
       this.model.runners[moveViewRunner.id - 1].position =
         moveViewRunner.position
       this.model.runners = this.model.setupRunners(this.model.runners)
-      this.model.bar = this.model.createBar()
-      this.view.bar = this.model.bar
-      this.view.createBar()
+      console.log(this.model.runners)
+      // this.model.bar = this.model.createBar()
+      // this.view.bar = this.model.bar
+      // this.view.createBar()
     })
 
-    /** Model data state listeners
-     *
-     */
+    /** Model data state listeners    */
 
     /** Check if model ready
      * @todo Delegate to Jest and TS

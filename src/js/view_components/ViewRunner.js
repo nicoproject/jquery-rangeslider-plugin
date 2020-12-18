@@ -11,6 +11,8 @@ class ViewRunner {
     this.showTooltip = args.tooltip
     this.range = args.range
     this.$scaleWrapper = args.$scaleWrapper
+    this.hasNegative = args.hasNegative
+    this.min = args.min
 
     /** Set calculated values */
     this.createRunner()
@@ -22,6 +24,9 @@ class ViewRunner {
      * @todo Refactor
      */
     this.moveRunnerEvent = new Event()
+
+    /** Debounce heavy function, to execute once in 5 ms */
+    this.onmousemove = debounce(this.onmousemove, 5)
   }
 
   createRunner() {
@@ -33,30 +38,9 @@ class ViewRunner {
       'data-tooltip': this.showTooltip,
     })
 
-    /**
-     * @todo Refactor separate this block to own function
-     * @todo Refactor unite this.orientation check operations
-     */
-    const cssProp = this.orientation === 'vertical' ? 'bottom' : 'left'
-
-    const ccsPropArgs = {
-      max: this.range,
-      pixels:
-        this.orientation === 'vertical'
-          ? this.$scaleWrapper.offsetHeight
-          : this.$scaleWrapper.offsetWidth,
-      direction: 'range2pix',
-    }
-
-    /** Defines runner position converted to px on scale  */
-    const runnerPxPosition = this.position * convertRange(ccsPropArgs)
-
-    /** Sets runner position
-     * @todo Refactor move $runner with appropriate method
-     */
-    $runner.style.setProperty(cssProp, runnerPxPosition + 'px')
-
     this.$el = $runner
+
+    this.moveRunner(this.position)
   }
 
   // event listeners, with arrow functions
@@ -65,43 +49,51 @@ class ViewRunner {
     document.addEventListener('mouseup', this.onmouseup)
   }
 
+  /** Drag and Drop
+   *  @todo check and unite this.orientation === 'vertical' conditions
+   */
   onmousemove = (event) => {
     event.preventDefault()
-    if (this.orientation === 'vertical') {
-      this.$el.style.top = event.pageY - 25 + 'px'
-    } else {
-      this.$el.style.left = event.pageX - 25 + 'px'
-
-      const runnerPropArgs = {
-        max: this.range,
-        pixels:
-          this.orientation === 'vertical'
-            ? this.$scaleWrapper.offsetHeight
-            : this.$scaleWrapper.offsetWidth,
-        direction: 'pix2range',
-      }
-
-      this.$el.dataset.position = convertRange(runnerPropArgs) * event.pageX
+    const runnerPropArgs = {
+      max: this.range,
+      pixels:
+        this.orientation === 'vertical'
+          ? this.$scaleWrapper.offsetHeight
+          : this.$scaleWrapper.offsetWidth,
+      direction: 'pix2range',
     }
-  }
 
-  onmouseup = () => {
-    let $runnerParams = {
-      Event: this.moveRunnerEvent,
-      id: this.id,
-      position: this.$el.dataset.position,
+    /** 
+     * @todo Move to separate function get axisValue, validateAxisValue 
+     * @todo HEAVY REFACTOR
+    */
+    let axisValue =
+      this.orientation === 'vertical'
+        ? Math.abs(event.pageY - runnerPropArgs.pixels)
+        : event.pageX
+
+    if (axisValue > runnerPropArgs.pixels - 75) {
+      axisValue = runnerPropArgs.pixels - 75
+    } else if (axisValue < 0) {
+      axisValue = 0
+    } 
+
+    let newRunnerPosition = axisValue * convertRange(runnerPropArgs)
+
+    if (this.hasNegative) {
+      newRunnerPosition = this.min + newRunnerPosition
     }
-    this.moveRunnerEvent.trigger($runnerParams)
 
-    document.removeEventListener('mousemove', this.onmousemove)
-    document.removeEventListener('mouseup', this.onmouseup)
+    if (event.pageY > runnerPropArgs.pixels) {
+      newRunnerPosition = this.min
+    }
+
+    this.$el.dataset.position = newRunnerPosition.toFixed(2)
+    
+    this.moveRunner(newRunnerPosition)
   }
 
-  ondragstart = () => {
-    return false
-  }
-
-  moveRunner(args) {
+  moveRunner(runnerPosition) {
     const movePropArgs = {
       max: this.range,
       pixels:
@@ -111,11 +103,36 @@ class ViewRunner {
       direction: 'range2pix',
     }
 
-    if (this.orientation === 'vertical') {
-      this.$el.style.bottom = convertRange(movePropArgs) * args.position + 'px'
-    } else {
-      this.$el.style.left = convertRange(movePropArgs) * args.position + 'px'
+    let runnerPxPosition = runnerPosition * convertRange(movePropArgs)
+
+    if (this.hasNegative) {
+      const correctNegative = Math.abs(this.min * convertRange(movePropArgs))
+      runnerPxPosition = correctNegative + runnerPxPosition
+      console.log('ViewRunner runnerPxPosition:', runnerPxPosition)
     }
+
+    if (this.orientation === 'vertical') {
+      this.$el.style.bottom = runnerPxPosition + 'px'
+    } else {
+      this.$el.style.left = runnerPxPosition + 'px'
+    }
+  }
+
+  onmouseup = () => {
+    // console.log('ViewRunner onMouseup: ', event)
+    let $runnerParams = {
+      Event: this.moveRunnerEvent,
+      id: this.id,
+      position: +this.$el.dataset.position,
+    }
+    this.moveRunnerEvent.trigger($runnerParams)
+
+    document.removeEventListener('mousemove', this.onmousemove)
+    document.removeEventListener('mouseup', this.onmouseup)
+  }
+
+  ondragstart = () => {
+    return false
   }
 }
 

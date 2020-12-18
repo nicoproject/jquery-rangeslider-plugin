@@ -92,9 +92,9 @@ class View {
    */
   createScale() {
     /** Scale should always be removed before render */
-    if (typeof this._scale !== 'undefined') {
-      this.$el.removeChild(this._scale.$scaleWrapper)
-    }
+    // if (typeof this._scale !== 'undefined') {
+    //   this.$el.removeChild(this._scale.$scaleWrapper)
+    // }
 
 
     /** Prepare options obj for Scale render */
@@ -152,6 +152,7 @@ class View {
     return bar
   }
 
+/** Runners */
   createRunners() {
     /** Prepare options obj for Runners render */
     const runnersOptions = {
@@ -160,6 +161,8 @@ class View {
       orientation: this.orientation,
       range: this.range,
       $scaleWrapper: this._scale.$scaleWrapper,
+      hasNegative: this.hasNegative,
+      min: this.scale.min,
     }
 
     this.$runners = new ViewRunners(runnersOptions)

@@ -15,7 +15,7 @@ function drawRuler(args) {
       // Move cursor to bottom left each iteration
       this.context.moveTo(0, 0)
 
-      // Draw vertical line on each step
+      // Draw horizontal line on each step
       const intervalValue =
         ((this.intervalCount - interval) * this.range).toFixed() /
         this.intervalCount
