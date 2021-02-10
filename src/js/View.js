@@ -25,13 +25,18 @@ class View {
     /** DOM Elements creation/bindings */
     this.$mainWrapper = this.createSliderWrapper()
 
-    /** Store Scale component */
-    this._scale = this.createScale()
-
     /** Create Runners Nodes from Array  REFACTOR */
     this.$runners = []
     this.$runners = this.createRunners()
-    // this.bindRunnerClickEvent(this.$runners)
+
+    /** Store Scale component */
+    this._scale = this.createScale()
+
+    //** Link Runners objects with parent wrapper HTMLelement  */
+    this.$runners.$runners.forEach((runner) => {
+      runner.$scaleWrapper = this._scale.$scaleWrapper
+      runner.moveRunner(runner.position)
+    })
 
     /** Store Bar component */
     this._bar = this.createBar()
@@ -51,28 +56,7 @@ class View {
    * @todo Refactor receive options object with runners inside
    * @param {Object} runners
    */
-  render() {
-    /** Clears Runners nodes to recreate new Runners
-     * @todo Move to separate function clearNodes
-     * @todo build links to all changeable DOM Elements and change
-     * their parameters and rerender only specific element
-     * to avoid rerender each mousemove
-     */
-
-    // if (typeof this.$runners !== 'undefined' && this.$runners.length !== 0 ) {
-    //   this.$runners.forEach(($node, i) => {
-    //     console.log('typeof $node' + i, typeof $node)
-    //     if (typeof $node === 'HTMLElement') {
-    //       $node.remove()
-    //       $node = ''
-    //     }
-    //   })
-    //   this.$runners.length = 0
-    // }
-
-    // this.setTooltips(this.$runners)
-    // this.$mainWrapper.append(...this.$runners)
-  }
+  render() {}
 
   /** Slider methods */
   createSliderWrapper() {
@@ -80,8 +64,10 @@ class View {
     if (this.orientation === 'vertical') {
       verticalClass = 'range-slider_vertical'
     }
-    const $mainWrapper = document.createElement('div')
-    $mainWrapper.className = `range-slider__main-wrapper ${verticalClass} ${this.skin}`
+    const $mainWrapper = createElement(
+      'div',
+      `range-slider__main-wrapper ${verticalClass} ${this.skin}`
+    )
     document.body.appendChild($mainWrapper)
     return $mainWrapper
   }
@@ -91,12 +77,6 @@ class View {
    * @param {Object} options
    */
   createScale() {
-    /** Scale should always be removed before render */
-    // if (typeof this._scale !== 'undefined') {
-    //   this.$el.removeChild(this._scale.$scaleWrapper)
-    // }
-
-
     /** Prepare options obj for Scale render */
     const scaleOptions = {
       $el: this.$mainWrapper,
@@ -107,6 +87,10 @@ class View {
       range: this.range,
       hasNegative: this.hasNegative,
       isVisible: this.isVisible,
+      runnerPxSize: {
+        width: this.$runners.$runners[0].$el.offsetWidth,
+        height: this.$runners.$runners[0].$el.offsetHeight,
+      },
     }
 
     const scale = new ViewScale(scaleOptions)
@@ -117,6 +101,8 @@ class View {
   /** Tooltip methods */
   /** Sets tooltips value and visibility classes
    * @param {HTMLElement} $runners
+   * @todo Refactor tooltip visibility is handled by CSS (by setting data-attr value)
+   * consider if this method with ViewTooltip class still needed
    */
   setTooltips($runners = []) {
     $runners.forEach(($runner) => {
@@ -148,11 +134,10 @@ class View {
     }
 
     const bar = new ViewBar(barOptions)
-    // this.$mainWrapper.appendChild(bar.$el)
     return bar
   }
 
-/** Runners */
+  /** Runners */
   createRunners() {
     /** Prepare options obj for Runners render */
     const runnersOptions = {
@@ -160,30 +145,14 @@ class View {
       runners: this.runners,
       orientation: this.orientation,
       range: this.range,
-      $scaleWrapper: this._scale.$scaleWrapper,
+      // $scaleWrapper: this._scale.$scaleWrapper,
       hasNegative: this.hasNegative,
       min: this.scale.min,
+      step: this.step,
     }
 
     this.$runners = new ViewRunners(runnersOptions)
 
-    return this.$runners
-  }
-
-  /** Bind Drag&Drop handler
-   * @todo Refactor separate omMouseUp function to this - class scope
-   */
-  bindRunnerClickEvent($runners = []) {
-    $runners.forEach(($runner) => {
-      const $runnerOptions = {
-        $el: $runner,
-        orientation: this.orientation,
-        showTooltip: $runner.dataset.tooltip,
-      }
-
-      $runner = new ViewRunner($runnerOptions)
-      this.$runners.push($runner)
-    })
     return this.$runners
   }
 }

@@ -13,10 +13,10 @@ class ViewRunners {
     this.$runners = []
     this.hasNegative = options.hasNegative
     this.min = options.min
+    this.step = options.step
 
     //** Set calculated initial values */
     this.$runners = this.createRunners(this.runners)
-    console.log('ViewRunners this', this)
 
     /** Register events collection
      * @todo Refactor
@@ -38,6 +38,7 @@ class ViewRunners {
    */ render() {
     this.$runners.forEach(($runner) => {
       this.$el.appendChild($runner.$el)
+      // this.correctRunnerPosition($runner.$el)
     })
   }
 
@@ -55,11 +56,21 @@ class ViewRunners {
         $scaleWrapper: this.$scaleWrapper,
         hasNegative: this.hasNegative,
         min: this.min,
+        step: this.step,
       }
       this.$runners.push(new ViewRunner(runnerArgs))
     })
 
     return this.$runners
+  }
+
+  /** Corrects runners positions by their half-length size
+   * @param {HTMLElement} $el
+   */
+  correctRunnerPosition($el) {
+    const correctLength = $el.offsetWidth / 2
+    
+    $el.style.left = correctLength * -1 + 'px'
   }
 }
 

@@ -37,7 +37,6 @@ class Presenter {
       this.model.runners[moveViewRunner.id - 1].position =
         moveViewRunner.position
       this.model.runners = this.model.setupRunners(this.model.runners)
-      console.log(this.model.runners)
       // this.model.bar = this.model.createBar()
       // this.view.bar = this.model.bar
       // this.view.createBar()

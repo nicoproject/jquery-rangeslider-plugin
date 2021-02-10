@@ -17,8 +17,9 @@ h1 {
   background: url(../images/design/panorama-city-background.jpg) repeat-x;
   background-size: cover;
   height: 179px;
-  width: 100%;
-  
+  width: 80%;
+  margin: 0 auto;
+
   &.range-slider_vertical {
     background: url(../images/design/vertical-background.jpg) repeat-y;
     width: 449px;
@@ -30,7 +31,7 @@ h1 {
       right: 55px;
       width: 15px;
       height: 100%;
-    
+
       canvas.scale__ruler {
         margin: 0 15px;
         height: 100%;
@@ -42,7 +43,7 @@ h1 {
     .bar__wrapper {
       right: 55px;
       width: 15px;
-  }
+    }
 
     .runner {
       cursor: pointer;
@@ -50,18 +51,18 @@ h1 {
       right: 81px;
       left: auto !important;
       height: 100px;
-      background: url(../images/design/climber-vertical-cropped.png) no-repeat 0 30px;
+      background: url(../images/design/climber-vertical-cropped.png) no-repeat 0
+        30px;
       background-size: contain;
     }
 
     .runner:before {
-      content: attr(data-position) "м";
+      content: attr(data-position) 'м';
       background: url(../images/design/tooltip.png) no-repeat;
       background-size: cover;
       left: -16px;
       top: -40px;
-  }
-    
+    }
   }
 }
 
@@ -95,10 +96,34 @@ h1 {
   height: 15px;
   width: 15px;
   bottom: 0;
+  cursor: pointer;
+  z-index: 10;
   // &:active {
   //   transition: all 1s ease-in-out;
   //   transform: translate(0, -45px);
   // }
+}
+
+.runner:before {
+  content: attr(data-position);
+  background: url(../images/design/tooltip.png) no-repeat;
+  background-color: #ccc;
+  background-size: cover;
+  width: 55px;
+  height: 50px;
+  z-index: 2;
+  position: absolute;
+  color: black;
+  text-align: center;
+  line-height: 50px;
+  font-weight: bold;
+  left: -22px;
+  top: -55px;
+  font-size: 12px;
+}
+
+[data-tooltip='false']:before {
+  display: none;
 }
 
 .bar__wrapper {
@@ -163,12 +188,16 @@ h1 {
   .runner {
     cursor: pointer;
     position: absolute;
-    bottom: 40px;
+    bottom: 0;
     left: 0;
     width: 75px;
     height: 85px;
     background: url(../images/design/sonic_runner.gif) no-repeat;
     background-size: contain;
+
+    &:before {
+      left: 10px;
+    }
   }
 
   .bar__wrapper {
@@ -192,7 +221,12 @@ h1 {
     height: 85px;
     background: url(../images/design/mario_runner.gif) no-repeat;
     background-size: contain;
+
+    &:before {
+      left: 5px;
+    }
   }
+
   .bar__wrapper {
     background: red;
     background-size: contain;
@@ -207,12 +241,17 @@ h1 {
   .runner {
     cursor: pointer;
     position: absolute;
-    bottom: 15px;
+    bottom: 10px;
     left: 0;
     width: 75px;
     height: 85px;
     background: url(../images/design/impostor_runner.gif) no-repeat;
     background-size: contain;
+
+    
+    &:before {
+      left: 10px;
+    }
   }
   .bar__wrapper {
     background: red;

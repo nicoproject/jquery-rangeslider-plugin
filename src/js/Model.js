@@ -54,7 +54,7 @@ class Slider {
 
   validateRunnerPosition(obj = {}) {
     const isRunnerOnScale =
-      obj.position < this.scale.max && obj.position > this.scale.min
+      obj.position <= this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
       obj.position = 0
       return

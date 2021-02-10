@@ -33,6 +33,11 @@ class ViewScale {
     this.context.lineWidth = this.lineWidth
     this.context.strokeStyle = '#ff000'
 
+    this.runnerPxSize =
+      this.orientation === 'vertical'
+        ? options.runnerPxSize.height
+        : options.runnerPxSize.width
+
     this.scaleLength = this.getScaleLength(this.$el)
     this.intervalCount = this.getIntervalCount()
     this.spacing = (this.scaleLength / this.intervalCount).toFixed()
@@ -95,8 +100,9 @@ class ViewScale {
       /** For vertical orientation make scale Y coords upside down (inverted) */
       const clientCoords =
         this.orientation === 'vertical'
-          ? Math.abs(event.clientY - this.clientCoordsArgs.pixels)
-          : event.clientX
+          ? Math.abs(event.offsetY - this.clientCoordsArgs.pixels)
+          : event.offsetX
+          console.dir(this.$scaleWrapper)
 
       let clickPoint = convertRange(this.clientCoordsArgs) * clientCoords
 

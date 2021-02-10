@@ -3,7 +3,7 @@ import '../scss/app.scss'
 
 const mockSliderInitialState = {
   id: 1,
-  step: 1,
+  step: 2,
   scale: {
     min: 0,
     max: 40,
@@ -11,11 +11,11 @@ const mockSliderInitialState = {
   },
   type: 'single',
   orientation: '',
-  skin: 'city',
+  skin: 'mario',
   runners: [
     {
       id: 1,
-      position: -1,
+      position: 0,
       showTooltip: true,
     },
     {
@@ -25,7 +25,7 @@ const mockSliderInitialState = {
     },
     {
       id: 3,
-      position: 15,
+      position: 20,
       showTooltip: true,
     },
     // {
@@ -69,9 +69,8 @@ app1.run()
 
 // setTimeout(() => {
 //   console.log('app1.view.$runners.$runners[0]', app1.view.$runners.$runners[0])
-//   app1.view.$runners.$runners[0].moveRunner(1)
+//   app1.view.$runners.$runners[0].moveRunner(5)
 // }, 2000)
-
 
 // setTimeout(() => {
 //   console.log('app1.view.$runners.$runners[0]', app1.view.$runners.$runners[0])
