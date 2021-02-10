@@ -3,19 +3,19 @@ import '../scss/app.scss'
 
 const mockSliderInitialState = {
   id: 1,
-  step: 1,
+  step: 2,
   scale: {
     min: 0,
-    max: 20,
+    max: 40,
     isVisible: true,
   },
   type: 'single',
   orientation: '',
-  skin: 'city',
+  skin: 'mario',
   runners: [
     {
       id: 1,
-      position: 4,
+      position: 0,
       showTooltip: true,
     },
     {
@@ -25,7 +25,7 @@ const mockSliderInitialState = {
     },
     {
       id: 3,
-      position: 15,
+      position: 20,
       showTooltip: true,
     },
     // {
@@ -66,9 +66,23 @@ const mockSliderInitialState = {
 
 const app1 = new Presenter(mockSliderInitialState)
 app1.run()
-// const app2 = new Presenter(mockSliderOptions1)
-// app2.run()
-// const app3 = new Presenter(mockSliderOptions)
-// app3.run()
-// const app4 = new Presenter(mockSliderOptions1)
-// app4.run()
+
+// setTimeout(() => {
+//   console.log('app1.view.$runners.$runners[0]', app1.view.$runners.$runners[0])
+//   app1.view.$runners.$runners[0].moveRunner(5)
+// }, 2000)
+
+// setTimeout(() => {
+//   console.log('app1.view.$runners.$runners[0]', app1.view.$runners.$runners[0])
+//   app1.view.$runners.$runners[0].moveRunner(8)
+// }, 4000)
+
+// setTimeout(()=> {
+//   console.log(app1.model.scale.min)
+//   app1.model.scale.min = -40
+//   console.log(app1.model.scale.min)
+//   app1.view.scale.min = -40
+//   app1.view.step = 1
+//   app1.view.createScale()
+//   console.log(app1.view._scale)
+// }, 2000)

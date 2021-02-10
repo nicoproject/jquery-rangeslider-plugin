@@ -39,7 +39,7 @@ class Slider {
    *  @todo Delegate all initial tests to Jest test instead of console
    */
   init() {
-    console.log('Model. Initiated: ', this)
+    console.log('Model. Initiated and ready: ', this)
   }
 
   // RUNNERS -------------------------------------------------
@@ -54,7 +54,7 @@ class Slider {
 
   validateRunnerPosition(obj = {}) {
     const isRunnerOnScale =
-      obj.position < this.scale.max && obj.position > this.scale.min
+      obj.position <= this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
       obj.position = 0
       return
