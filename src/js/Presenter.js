@@ -36,10 +36,11 @@ class Presenter {
     this.view.moveRunnerEvent.addListener((moveViewRunner) => {
       this.model.runners[moveViewRunner.id - 1].position =
         moveViewRunner.position
-      this.model.runners = this.model.setupRunners(this.model.runners)
-      // this.model.bar = this.model.createBar()
-      // this.view.bar = this.model.bar
-      // this.view.createBar()
+      // this.model.runners = this.model.setupRunners(this.model.runners)
+      
+      let bar = this.model.createBar()
+      this.view.bar = bar
+      this.view.createBar(bar)
     })
 
     /** Model data state listeners    */

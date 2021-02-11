@@ -5,7 +5,7 @@ const mockSliderInitialState = {
   id: 1,
   step: 2,
   scale: {
-    min: 0,
+    min: -40,
     max: 40,
     isVisible: true,
   },

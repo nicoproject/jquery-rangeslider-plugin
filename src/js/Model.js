@@ -73,12 +73,20 @@ class Slider {
   createBar() {
     let length
     let startPoint = 0
+
+    let minRunner = this.runners.reduce(function (prev, curr) {
+      return prev.position < curr.position ? prev : curr
+    })
+    let maxRunner = this.runners.reduce(function (prev, curr) {
+      return prev.position > curr.position ? prev : curr
+    })
+
     if (this.runners.length >= 2) {
       const lastIndex = this.runners.length - 1
-      length = +this.runners[lastIndex].position - +this.runners[0].position
-      startPoint = +this.runners[0].position
+      length = maxRunner.position - minRunner.position 
+      startPoint = minRunner.position 
     } else if (this.runners.length < 2) {
-      length = this.runners[0].position - this.options.scale.min
+      length = minRunner.position  - this.options.scale.min
     } else if (typeof this.bar === 'undefined') {
       length = 200
     }
