@@ -154,8 +154,9 @@ class ViewRunner {
     const stepPx = this.step * convertRange(stepPropArgs)
 
     /** Move Runner to the maximum
-     * @todo rewrite w use of utility fn replacing getBoundingClientRect as getCoords
+     * @todo this condition doesnt fire, idk why
      */
+
     if (
       newRunnerPosition >
       this.$el.getBoundingClientRect().right + stepPx / 2
@@ -164,15 +165,30 @@ class ViewRunner {
       if (this.$scaleWrapper.offsetWidth / stepPx <= 20) {
         this.$el.style[$elMarginProp] =
           Math.ceil(newRunnerPosition / stepPx) * stepPx - $elLength / 2 + 'px'
-        this.$el.dataset.position =
-          Math.ceil(newRunnerPosition / stepPx) * this.step
+        /** Calculate position of runner depending on negative values */
+        if (this.hasNegative) {
+          this.$el.dataset.position =
+            Math.ceil(newRunnerPosition / stepPx) * this.step -
+            Math.abs(this.min)
+        } else {
+          this.$el.dataset.position =
+            Math.ceil(newRunnerPosition / stepPx) * this.step
+        }
       } else {
         /** If !isStepped use convertRange for detailed position */
         this.$el.style[$elMarginProp] = newRunnerPosition + 'px'
-        this.$el.dataset.position = (
-          (newRunnerPosition + $elLength / 2) *
-          convertRange(runnerPropArgs)
-        ).toFixed(2)
+        if (this.hasNegative) {
+          this.$el.dataset.position =
+            (
+              (newRunnerPosition + $elLength / 2) *
+              convertRange(runnerPropArgs)
+            ).toFixed(2) - Math.abs(this.min)
+        } else {
+          this.$el.dataset.position = (
+            (newRunnerPosition + $elLength / 2) *
+            convertRange(runnerPropArgs)
+          ).toFixed(2)
+        }
       }
     }
 
@@ -191,16 +207,31 @@ class ViewRunner {
         }
         this.$el.style[$elMarginProp] =
           Math.floor(newRunnerPosition / stepPx) * stepPx + $elLength / 2 + 'px'
-        /** @todo Fix wrong position calculation */
-        this.$el.dataset.position =
-          Math.ceil(newRunnerPosition / stepPx) * this.step
+
+        /** Calculate position of runner depending on negative values */
+        if (this.hasNegative) {
+          this.$el.dataset.position =
+            Math.ceil(newRunnerPosition / stepPx) * this.step -
+            Math.abs(this.min)
+        } else {
+          this.$el.dataset.position =
+            Math.ceil(newRunnerPosition / stepPx) * this.step
+        }
       } else {
         /** @todo !isStepped */
         this.$el.style[$elMarginProp] = newRunnerPosition + 'px'
-        this.$el.dataset.position = (
-          (newRunnerPosition + $elLength / 2) *
-          convertRange(runnerPropArgs)
-        ).toFixed(2)
+        if (this.hasNegative) {
+          this.$el.dataset.position =
+            (
+              (newRunnerPosition + $elLength / 2) *
+              convertRange(runnerPropArgs)
+            ).toFixed(2) - Math.abs(this.min)
+        } else {
+          this.$el.dataset.position = (
+            (newRunnerPosition + $elLength / 2) *
+            convertRange(runnerPropArgs)
+          ).toFixed(2)
+        }
       }
     }
   }
