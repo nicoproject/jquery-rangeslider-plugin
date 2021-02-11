@@ -4,13 +4,18 @@ import { convertRange } from '../core/utils'
 class ViewBar {
   constructor(args) {
     /** Set initial values */
-
     this.$el = args.$el || HTMLElement
     this.$scaleWrapper = args.$scaleWrapper
     this.barLength = args.barLength
     this.startPoint = args.barStartPoint
     this.orientation = args.orientation
     this.range = args.range
+    this.hasNegative = args.hasNegative
+    this.min = args.min
+
+    if (this.hasNegative) {
+      this.startPoint = Math.abs(this.min - this.startPoint)
+    }
 
     /** Set calculated values
      * @todo Refactor change variables name barLengthInPx, barStartFromLeft
@@ -19,7 +24,6 @@ class ViewBar {
     this.barLengthInPx = convertRange(this.getRangeToConvert()) * this.barLength
     this.barStartFromLeft =
       convertRange(this.getRangeToConvert()) * this.startPoint
-
     this.createBar()
   }
 
@@ -68,9 +72,7 @@ class ViewBar {
     this.$el.appendChild($progressBar)
   }
 
-  updateBar() {
-    
-  }
+  updateBar() {}
 }
 
 export default ViewBar

@@ -131,6 +131,8 @@ class View {
       barStartPoint: this.bar.startPoint,
       orientation: this.orientation,
       range: this.range,
+      hasNegative: this.hasNegative,
+      min: this.scale.min,
     }
 
     const bar = new ViewBar(barOptions)

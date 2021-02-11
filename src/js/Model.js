@@ -82,9 +82,10 @@ class Slider {
     })
 
     if (this.runners.length >= 2) {
-      const lastIndex = this.runners.length - 1
       length = maxRunner.position - minRunner.position 
+      console.log(maxRunner.position, minRunner.position)
       startPoint = minRunner.position 
+      
     } else if (this.runners.length < 2) {
       length = minRunner.position  - this.options.scale.min
     } else if (typeof this.bar === 'undefined') {

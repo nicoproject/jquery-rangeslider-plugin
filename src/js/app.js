@@ -5,13 +5,13 @@ const mockSliderInitialState = {
   id: 1,
   step: 2,
   scale: {
-    min: -40,
-    max: 40,
+    min: -20,
+    max: 60,
     isVisible: true,
   },
   type: 'single',
   orientation: '',
-  skin: 'mario',
+  skin: 'city',
   runners: [
     {
       id: 1,
@@ -28,16 +28,16 @@ const mockSliderInitialState = {
       position: 20,
       showTooltip: true,
     },
-    // {
-    //   id: 4,
-    //   position: 8,
-    //   showTooltip: true,
-    // },
-    // {
-    //   id: 5,
-    //   position: 10,
-    //   showTooltip: true,
-    // },
+    {
+      id: 4,
+      position: 8,
+      showTooltip: true,
+    },
+    {
+      id: 5,
+      position: 10,
+      showTooltip: true,
+    },
   ],
 }
 // const mockSliderOptions1 = {
