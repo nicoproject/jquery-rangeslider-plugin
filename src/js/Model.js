@@ -83,7 +83,6 @@ class Slider {
 
     if (this.runners.length >= 2) {
       length = maxRunner.position - minRunner.position 
-      console.log(maxRunner.position, minRunner.position)
       startPoint = minRunner.position 
       
     } else if (this.runners.length < 2) {
