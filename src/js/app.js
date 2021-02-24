@@ -10,7 +10,7 @@ const mockSliderInitialState = {
     isVisible: true,
   },
   type: 'single',
-  orientation: 'vertical',
+  orientation: '',
   skin: 'city',
   runners: [
     {

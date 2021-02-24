@@ -27,10 +27,6 @@ function getClosest(arr = [], goal) {
   return output
 }
 
-function getCoords(side) {
-  return 
-}
-
 
 function startBackgroundLoop($mainWrapper) {
   const x = 0

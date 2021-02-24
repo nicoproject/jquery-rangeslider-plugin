@@ -94,7 +94,7 @@ class ViewRunner {
     /** Get largest wrapper dimension in px depending on orientation
      * @todo rename variable
      */
-    const pixels =
+    const wrapperLength =
       this.orientation === 'vertical'
         ? this.$scaleWrapper.offsetHeight
         : this.$scaleWrapper.offsetWidth
@@ -102,14 +102,14 @@ class ViewRunner {
     /** Set initial properties for runner pix to range converter  */
     const runnerPropArgs = {
       max: this.range,
-      pixels: pixels,
+      pixels: wrapperLength,
       direction: 'pix2range',
     }
 
     /** Set initial properties for step to px converter  */
     const stepPropArgs = {
       max: this.range,
-      pixels: pixels,
+      pixels: wrapperLength,
       direction: 'range2pix',
     }
 
@@ -135,13 +135,29 @@ class ViewRunner {
 
     /** Define variables depending on orientation */
     if (this.orientation === 'vertical') {
-      clientAxisValue = Math.abs(event.pageY - runnerPropArgs.pixels)
+      // clientAxisValue = Math.abs(event.pageY - runnerPropArgs.pixels)
+      clientAxisValue = runnerPropArgs.pixels - event.clientY
       console.log('clientAxisValue', clientAxisValue)
       $elLength = this.$el.offsetHeight
       /** Strange shiftAxis logic for vertical */
       shiftAxis = this.$scaleWrapper.getBoundingClientRect().top
       $elMarginProp = 'bottom'
       newRunnerPosition = clientAxisValue + shiftAxis
+
+      /** Check if newRunnerPosition extends min/max limits
+       * @todo Doesn't work for vertical because of inverted
+       */
+      if (event.pageY < runnerPropArgs.pixels) {
+        console.log(event.pageY)
+        // newRunnerPosition = this.max
+      }
+
+      /** Check if newRunnerPosition extends min/max limits */
+      if (newRunnerPosition > wrapperLength) {
+        newRunnerPosition = wrapperLength
+      } else if (newRunnerPosition < 0) {
+        newRunnerPosition = 0
+      }
     } else {
       clientAxisValue = event.clientX
       $elLength = this.$el.offsetWidth
@@ -149,22 +165,14 @@ class ViewRunner {
         this.$scaleWrapper.getBoundingClientRect().left + $elLength / 2
       $elMarginProp = 'left'
       newRunnerPosition = clientAxisValue - shiftAxis
-      /** Check if newRunnerPosition extends min/max limits
-       * @todo Doesn't work for vertical because of inverted
-       */
-      if (newRunnerPosition > pixels - $elLength / 2) {
-        newRunnerPosition = pixels - $elLength / 2
+
+      /** Check if newRunnerPosition extends min/max limits */
+      if (newRunnerPosition > wrapperLength - $elLength / 2) {
+        newRunnerPosition = wrapperLength - $elLength / 2
       } else if (newRunnerPosition < 0 - $elLength / 2) {
         newRunnerPosition = 0 - $elLength / 2
       }
     }
-
-    console.log(newRunnerPosition)
-
-    if (event.pageY > runnerPropArgs.pixels + 390) {
-      newRunnerPosition = this.min
-    }
-    console.log(newRunnerPosition)
 
     /** Get step dimension in px */
     const stepPx = this.step * convertRange(stepPropArgs)

@@ -103,7 +103,7 @@ class ViewScale {
           ? Math.abs(event.offsetY - this.clientCoordsArgs.pixels)
           : event.offsetX
 
-      let clickPoint = convertRange(this.clientCoordsArgs) * clientCoords
+      let clickPoint = (convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
 
       if (this.hasNegative) {
         clickPoint = this.min + clickPoint
