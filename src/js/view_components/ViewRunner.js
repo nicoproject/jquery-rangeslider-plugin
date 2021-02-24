@@ -14,6 +14,7 @@ class ViewRunner {
     this.hasNegative = args.hasNegative
     this.min = args.min
     this.step = args.step
+    this.isStepped
 
     /** Set calculated values */
     this.createRunner()
@@ -66,9 +67,10 @@ class ViewRunner {
         : this.$el.offsetWidth
 
     if (this.orientation === 'vertical') {
-      this.$el.style.bottom = runnerPxPosition + 'px'
+      this.$el.style.bottom =
+        runnerPxPosition - this.runnerPxDimension / 2 + 'px'
     } else {
-      this.$el.style.left = runnerPxPosition - this.$el.offsetWidth / 2 + 'px'
+      this.$el.style.left = runnerPxPosition - this.runnerPxDimension / 2 + 'px'
     }
 
     /** Set runner position */
@@ -81,9 +83,7 @@ class ViewRunner {
     document.addEventListener('mouseup', this.onmouseup)
   }
 
-  /** Drag and Drop
-   *  @todo check and unite this.orientation === 'vertical' conditions
-   */
+  /** Drag and Drop */
   onmousemove = (event) => {
     /** Remove browser selection action */
     event.preventDefault()
@@ -94,7 +94,7 @@ class ViewRunner {
     /** Get largest wrapper dimension in px depending on orientation
      * @todo rename variable
      */
-    const pixels =
+    const wrapperLength =
       this.orientation === 'vertical'
         ? this.$scaleWrapper.offsetHeight
         : this.$scaleWrapper.offsetWidth
@@ -102,142 +102,136 @@ class ViewRunner {
     /** Set initial properties for runner pix to range converter  */
     const runnerPropArgs = {
       max: this.range,
-      pixels: pixels,
+      pixels: wrapperLength,
       direction: 'pix2range',
     }
 
     /** Set initial properties for step to px converter  */
     const stepPropArgs = {
       max: this.range,
-      pixels: pixels,
+      pixels: wrapperLength,
       direction: 'range2pix',
     }
 
-    /** Get cursor coordinates */
-    let clientAxisValue =
-      this.orientation === 'vertical'
-        ? Math.abs(event.pageY - runnerPropArgs.pixels)
-        : event.clientX
+    /************************
+     * Define variables set
+     ************************/
+    /** Get cursor chosen axis coordinates */
+    let clientAxisValue
+    /** Runner HTMLElement length */
+    let $elLength
+    /** Get shift axis value */
+    let shiftAxis
+    /** Get element style property name  */
+    let $elMarginProp
+    /** Get Runner HTMLElement coordinates */
+    let $elCoords = {
+      left: this.$el.getBoundingClientRect().left,
+      right: this.$el.getBoundingClientRect().right,
+      top: this.$el.getBoundingClientRect().top,
+      bottom: this.$el.getBoundingClientRect().bottom,
+    }
+    let newRunnerPosition
 
-    //** Get element length depending on orientation */
-    const $elLength =
-      this.orientation === 'vertical'
-        ? this.$el.offsetHeight
-        : this.$el.offsetWidth
+    /** Define variables depending on orientation */
+    if (this.orientation === 'vertical') {
+      // clientAxisValue = Math.abs(event.pageY - runnerPropArgs.pixels)
+      clientAxisValue = runnerPropArgs.pixels - event.clientY
+      console.log('clientAxisValue', clientAxisValue)
+      $elLength = this.$el.offsetHeight
+      /** Strange shiftAxis logic for vertical */
+      shiftAxis = this.$scaleWrapper.getBoundingClientRect().top
+      $elMarginProp = 'bottom'
+      newRunnerPosition = clientAxisValue + shiftAxis
 
-    /**
-     * @todo Check for bugs in vertical orientation
-     */
-    let shiftAxis =
-      this.orientation === 'vertical'
-        ? this.$scaleWrapper.getBoundingClientRect().top +
-          this.$el.offsetHeight / 2
-        : this.$scaleWrapper.getBoundingClientRect().left +
-          this.$el.offsetWidth / 2
+      /** Check if newRunnerPosition extends min/max limits
+       * @todo Doesn't work for vertical because of inverted
+       */
+      if (event.pageY < runnerPropArgs.pixels) {
+        console.log(event.pageY)
+        // newRunnerPosition = this.max
+      }
 
-    //** Get element style property name depending on orientation */
-    let $elMarginProp = this.orientation === 'vertical' ? 'bottom' : 'left'
+      /** Check if newRunnerPosition extends min/max limits */
+      if (newRunnerPosition > wrapperLength) {
+        newRunnerPosition = wrapperLength
+      } else if (newRunnerPosition < 0) {
+        newRunnerPosition = 0
+      }
+    } else {
+      clientAxisValue = event.clientX
+      $elLength = this.$el.offsetWidth
+      shiftAxis =
+        this.$scaleWrapper.getBoundingClientRect().left + $elLength / 2
+      $elMarginProp = 'left'
+      newRunnerPosition = clientAxisValue - shiftAxis
 
-    let newRunnerPosition = clientAxisValue - shiftAxis
-
-    /**
-     * Check if newRunnerPosition extends max limits
-     * If cursor position > then max scale value
-     */
-    if (newRunnerPosition > pixels - $elLength) {
-      newRunnerPosition = pixels - $elLength / 2
-    } else if (newRunnerPosition < 0 - $elLength / 2) {
-      newRunnerPosition = 0 - $elLength / 2
+      /** Check if newRunnerPosition extends min/max limits */
+      if (newRunnerPosition > wrapperLength - $elLength / 2) {
+        newRunnerPosition = wrapperLength - $elLength / 2
+      } else if (newRunnerPosition < 0 - $elLength / 2) {
+        newRunnerPosition = 0 - $elLength / 2
+      }
     }
 
     /** Get step dimension in px */
     const stepPx = this.step * convertRange(stepPropArgs)
 
-    /** Move Runner to the maximum
-     * @todo this condition doesnt fire, idk why
-     */
-
-    if (
-      newRunnerPosition >
-      this.$el.getBoundingClientRect().right + stepPx / 2
-    ) {
-      /** If isStepped multiply step pixels value on steps quantity */
-      if (this.$scaleWrapper.offsetWidth / stepPx <= 20) {
-        this.$el.style[$elMarginProp] =
-          Math.ceil(newRunnerPosition / stepPx) * stepPx - $elLength / 2 + 'px'
-        /** Calculate position of runner depending on negative values */
-        if (this.hasNegative) {
-          this.$el.dataset.position =
-            Math.ceil(newRunnerPosition / stepPx) * this.step -
-            Math.abs(this.min)
-        } else {
-          this.$el.dataset.position =
-            Math.ceil(newRunnerPosition / stepPx) * this.step
-        }
-      } else {
-        /** If !isStepped use convertRange for detailed position */
-        this.$el.style[$elMarginProp] = newRunnerPosition + 'px'
-        if (this.hasNegative) {
-          this.$el.dataset.position =
-            (
-              (newRunnerPosition + $elLength / 2) *
-              convertRange(runnerPropArgs)
-            ).toFixed(2) - Math.abs(this.min)
-        } else {
-          this.$el.dataset.position = (
-            (newRunnerPosition + $elLength / 2) *
-            convertRange(runnerPropArgs)
-          ).toFixed(2)
-        }
-      }
+    /** Define if runner movement is stepped */
+    if (this.$scaleWrapper.offsetWidth / stepPx <= 20) {
+      this.isStepped = true
+    } else {
+      this.isStepped = false
     }
 
-    /** Move Runner to the minimum
-     * @todo Rewrite this condition - doesn't work on wrong stepped
-     *
-     */
-    if (
-      newRunnerPosition <
-      this.$el.getBoundingClientRect().left - stepPx / 2
-    ) {
-      /** @todo change this condition for isStepped flag */
-      if (this.$scaleWrapper.offsetWidth / stepPx <= 20) {
-        if (newRunnerPosition <= 0 - this.$el.offsetWidth / 2) {
-          this.$el.style[$elMarginProp] = 0 - $elLength / 2
-        }
-        this.$el.style[$elMarginProp] =
-          Math.floor(newRunnerPosition / stepPx) * stepPx + $elLength / 2 + 'px'
-
-        /** Calculate position of runner depending on negative values */
-        if (this.hasNegative) {
-          this.$el.dataset.position =
-            Math.ceil(newRunnerPosition / stepPx) * this.step -
-            Math.abs(this.min)
-        } else {
-          this.$el.dataset.position =
-            Math.ceil(newRunnerPosition / stepPx) * this.step
-        }
+    if (this.isStepped) {
+      let $elStartCoord
+      let $elEndCoord
+      if (this.orientation === 'vertical') {
+        $elStartCoord = $elCoords.top
+        $elEndCoord = $elCoords.bottom
       } else {
-        /** @todo !isStepped */
-        this.$el.style[$elMarginProp] = newRunnerPosition + 'px'
+        $elStartCoord = $elCoords.left
+        $elEndCoord = $elCoords.right
+      }
+
+      if (
+        newRunnerPosition - $elStartCoord > stepPx / 2 ||
+        $elEndCoord - newRunnerPosition > stepPx / 2
+      ) {
+        let stepsCount = Math.ceil(newRunnerPosition / stepPx)
+
+        this.$el.style[$elMarginProp] =
+          stepsCount * stepPx - $elLength / 2 + 'px'
+
+        /** Calculate and set data-position of runner depending on negative values */
         if (this.hasNegative) {
           this.$el.dataset.position =
-            (
-              (newRunnerPosition + $elLength / 2) *
-              convertRange(runnerPropArgs)
-            ).toFixed(2) - Math.abs(this.min)
+            stepsCount * this.step - Math.abs(this.min)
         } else {
-          this.$el.dataset.position = (
+          this.$el.dataset.position = stepsCount * this.step
+        }
+      }
+    } else {
+      console.log(newRunnerPosition)
+      /** If !isStepped use convertRange for detailed position */
+      this.$el.style[$elMarginProp] = newRunnerPosition + 'px'
+      if (this.hasNegative) {
+        this.$el.dataset.position =
+          (
             (newRunnerPosition + $elLength / 2) *
             convertRange(runnerPropArgs)
-          ).toFixed(2)
-        }
+          ).toFixed() - Math.abs(this.min)
+      } else {
+        this.$el.dataset.position = (
+          (newRunnerPosition + $elLength / 2) *
+          convertRange(runnerPropArgs)
+        ).toFixed()
       }
     }
   }
 
   onmouseup = () => {
-    // console.log('ViewRunner onMouseup: ', event)
     let $runnerParams = {
       Event: this.moveRunnerEvent,
       id: this.id,

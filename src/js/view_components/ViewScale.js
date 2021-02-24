@@ -102,9 +102,8 @@ class ViewScale {
         this.orientation === 'vertical'
           ? Math.abs(event.offsetY - this.clientCoordsArgs.pixels)
           : event.offsetX
-          console.dir(this.$scaleWrapper)
 
-      let clickPoint = convertRange(this.clientCoordsArgs) * clientCoords
+      let clickPoint = (convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
 
       if (this.hasNegative) {
         clickPoint = this.min + clickPoint

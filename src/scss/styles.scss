@@ -1,6 +1,7 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   background-color: #ccc;
+  margin-top: 100px;
 }
 
 h1 {
@@ -50,18 +51,17 @@ h1 {
       position: absolute;
       right: 81px;
       left: auto !important;
-      height: 100px;
-      background: url(../images/design/climber-vertical-cropped.png) no-repeat 0
-        30px;
+      height: 90px;
+      background: url(../images/design/climber-vertical-cropped.png) no-repeat;
       background-size: contain;
     }
 
     .runner:before {
       content: attr(data-position) 'м';
-      background: url(../images/design/tooltip.png) no-repeat;
+      background: url(../images/design/tooltip_vertical.png) no-repeat;
       background-size: cover;
-      left: -16px;
-      top: -40px;
+      left: -50px;
+      top: 17px;
     }
   }
 }
@@ -164,7 +164,7 @@ h1 {
     text-align: center;
     line-height: 50px;
     font-weight: bold;
-    left: 25px;
+    left: 11px;
     top: -55px;
     font-size: 12px;
   }

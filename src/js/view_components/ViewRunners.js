@@ -35,7 +35,8 @@ class ViewRunners {
 
   /** Appends runners DOM nodes to wrapper
    * @param {Object} runners
-   */ render() {
+   */
+  render() {
     this.$runners.forEach(($runner) => {
       this.$el.appendChild($runner.$el)
       // this.correctRunnerPosition($runner.$el)
@@ -65,11 +66,15 @@ class ViewRunners {
   }
 
   /** Corrects runners positions by their half-length size
+   * @todo not in use, refactor or delete
    * @param {HTMLElement} $el
    */
   correctRunnerPosition($el) {
-    const correctLength = $el.offsetWidth / 2
-    
+    const correctLength =
+      this.orientation === 'vertical'
+        ? $el.offsetWidth / 2
+        : $el.offsetWidth / 2
+
     $el.style.left = correctLength * -1 + 'px'
   }
 }
