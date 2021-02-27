@@ -39,7 +39,6 @@ class ViewBar {
   }
 
   createBar() {
-    // this.createBarEvent.trigger()
     /** Delete existing progress bar before creating new DOM element
      * @todo Check if this condition ever fires
      */

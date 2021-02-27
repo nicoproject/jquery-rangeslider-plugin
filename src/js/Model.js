@@ -18,6 +18,7 @@ class Slider {
     this.id = this.options.id
     this.step = this.options.step
     this.scale = this.options.scale
+    this.skin = this.options.skin
     this.orientation = this.options.orientation
 
     /** Set additional (calculated) options */
@@ -29,7 +30,6 @@ class Slider {
     /** Register events collection
      * @todo Refactor
      */
-    this.createBarEvent = new Event()
   }
 
   // ------------ CLASS METHODS --------------
