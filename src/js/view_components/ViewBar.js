@@ -19,11 +19,19 @@ class ViewBar {
 
     /** Set calculated values
      * @todo Refactor change variables name barLengthInPx, barStartFromLeft
+     * @todo Refactor code
      * @todo Refactor change methods names - they don't reflect stored values, maybe change logic
      */
     this.barLengthInPx = convertRange(this.getRangeToConvert()) * this.barLength
-    this.barStartFromLeft =
-      convertRange(this.getRangeToConvert()) * this.startPoint
+    this.barStartFromLeft
+    if (this.min > 0) {
+      this.barStartFromLeft =
+        convertRange(this.getRangeToConvert()) *  (this.startPoint  - this.min)
+    } else {
+      this.barStartFromLeft =
+        convertRange(this.getRangeToConvert()) * this.startPoint
+    }
+
     this.createBar()
   }
 

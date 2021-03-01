@@ -22,7 +22,7 @@ class Slider {
     this.orientation = this.options.orientation
 
     /** Set additional (calculated) options */
-    this.hasNegative = this.hasNegative()
+    this.hasNegative = this.scaleHasNegative()
     this.range = this.calculateRange()
     this.runners = this.setupRunners(this.options.runners)
     this.bar = this.createBar()
@@ -102,7 +102,7 @@ class Slider {
   /** Returns true if scale has negative values
    * @todo Refactor change name to scaleHasNegative
    */
-  hasNegative() {
+  scaleHasNegative() {
     return this.options.scale.min < 0 || this.options.scale.max < 0
   }
 

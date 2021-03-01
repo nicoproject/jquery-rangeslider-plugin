@@ -58,7 +58,7 @@ function drawRuler(args) {
       this.context.moveTo(0, 0)
 
       // Draw vertical line on each step
-      const intervalValue = (interval * this.range) / this.intervalCount
+      const intervalValue =  (interval * this.range) / this.intervalCount
       if (intervalValue !== 0) {
         this.context.moveTo(interval * this.spacing + this.lineWidth, 0)
         this.context.lineTo(interval * this.spacing + this.lineWidth, 50)
@@ -66,7 +66,7 @@ function drawRuler(args) {
         if (!this.hasNegative) {
           this.context.font = '8px Arial'
           this.context.fillText(
-            intervalValue.toFixed(),
+            +this.min + +intervalValue.toFixed(),
             interval * this.spacing,
             65
           )

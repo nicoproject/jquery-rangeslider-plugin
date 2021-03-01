@@ -75,6 +75,13 @@ class Presenter {
       this.render()
     })
 
+    /** Min has been changed */
+    this.view.maxChangedEvent.addListener((changeMaxPanel) => {
+      this.model.options.scale.max = +changeMaxPanel
+      this.model.scale.max = +changeMaxPanel
+      this.render()
+    })
+
     /** Scale  */
   }
 
@@ -87,12 +94,18 @@ class Presenter {
   render() {
     this.view.destroy()
     console.log('destroyed')
+    console.log(this.model.scaleHasNegative())
+    this.model.hasNegative = this.model.scaleHasNegative()
+    this.model.range = this.model.calculateRange()
+
     this.view = new View(this.model)
     
+
     this.setupListeners()
-    
+
     this.renderBar()
     console.log('rendered')
+    console.log(this.model)
   }
 
   renderBar() {

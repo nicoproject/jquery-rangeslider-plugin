@@ -120,12 +120,26 @@ class ViewPanel {
       console.log('Min has changed')
     })
 
+    /** Scale max input */
+    let $scaleMaxInput = createElement('input', 'input max-input')
+    setAttributes($scaleMaxInput, {
+      type: 'text',
+      placeholder: 'Максимум',
+      value: this.max,
+    })
+
+    $scaleMaxInput.addEventListener('change', (event) => {
+      this.maxPanelEvent.trigger(event.target.value)
+      console.log('Max has changed')
+    })
+
     /** Add created HTML elements to array */
     $formElements.push(
       $skinDropdown,
       $orientationDropdown,
-      $scaleStepInput,
-      $scaleMinInput
+      $scaleMinInput,
+      $scaleMaxInput,
+      $scaleStepInput
     )
 
     /** Append all elements to parent form */
