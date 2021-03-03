@@ -24,14 +24,12 @@ function drawRuler(args) {
         this.context.lineTo(75, interval * this.spacing + this.lineWidth)
 
         // stepValues don't work with negative numbers
-        if (!this.hasNegative) {
           this.context.font = '14px Arial'
           this.context.fillText(
-            intervalValue.toFixed(),
+            +this.min + +intervalValue.toFixed(),
             30,
             interval * this.spacing - 10
           )
-        }
         this.context.stroke()
       }
     }
@@ -58,19 +56,17 @@ function drawRuler(args) {
       this.context.moveTo(0, 0)
 
       // Draw vertical line on each step
-      const intervalValue =  (interval * this.range) / this.intervalCount
+      const intervalValue = (interval * this.range) / this.intervalCount
       if (intervalValue !== 0) {
         this.context.moveTo(interval * this.spacing + this.lineWidth, 0)
         this.context.lineTo(interval * this.spacing + this.lineWidth, 50)
         // stepValues don't work with negative numbers
-        if (!this.hasNegative) {
-          this.context.font = '8px Arial'
-          this.context.fillText(
-            +this.min + +intervalValue.toFixed(),
-            interval * this.spacing,
-            65
-          )
-        }
+        this.context.font = '8px Arial'
+        this.context.fillText(
+          +this.min + +intervalValue.toFixed(),
+          interval * this.spacing,
+          65
+        )
         this.context.stroke()
       }
     }
