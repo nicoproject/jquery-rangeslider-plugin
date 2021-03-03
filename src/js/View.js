@@ -56,6 +56,9 @@ class View {
     this.minChangedEvent = this.$controlPanel.minPanelEvent
     this.maxChangedEvent = this.$controlPanel.maxPanelEvent
     this.visibilityChangedEvent = this.$controlPanel.visibilityPanelEvent
+    this.runnerChosenEvent = this.$controlPanel.runnersIdPanelEvent
+    this.positionChangedEvent = this.$controlPanel.positionPanelEvent
+    this.tooltipChangedEvent = this.$controlPanel.tooltipPanelEvent
 
     this.render()
   }
@@ -181,7 +184,7 @@ class View {
     }
 
     this.$controlPanel = new ViewPanel(panelOptions)
-
+    console.log('panelOptions', panelOptions)
     return this.$controlPanel
   }
 

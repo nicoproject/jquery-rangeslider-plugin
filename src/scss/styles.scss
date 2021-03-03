@@ -257,7 +257,6 @@ h1 {
     background: url(../images/design/impostor_runner.gif) no-repeat;
     background-size: contain;
 
-    
     &:before {
       left: 10px;
     }
@@ -290,7 +289,9 @@ h1 {
 
 /** Control Panel Styles ****************************/
 .dropdown {
-  display: block;
   width: 90%;
 }
 
+.input {
+  display: block;
+}
