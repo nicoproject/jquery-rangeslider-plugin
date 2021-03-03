@@ -1,5 +1,6 @@
 import Event from '../Event'
 import { createElement, setAttributes } from '../core/dom'
+import { validateInRange } from '../core/utils'
 
 class ViewPanel {
   /** Create HTML form with values set from Model object
@@ -51,21 +52,28 @@ class ViewPanel {
   }
 
   createPanel() {
-    const $panelWrapper = createElement('div', 'panel__wrapper')
+    const $panelWrapper = createElement('form', 'panel__wrapper')
     const $formElements = []
 
     /** Headers elements */
-    let $sliderHeader = createElement('h3', 'header header-slider')
+    let $sliderHeader = createElement('h5', 'header header-slider')
     $sliderHeader.textContent = this.headers[0]
-    let $scaleHeader = createElement('h3', 'header header-scale')
+    let $scaleHeader = createElement('h5', 'header header-scale')
     $scaleHeader.textContent = this.headers[1]
-    let $runnersHeader = createElement('h3', 'header header-runners')
+    let $runnersHeader = createElement('h5', 'header header-runners')
     $runnersHeader.textContent = this.headers[2]
 
+    /** Labels elements */
+    const $labels = []
+
     /** Skin dropdown */
-    const $skinDropdown = createElement('select', 'dropdown skin-dropdown')
+    const $skinDropdown = createElement(
+      'select',
+      'dropdown skin-dropdown custom-select custom-select-sm'
+    )
     setAttributes($skinDropdown, {
       name: 'skins',
+      'data-title': 'Скин: ',
     })
 
     /** @todo Write util for options or whole select creation */
@@ -85,10 +93,11 @@ class ViewPanel {
     /** Orientation dropdown */
     const $orientationDropdown = createElement(
       'select',
-      'dropdown orientation-dropdown'
+      'dropdown orientation-dropdown custom-select custom-select-sm'
     )
     setAttributes($orientationDropdown, {
       name: 'orientation',
+      'data-title': 'Ориентация: ',
     })
 
     /** @todo Consider refactoring without for syntax */
@@ -109,25 +118,16 @@ class ViewPanel {
       console.log('Orientation has changed')
     })
 
-    /** Scale step input */
-    let $scaleStepInput = createElement('input', 'input step-input')
-    setAttributes($scaleStepInput, {
-      type: 'text',
-      placeholder: 'Шаг',
-      value: this.step,
-    })
-
-    $scaleStepInput.addEventListener('change', (event) => {
-      this.stepPanelEvent.trigger(event.target.value)
-      console.log('Step has changed')
-    })
-
     /** Scale min input */
-    let $scaleMinInput = createElement('input', 'input min-input')
+    let $scaleMinInput = createElement(
+      'input',
+      'input min-input form-control-sm'
+    )
     setAttributes($scaleMinInput, {
       type: 'text',
-      placeholder: 'Мин',
+      placeholder: 'Минимум',
       value: this.min,
+      'data-title': 'Минимум'
     })
 
     $scaleMinInput.addEventListener('change', (event) => {
@@ -136,11 +136,15 @@ class ViewPanel {
     })
 
     /** Scale max input */
-    let $scaleMaxInput = createElement('input', 'input max-input')
+    let $scaleMaxInput = createElement(
+      'input',
+      'input max-input form-control-sm'
+    )
     setAttributes($scaleMaxInput, {
       type: 'text',
       placeholder: 'Максимум',
       value: this.max,
+      'data-title': 'Максимум',
     })
 
     $scaleMaxInput.addEventListener('change', (event) => {
@@ -148,12 +152,33 @@ class ViewPanel {
       console.log('Max has changed')
     })
 
+    /** Scale step input */
+    let $scaleStepInput = createElement(
+      'input',
+      'input step-input form-control-sm'
+    )
+    setAttributes($scaleStepInput, {
+      type: 'text',
+      placeholder: 'Шаг',
+      value: this.step,
+      'data-title': 'Шаг'
+    })
+
+    $scaleStepInput.addEventListener('change', (event) => {
+      this.stepPanelEvent.trigger(event.target.value)
+      console.log('Step has changed')
+    })
+
     /** Scale visibility checkbox */
-    let $scaleVisible = createElement('input', 'input scaleVisible-input')
+    let $scaleVisible = createElement(
+      'input',
+      'input scaleVisible-input form-check'
+    )
     setAttributes($scaleVisible, {
       type: 'checkbox',
       name: 'scaleVisible',
       value: this.scaleVisible,
+      'data-title': 'Шкала видна:'
     })
 
     $scaleVisible.checked = this.scaleVisible
@@ -163,9 +188,13 @@ class ViewPanel {
       console.log('Scale visibility has changed', $scaleVisible.checked)
     })
 
-    this.$runnersDropdown = createElement('select', 'dropdown runners-dropdown')
+    this.$runnersDropdown = createElement(
+      'select',
+      'dropdown runners-dropdown custom-select custom-select-sm'
+    )
     setAttributes(this.$runnersDropdown, {
       name: 'runners',
+      'data-title': 'ID Бегуна: ',
     })
 
     /** @todo Consider refactoring without for syntax */
@@ -188,30 +217,42 @@ class ViewPanel {
       this.runners.findIndex((x) => x.id == this.$runnersDropdown.value)
     ]
     /** Runner position input */
-    this.$positionInput = createElement('input', 'input position-input')
+    this.$positionInput = createElement(
+      'input',
+      'input position-input form-control-sm'
+    )
 
     setAttributes(this.$positionInput, {
       type: 'text',
       placeholder: 'Позиция',
       value: runnerData.position,
-      // value: this.runners.id[$runnersDropdown.value].position,
-      // value: this.runners.runnerId.position,
+      'data-title': 'Позиция',
     })
 
     this.$positionInput.addEventListener('change', (event) => {
+      let validatedPosition = validateInRange({
+        position: +event.target.value,
+        min: this.min,
+        max: this.max,
+      })
+      console.log('Position has been validated', validatedPosition)
+
       this.positionPanelEvent.trigger({
         id: +this.$runnersDropdown.value,
-        position: +event.target.value,
+        position: validatedPosition,
       })
-      console.log('Position has changed')
     })
 
     /** Runner show tooltip input */
-    this.$tooltipVisible = createElement('input', 'input tooltipVisible-input')
+    this.$tooltipVisible = createElement(
+      'input',
+      'input tooltipVisible-input form-check'
+    )
     setAttributes(this.$tooltipVisible, {
       type: 'checkbox',
       name: 'tooltipVisible',
       value: runnerData.showTooltip,
+      'data-title': 'Флаг виден:',
     })
 
     this.$tooltipVisible.checked = runnerData.showTooltip
@@ -229,15 +270,12 @@ class ViewPanel {
 
     /** Add created HTML elements to array */
     $formElements.push(
-      $sliderHeader,
       $skinDropdown,
       $orientationDropdown,
-      $scaleHeader,
       $scaleMinInput,
       $scaleMaxInput,
       $scaleStepInput,
       $scaleVisible,
-      $runnersHeader,
       this.$runnersDropdown,
       this.$positionInput,
       this.$tooltipVisible
@@ -245,11 +283,21 @@ class ViewPanel {
 
     /** Append all elements to parent form */
     $formElements.forEach(($formElement) => {
+      $formElement = this.wrapFormGroup($formElement)
       $panelWrapper.append($formElement)
     })
 
     /** Append form to Slider wrapper */
     this.$scaleWrapper.append($panelWrapper)
+  }
+
+  wrapFormGroup($el) {
+    const $wrappedElement = createElement('div', 'form-group')
+    const label = createElement('label', 'label')
+    label.textContent = $el.dataset.title
+    label.append($el)
+    $wrappedElement.append(label)
+    return $wrappedElement
   }
 
   setCurrentRunner(runnerId) {

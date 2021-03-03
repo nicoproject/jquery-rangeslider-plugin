@@ -21,12 +21,11 @@ function debounce(fn, wait) {
 
 function getClosest(arr = [], goal) {
   const output = arr.reduce((prev, curr) =>
-  Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
+    Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
   )
 
   return output
 }
-
 
 function startBackgroundLoop($mainWrapper) {
   const x = 0
@@ -36,4 +35,24 @@ function startBackgroundLoop($mainWrapper) {
   }, 10)
 }
 
-export { convertRange, startBackgroundLoop, getClosest, debounce }
+function validateInRange(args) {
+  if (isNaN(args.position)) {
+    // throw new Error('New position has to be a number')
+    return args.min
+  }
+  else if (args.position >= args.max) {
+    return args.max
+  } else if (args.position <= args.min) {
+    return args.min
+  } else {
+    return args.position
+  }
+}
+
+export {
+  convertRange,
+  startBackgroundLoop,
+  getClosest,
+  debounce,
+  validateInRange,
+}

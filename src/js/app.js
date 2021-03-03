@@ -1,11 +1,12 @@
 import Presenter from './Presenter'
 import '../scss/app.scss'
+import 'bootstrap'
 
 const mockSliderInitialState = {
   id: 1,
   step: 10,
   scale: {
-    min: 200,
+    min: -2000,
     max: 400,
     isVisible: true,
   },
@@ -14,7 +15,7 @@ const mockSliderInitialState = {
   skin: 'city',
   runners: [
     {
-      id: 1,
+      id: 50123,
       position: 201,
       showTooltip: true,
     },

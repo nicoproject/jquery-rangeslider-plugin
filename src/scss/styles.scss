@@ -133,12 +133,15 @@ h1 {
 }
 
 .panel__wrapper {
-  position: relative;
+  position: absolute;
   top: 0;
   left: -250px;
   width: 200px;
-  height: 200px;
-  border: solid 1px black;
+  padding: 10px;
+  height: auto;
+  border: solid 1px gray;
+  border-radius: 5px;
+  background: linear-gradient(0.38turn, #43b5e6, #ebf8e1, #ffb462);
 }
 
 // SKINS STYLES
@@ -289,9 +292,13 @@ h1 {
 
 /** Control Panel Styles ****************************/
 .dropdown {
-  width: 90%;
+  // width: 90%;
 }
 
 .input {
-  display: block;
+  // display: block;
+}
+
+.form-group {
+  margin-bottom: 0;
 }
