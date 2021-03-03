@@ -34,19 +34,30 @@ class Presenter {
         (runner) => runner.position === closestRunner
       )
       closestRunner.position = clickViewScale
-      this.view.$runners.$runners[closestRunner.id - 1].moveRunner(
-        closestRunner.position
-      )
+      let activeRunner = this.view.$runners.$runners[
+        this.view.$runners.$runners.findIndex((x) => x.id == closestRunner.id)
+      ]
+      activeRunner.moveRunner(clickViewScale)
 
-      this.renderBar() 
+      this.renderBar()
     })
 
     /** Runner has been moved */
     this.view.moveRunnerEvent.addListener((moveViewRunner) => {
-      this.model.runners[moveViewRunner.id - 1].position =
-        moveViewRunner.position
-      this.renderBar() 
-
+      console.log('moveViewRunner', moveViewRunner)
+      this.model.options.runners = this.model.options.runners.map((obj) =>
+        obj.id === moveViewRunner.id
+          ? { ...obj, position: moveViewRunner.position }
+          : obj
+      )
+      this.model.runners = this.model.runners.map((obj) =>
+        obj.id === moveViewRunner.id
+          ? { ...obj, position: moveViewRunner.position }
+          : obj
+      )
+      this.view.$controlPanel.runners = this.model.runners
+      this.view.$controlPanel.setCurrentRunner(moveViewRunner.id)
+      this.renderBar()
     })
 
     /** Skin has been selected */
@@ -61,17 +72,10 @@ class Presenter {
       this.render()
     })
 
-    /** Step has been changed */
-    this.view.stepChangedEvent.addListener((changeStepPanel) => {
-      this.model.options.step = changeStepPanel
-      this.render()
-    })
-
     /** Min has been changed */
     this.view.minChangedEvent.addListener((changeMinPanel) => {
       this.model.options.scale.min = +changeMinPanel
       this.model.scale.min = +changeMinPanel
-      console.log(typeof(+changeMinPanel))
       this.render()
     })
 
@@ -80,6 +84,60 @@ class Presenter {
       this.model.options.scale.max = +changeMaxPanel
       this.model.scale.max = +changeMaxPanel
       this.render()
+    })
+
+    /** Step has been changed */
+    this.view.stepChangedEvent.addListener((changeStepPanel) => {
+      this.model.options.step = changeStepPanel
+      this.render()
+    })
+
+    /** Scale visibility has been changed */
+    this.view.visibilityChangedEvent.addListener((changeVisibilityPanel) => {
+      this.model.options.scale.isVisible = changeVisibilityPanel
+      this.render()
+    })
+
+    /** Runner chosen by id in panel */
+    this.view.runnerChosenEvent.addListener((changeRunnerPanel) => {
+      // this.model.options.scale.isVisible = changeRunnerPanel
+      this.view.$controlPanel.setCurrentRunner(changeRunnerPanel)
+      // this.render()
+    })
+
+    /** Runner position has been changed */
+    this.view.positionChangedEvent.addListener((changePositionPanel) => {
+      this.model.options.runners = this.model.options.runners.map((obj) =>
+        obj.id === changePositionPanel.id
+          ? { ...obj, position: changePositionPanel.position }
+          : obj
+      )
+      this.model.runners = this.model.runners.map((obj) =>
+        obj.id === changePositionPanel.id
+          ? { ...obj, position: changePositionPanel.position }
+          : obj
+      )
+
+      this.render()
+
+      this.view.$controlPanel.setCurrentRunner(changePositionPanel.id)
+    })
+
+    /** Tooltip visibility has been changed */
+    this.view.tooltipChangedEvent.addListener((changeTooltipPanel) => {
+      this.model.options.runners = this.model.options.runners.map((obj) =>
+        obj.id === changeTooltipPanel.id
+          ? { ...obj, showTooltip: changeTooltipPanel.showTooltip }
+          : obj
+      )
+      this.model.runners = this.model.runners.map((obj) =>
+        obj.id === changeTooltipPanel.id
+          ? { ...obj, showTooltip: changeTooltipPanel.showTooltip }
+          : obj
+      )
+      this.render()
+
+      this.view.$controlPanel.setCurrentRunner(changeTooltipPanel.id)
     })
 
     /** Scale  */
@@ -93,18 +151,11 @@ class Presenter {
   /** Render */
   render() {
     this.view.destroy()
-    console.log('destroyed')
-    console.log(this.model.scaleHasNegative())
     this.model.hasNegative = this.model.scaleHasNegative()
     this.model.range = this.model.calculateRange()
-
     this.view = new View(this.model)
-    
-
     this.setupListeners()
-
     this.renderBar()
-    console.log('rendered')
     console.log(this.model)
   }
 
