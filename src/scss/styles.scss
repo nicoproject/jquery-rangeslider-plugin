@@ -132,17 +132,6 @@ h1 {
   height: 15px;
 }
 
-.panel__wrapper {
-  position: absolute;
-  top: 0;
-  left: -250px;
-  width: 200px;
-  padding: 10px;
-  height: auto;
-  border: solid 1px gray;
-  border-radius: 5px;
-  background: linear-gradient(0.38turn, #43b5e6, #ebf8e1, #ffb462);
-}
 
 // SKINS STYLES
 
@@ -301,4 +290,21 @@ h1 {
 
 .form-group {
   margin-bottom: 0;
+}
+
+.panel__wrapper {
+  position: absolute;
+  top: 0;
+  left: -250px;
+  width: 200px;
+  padding: 10px;
+  height: auto;
+  border: solid 1px gray;
+  border-radius: 5px;
+  background: linear-gradient(0.38turn, #43b5e6, #ebf8e1, #ffb462);
+
+  h5 {
+    display: block;
+    border-bottom: 1px solid gray;
+  }
 }

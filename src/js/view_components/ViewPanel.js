@@ -127,7 +127,7 @@ class ViewPanel {
       type: 'text',
       placeholder: 'Минимум',
       value: this.min,
-      'data-title': 'Минимум'
+      'data-title': 'Минимум',
     })
 
     $scaleMinInput.addEventListener('change', (event) => {
@@ -161,7 +161,7 @@ class ViewPanel {
       type: 'text',
       placeholder: 'Шаг',
       value: this.step,
-      'data-title': 'Шаг'
+      'data-title': 'Шаг',
     })
 
     $scaleStepInput.addEventListener('change', (event) => {
@@ -178,7 +178,7 @@ class ViewPanel {
       type: 'checkbox',
       name: 'scaleVisible',
       value: this.scaleVisible,
-      'data-title': 'Шкала видна:'
+      'data-title': 'Шкала видна:',
     })
 
     $scaleVisible.checked = this.scaleVisible
@@ -282,8 +282,20 @@ class ViewPanel {
     )
 
     /** Append all elements to parent form */
-    $formElements.forEach(($formElement) => {
+    $formElements.forEach(($formElement, i) => {
+      let $heading = createElement('h5', 'panel__heading')
+      console.log('$formElement[i]', i, $formElement)
       $formElement = this.wrapFormGroup($formElement)
+      if (i === 0) {
+        $heading.textContent = this.headers[0]
+        $formElement.prepend($heading)
+      } else if (i === 2) {
+        $heading.textContent = this.headers[1]
+        $formElement.prepend($heading)
+      } else if (i === 6) {
+        $heading.textContent = this.headers[2]
+        $formElement.prepend($heading)
+      }
       $panelWrapper.append($formElement)
     })
 
