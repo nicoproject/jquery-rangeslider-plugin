@@ -18,10 +18,11 @@ class Slider {
     this.id = this.options.id
     this.step = this.options.step
     this.scale = this.options.scale
+    this.skin = this.options.skin
     this.orientation = this.options.orientation
 
     /** Set additional (calculated) options */
-    this.hasNegative = this.hasNegative()
+    this.hasNegative = this.scaleHasNegative()
     this.range = this.calculateRange()
     this.runners = this.setupRunners(this.options.runners)
     this.bar = this.createBar()
@@ -29,7 +30,6 @@ class Slider {
     /** Register events collection
      * @todo Refactor
      */
-    this.createBarEvent = new Event()
   }
 
   // ------------ CLASS METHODS --------------
@@ -102,7 +102,7 @@ class Slider {
   /** Returns true if scale has negative values
    * @todo Refactor change name to scaleHasNegative
    */
-  hasNegative() {
+  scaleHasNegative() {
     return this.options.scale.min < 0 || this.options.scale.max < 0
   }
 

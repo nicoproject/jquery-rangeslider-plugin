@@ -3,9 +3,9 @@ import '../scss/app.scss'
 
 const mockSliderInitialState = {
   id: 1,
-  step: 3,
+  step: 10,
   scale: {
-    min: 0,
+    min: 200,
     max: 400,
     isVisible: true,
   },
@@ -15,17 +15,17 @@ const mockSliderInitialState = {
   runners: [
     {
       id: 1,
-      position: 0,
+      position: 201,
       showTooltip: true,
     },
     {
       id: 2,
-      position: 10,
+      position: 210,
       showTooltip: true,
     },
     {
       id: 3,
-      position: 20,
+      position: 220,
       showTooltip: true,
     },
     // {

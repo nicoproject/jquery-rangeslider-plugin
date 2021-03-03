@@ -20,7 +20,7 @@ class ViewScale {
     this.$el = options.$el
     this.min = options.min
     this.max = options.max
-    this.isVisible = options.isVisible
+    this.isVisible = options.scaleVisible
     this.step = options.step
     this.orientation = options.orientation
     this.range = options.range
@@ -103,7 +103,7 @@ class ViewScale {
           ? Math.abs(event.offsetY - this.clientCoordsArgs.pixels)
           : event.offsetX
 
-      let clickPoint = (convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
+      let clickPoint = +this.min + +(convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
 
       if (this.hasNegative) {
         clickPoint = this.min + clickPoint

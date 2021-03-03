@@ -5,7 +5,7 @@ import ViewScale from './view_components/ViewScale'
 import ViewBar from './view_components/ViewBar'
 import ViewTooltip from './view_components/ViewTooltip'
 import ViewRunners from './view_components/ViewRunners'
-import ViewRunner from './view_components/ViewRunner'
+import ViewPanel from './view_components/ViewPanel'
 
 class View {
   constructor(modelState = {}) {
@@ -20,7 +20,7 @@ class View {
 
     /** @todo Refactor define those in ViewScale init */
     this.hasNegative = modelState.hasNegative
-    this.isVisible = modelState.options.scale.isVisible
+    this.scaleVisible = modelState.options.scale.isVisible
 
     /** DOM Elements creation/bindings */
     this.$mainWrapper = this.createSliderWrapper()
@@ -41,12 +41,21 @@ class View {
     /** Store Bar component */
     this._bar = this.createBar()
 
+    /** Control Panel component */
+    this.$controlPanel = this.createPanel()
+
     /** Register events
      * @todo Refactor
      */
     /** Link Child Events to same name Parent Events */
     this.clickScaleEvent = this._scale.clickScaleEvent
     this.moveRunnerEvent = this.$runners.moveRunnerEvent
+    this.skinSelectedEvent = this.$controlPanel.skinPanelEvent
+    this.orientationChangedEvent = this.$controlPanel.orientationPanelEvent
+    this.stepChangedEvent = this.$controlPanel.stepPanelEvent
+    this.minChangedEvent = this.$controlPanel.minPanelEvent
+    this.maxChangedEvent = this.$controlPanel.maxPanelEvent
+    this.visibilityChangedEvent = this.$controlPanel.visibilityPanelEvent
 
     this.render()
   }
@@ -86,7 +95,7 @@ class View {
       orientation: this.orientation,
       range: this.range,
       hasNegative: this.hasNegative,
-      isVisible: this.isVisible,
+      scaleVisible: this.scaleVisible,
       runnerPxSize: {
         width: this.$runners.$runners[0].$el.offsetWidth,
         height: this.$runners.$runners[0].$el.offsetHeight,
@@ -156,6 +165,29 @@ class View {
     this.$runners = new ViewRunners(runnersOptions)
 
     return this.$runners
+  }
+
+  /** Control Panel */
+  createPanel() {
+    const panelOptions = {
+      $el: this.$mainWrapper,
+      skin: this.skin,
+      orientation: this.orientation,
+      step: this.step,
+      min: this.scale.min,
+      max: this.scale.max,
+      scaleVisible: this.scaleVisible,
+      runners: this.runners,
+    }
+
+    this.$controlPanel = new ViewPanel(panelOptions)
+
+    return this.$controlPanel
+  }
+
+  /** Destroy Slider View  */
+  destroy() {
+    this.$mainWrapper.remove()
   }
 }
 

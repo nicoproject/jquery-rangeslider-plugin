@@ -58,7 +58,13 @@ class ViewRunner {
     if (this.hasNegative) {
       const correctNegative = Math.abs(this.min * convertRange(movePropArgs))
       runnerPxPosition = correctNegative + runnerPxPosition
+    } else if (this.min >= 0) {
+      const correctPositive = this.min * convertRange(movePropArgs)
+      runnerPxPosition = runnerPxPosition - correctPositive
     }
+
+    console.log('runnerPxPosition', runnerPxPosition)
+
 
     /** Correct runner px position (based on dimensions)  */
     this.runnerPxDimension =
@@ -70,6 +76,7 @@ class ViewRunner {
       this.$el.style.bottom =
         runnerPxPosition - this.runnerPxDimension / 2 + 'px'
     } else {
+      console.log('runnerPxPosition - this.runnerPxDimension / 2', runnerPxPosition - this.runnerPxDimension / 2)
       this.$el.style.left = runnerPxPosition - this.runnerPxDimension / 2 + 'px'
     }
 
@@ -209,7 +216,8 @@ class ViewRunner {
           this.$el.dataset.position =
             stepsCount * this.step - Math.abs(this.min)
         } else {
-          this.$el.dataset.position = stepsCount * this.step
+          this.$el.dataset.position = this.min + stepsCount * this.step
+          console.log('stepsCount * this.step', stepsCount, this.step)
         }
       }
     } else {
@@ -222,11 +230,13 @@ class ViewRunner {
             (newRunnerPosition + $elLength / 2) *
             convertRange(runnerPropArgs)
           ).toFixed() - Math.abs(this.min)
+          console.log('!not stepped, has negative')
       } else {
         this.$el.dataset.position = (
           (newRunnerPosition + $elLength / 2) *
           convertRange(runnerPropArgs)
         ).toFixed()
+        console.log('not stepped, no negative')
       }
     }
   }
