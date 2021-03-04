@@ -19,12 +19,10 @@ class ViewRunner {
     /** Set calculated values */
     this.createRunner()
 
-    // add event listener
+    /**  Add event listener */
     this.$el.addEventListener('mousedown', this.onmousedown)
 
-    /** Register events collection
-     * @todo Refactor
-     */
+    /** Register events collection */
     this.moveRunnerEvent = new Event()
 
     /** Debounce heavy function, to execute once in 7 ms */
@@ -63,9 +61,6 @@ class ViewRunner {
       runnerPxPosition = runnerPxPosition - correctPositive
     }
 
-    console.log('runnerPxPosition', runnerPxPosition)
-
-
     /** Correct runner px position (based on dimensions)  */
     this.runnerPxDimension =
       this.orientation === 'vertical'
@@ -76,7 +71,6 @@ class ViewRunner {
       this.$el.style.bottom =
         runnerPxPosition - this.runnerPxDimension / 2 + 'px'
     } else {
-      console.log('runnerPxPosition - this.runnerPxDimension / 2', runnerPxPosition - this.runnerPxDimension / 2)
       this.$el.style.left = runnerPxPosition - this.runnerPxDimension / 2 + 'px'
     }
 
@@ -84,7 +78,7 @@ class ViewRunner {
     this.$el.dataset.position = runnerPosition
   }
 
-  // event listeners, with arrow functions
+  /** event listeners, with arrow functions */
   onmousedown = (event) => {
     document.addEventListener('mousemove', this.onmousemove)
     document.addEventListener('mouseup', this.onmouseup)
@@ -98,9 +92,7 @@ class ViewRunner {
     /** Remove browser drag&drop */
     ondragstart = () => false
 
-    /** Get largest wrapper dimension in px depending on orientation
-     * @todo rename variable
-     */
+    /** Get largest wrapper dimension in px depending on orientation */
     const wrapperLength =
       this.orientation === 'vertical'
         ? this.$scaleWrapper.offsetHeight
@@ -142,22 +134,12 @@ class ViewRunner {
 
     /** Define variables depending on orientation */
     if (this.orientation === 'vertical') {
-      // clientAxisValue = Math.abs(event.pageY - runnerPropArgs.pixels)
       clientAxisValue = runnerPropArgs.pixels - event.clientY
-      console.log('clientAxisValue', clientAxisValue)
       $elLength = this.$el.offsetHeight
       /** Strange shiftAxis logic for vertical */
       shiftAxis = this.$scaleWrapper.getBoundingClientRect().top
       $elMarginProp = 'bottom'
       newRunnerPosition = clientAxisValue + shiftAxis
-
-      /** Check if newRunnerPosition extends min/max limits
-       * @todo Doesn't work for vertical because of inverted
-       */
-      if (event.pageY < runnerPropArgs.pixels) {
-        console.log(event.pageY)
-        // newRunnerPosition = this.max
-      }
 
       /** Check if newRunnerPosition extends min/max limits */
       if (newRunnerPosition > wrapperLength) {
@@ -217,11 +199,9 @@ class ViewRunner {
             stepsCount * this.step - Math.abs(this.min)
         } else {
           this.$el.dataset.position = this.min + stepsCount * this.step
-          console.log('stepsCount * this.step', stepsCount, this.step)
         }
       }
     } else {
-      console.log(newRunnerPosition)
       /** If !isStepped use convertRange for detailed position */
       this.$el.style[$elMarginProp] = newRunnerPosition + 'px'
       if (this.hasNegative) {
@@ -230,13 +210,11 @@ class ViewRunner {
             (newRunnerPosition + $elLength / 2) *
             convertRange(runnerPropArgs)
           ).toFixed() - Math.abs(this.min)
-          console.log('!not stepped, has negative')
       } else {
         this.$el.dataset.position = (
           (newRunnerPosition + $elLength / 2) *
           convertRange(runnerPropArgs)
         ).toFixed()
-        console.log('not stepped, no negative')
       }
     }
   }

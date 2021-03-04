@@ -19,12 +19,13 @@ h1 {
   background-size: cover;
   height: 179px;
   width: 70%;
-  margin: 0 auto;
+  margin: 0 auto 500px auto;
 
   &.range-slider_vertical {
     background: url(../images/design/vertical-background.jpg) repeat-y;
     width: 449px;
     height: 615px;
+    margin: 55px auto;
 
     .scale__wrapper {
       position: absolute;
@@ -84,7 +85,6 @@ h1 {
   canvas.scale__ruler {
     margin-top: 15px;
     width: 100%;
-    // background: red;
     z-index: 2;
   }
 }
@@ -98,10 +98,6 @@ h1 {
   bottom: 0;
   cursor: pointer;
   z-index: 10;
-  // &:active {
-  //   transition: all 1s ease-in-out;
-  //   transform: translate(0, -45px);
-  // }
 }
 
 .runner:before {
@@ -132,6 +128,35 @@ h1 {
   height: 15px;
 }
 
+/** Control Panel Styles ****************************/
+.dropdown {
+  // width: 90%;
+}
+
+.input {
+  // display: block;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.panel__wrapper {
+  position: absolute;
+  top: 0;
+  left: -250px;
+  width: 200px;
+  padding: 10px;
+  height: auto;
+  border: solid 1px gray;
+  border-radius: 5px;
+  background: linear-gradient(0.38turn, #43b5e6, #ebf8e1, #ffb462);
+
+  h5 {
+    display: block;
+    border-bottom: 1px solid gray;
+  }
+}
 
 // SKINS STYLES
 
@@ -277,34 +302,4 @@ h1 {
   top: 170px;
   left: 75px;
   border: 5px dotted orange;
-}
-
-/** Control Panel Styles ****************************/
-.dropdown {
-  // width: 90%;
-}
-
-.input {
-  // display: block;
-}
-
-.form-group {
-  margin-bottom: 0;
-}
-
-.panel__wrapper {
-  position: absolute;
-  top: 0;
-  left: -250px;
-  width: 200px;
-  padding: 10px;
-  height: auto;
-  border: solid 1px gray;
-  border-radius: 5px;
-  background: linear-gradient(0.38turn, #43b5e6, #ebf8e1, #ffb462);
-
-  h5 {
-    display: block;
-    border-bottom: 1px solid gray;
-  }
 }

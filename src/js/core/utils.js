@@ -11,7 +11,6 @@ function debounce(fn, wait) {
   return function (...args) {
     const later = () => {
       clearTimeout(timeout)
-      // eslint-disable-next-line no-invalid-this
       fn.apply(this, args)
     }
     clearTimeout(timeout)
@@ -37,7 +36,6 @@ function startBackgroundLoop($mainWrapper) {
 
 function validateInRange(args) {
   if (isNaN(args.position)) {
-    // throw new Error('New position has to be a number')
     return args.min
   }
   else if (args.position >= args.max) {

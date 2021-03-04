@@ -8,21 +8,13 @@ class Presenter {
     this.model = new Slider(modelState)
     this.view = new View(this.model)
 
-    /** Model data state listeners    */
-
-    /** Check if model ready
-     * @todo Delegate to Jest and TS
-     */
-    this.model.init()
-
     /** Setup listeners */
     this.setupListeners()
   }
 
   /** View user events listeners */
   setupListeners() {
-    /** Scale has been clicked on
-     * @TODO HEAVY REFACTOR */
+    /** Scale has been clicked on */
     this.view.clickScaleEvent.addListener((clickViewScale) => {
       let runnersPositionsArray = this.model.runners
       runnersPositionsArray = runnersPositionsArray.map(
@@ -40,11 +32,12 @@ class Presenter {
       activeRunner.moveRunner(clickViewScale)
 
       this.renderBar()
+
+      this.view.$controlPanel.setCurrentRunner(closestRunner.id)
     })
 
     /** Runner has been moved */
     this.view.moveRunnerEvent.addListener((moveViewRunner) => {
-      console.log('moveViewRunner', moveViewRunner)
       this.model.options.runners = this.model.options.runners.map((obj) =>
         obj.id === moveViewRunner.id
           ? { ...obj, position: moveViewRunner.position }
@@ -100,9 +93,7 @@ class Presenter {
 
     /** Runner chosen by id in panel */
     this.view.runnerChosenEvent.addListener((changeRunnerPanel) => {
-      // this.model.options.scale.isVisible = changeRunnerPanel
       this.view.$controlPanel.setCurrentRunner(changeRunnerPanel)
-      // this.render()
     })
 
     /** Runner position has been changed */
@@ -140,13 +131,7 @@ class Presenter {
       this.view.$controlPanel.setCurrentRunner(changeTooltipPanel.id)
     })
 
-    /** Scale  */
   }
-
-  /** Runs the app
-   *  @todo Refactor all
-   */
-  run() {}
 
   /** Render */
   render() {
@@ -156,7 +141,6 @@ class Presenter {
     this.view = new View(this.model)
     this.setupListeners()
     this.renderBar()
-    console.log(this.model)
   }
 
   renderBar() {
