@@ -17,16 +17,12 @@ class ViewBar {
       this.startPoint = Math.abs(this.min - this.startPoint)
     }
 
-    /** Set calculated values
-     * @todo Refactor change variables name barLengthInPx, barStartFromLeft
-     * @todo Refactor code
-     * @todo Refactor change methods names - they don't reflect stored values, maybe change logic
-     */
+    /** Set calculated values */
     this.barLengthInPx = convertRange(this.getRangeToConvert()) * this.barLength
     this.barStartFromLeft
     if (this.min > 0) {
       this.barStartFromLeft =
-        convertRange(this.getRangeToConvert()) *  (this.startPoint  - this.min)
+        convertRange(this.getRangeToConvert()) * (this.startPoint - this.min)
     } else {
       this.barStartFromLeft =
         convertRange(this.getRangeToConvert()) * this.startPoint
@@ -47,9 +43,7 @@ class ViewBar {
   }
 
   createBar() {
-    /** Delete existing progress bar before creating new DOM element
-     * @todo Check if this condition ever fires
-     */
+    /** Delete existing progress bar before creating new DOM element */
     if (this.$el.$progressBar) {
       this.$el.removeChild(this.$el.$progressBar)
     }
@@ -58,7 +52,6 @@ class ViewBar {
 
     let lengthStyleParam = this.orientation === 'vertical' ? 'height' : 'width'
     let positionStyleParam = this.orientation === 'vertical' ? 'bottom' : 'left'
-    /** @todo Refactor change variables names */
     setAttributes($progressBar, {
       'data-start-point': this.startPoint,
       'data-length': this.barLength,
@@ -75,7 +68,6 @@ class ViewBar {
 
     this.$el.$progressBar = $progressBar
 
-    /** @todo Refactor separate and group all append operations */
     this.$el.appendChild($progressBar)
   }
 

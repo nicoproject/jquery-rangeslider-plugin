@@ -48,7 +48,6 @@ class ViewPanel {
 
     /** Create HTML-form */
     this.createPanel()
-    this.setCurrentRunner = this.setCurrentRunner
   }
 
   createPanel() {
@@ -76,7 +75,6 @@ class ViewPanel {
       'data-title': 'Скин: ',
     })
 
-    /** @todo Write util for options or whole select creation */
     for (let i = 0; i < this.skins.length; i++) {
       let option = createElement('option')
       option.value = this.skins[i]
@@ -100,7 +98,6 @@ class ViewPanel {
       'data-title': 'Ориентация: ',
     })
 
-    /** @todo Consider refactoring without for syntax */
     for (let i = 0; i < this.orientations.length; i++) {
       let option = createElement('option')
       option.value = this.orientations[i]
@@ -115,7 +112,6 @@ class ViewPanel {
 
     $orientationDropdown.addEventListener('change', (event) => {
       this.orientationPanelEvent.trigger(event.target.value)
-      console.log('Orientation has changed')
     })
 
     /** Scale min input */
@@ -132,7 +128,6 @@ class ViewPanel {
 
     $scaleMinInput.addEventListener('change', (event) => {
       this.minPanelEvent.trigger(event.target.value)
-      console.log('Min has changed')
     })
 
     /** Scale max input */
@@ -149,7 +144,6 @@ class ViewPanel {
 
     $scaleMaxInput.addEventListener('change', (event) => {
       this.maxPanelEvent.trigger(event.target.value)
-      console.log('Max has changed')
     })
 
     /** Scale step input */
@@ -166,7 +160,6 @@ class ViewPanel {
 
     $scaleStepInput.addEventListener('change', (event) => {
       this.stepPanelEvent.trigger(event.target.value)
-      console.log('Step has changed')
     })
 
     /** Scale visibility checkbox */
@@ -185,7 +178,6 @@ class ViewPanel {
 
     $scaleVisible.addEventListener('click', (event) => {
       this.visibilityPanelEvent.trigger($scaleVisible.checked)
-      console.log('Scale visibility has changed', $scaleVisible.checked)
     })
 
     this.$runnersDropdown = createElement(
@@ -197,7 +189,6 @@ class ViewPanel {
       'data-title': 'ID Бегуна: ',
     })
 
-    /** @todo Consider refactoring without for syntax */
     for (let i = 0; i < this.runners.length; i++) {
       let option = createElement('option')
       option.value = this.runners[i].id
@@ -209,7 +200,6 @@ class ViewPanel {
 
     this.$runnersDropdown.addEventListener('change', (event) => {
       this.runnersIdPanelEvent.trigger(event.target.value)
-      console.log('Runner has changed')
     })
 
     /** Find runner by chosen id */
@@ -235,7 +225,6 @@ class ViewPanel {
         min: this.min,
         max: this.max,
       })
-      console.log('Position has been validated', validatedPosition)
 
       this.positionPanelEvent.trigger({
         id: +this.$runnersDropdown.value,
@@ -262,10 +251,6 @@ class ViewPanel {
         id: +this.$runnersDropdown.value,
         showTooltip: this.$tooltipVisible.checked,
       })
-      console.log(
-        'Tooltip visibility has changed',
-        this.$tooltipVisible.checked
-      )
     })
 
     /** Add created HTML elements to array */
@@ -283,8 +268,8 @@ class ViewPanel {
 
     /** Append all elements to parent form */
     $formElements.forEach(($formElement, i) => {
+      /** Generate headings for group */
       let $heading = createElement('h5', 'panel__heading')
-      console.log('$formElement[i]', i, $formElement)
       $formElement = this.wrapFormGroup($formElement)
       if (i === 0) {
         $heading.textContent = this.headers[0]

@@ -105,13 +105,7 @@ class ViewScale {
 
       let clickPoint = +this.min + +(convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
 
-      // if (this.hasNegative) {
-      //   clickPoint = this.min + clickPoint
-      // }
-
       this.clickScaleEvent.trigger(clickPoint)
-      /** @todo Remove this */
-      console.log('viewScale clickPoint: ', clickPoint)
     })
   }
 }

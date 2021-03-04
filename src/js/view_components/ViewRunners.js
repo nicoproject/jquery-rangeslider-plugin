@@ -2,8 +2,12 @@ import Event from '../Event'
 import ViewRunner from './ViewRunner'
 
 class ViewRunners {
-  /** @todo Add check for empty input w throw Error */
-  constructor(options = {}) {
+  constructor(options) {
+    if (!options) {
+      throw new Error(
+        'ViewRunners component critical error: Options Object has to be provided'
+      )
+    }
     /** Set initial values */
     this.$el = options.$el
     this.runners = options.runners
@@ -15,12 +19,10 @@ class ViewRunners {
     this.min = options.min
     this.step = options.step
 
-    //** Set calculated initial values */
+    /** Set calculated initial values */
     this.$runners = this.createRunners(this.runners)
 
-    /** Register events collection
-     * @todo Refactor
-     */
+    /** Register events collection */
     this.moveRunnerEvent = new Event()
 
     /** Register listeners for runners */
@@ -39,7 +41,6 @@ class ViewRunners {
   render() {
     this.$runners.forEach(($runner) => {
       this.$el.appendChild($runner.$el)
-      // this.correctRunnerPosition($runner.$el)
     })
   }
 
@@ -63,19 +64,6 @@ class ViewRunners {
     })
 
     return this.$runners
-  }
-
-  /** Corrects runners positions by their half-length size
-   * @todo not in use, refactor or delete
-   * @param {HTMLElement} $el
-   */
-  correctRunnerPosition($el) {
-    const correctLength =
-      this.orientation === 'vertical'
-        ? $el.offsetWidth / 2
-        : $el.offsetWidth / 2
-
-    $el.style.left = correctLength * -1 + 'px'
   }
 }
 

@@ -17,8 +17,6 @@ class View {
     this.bar = modelState.bar
     this.orientation = modelState.options.orientation
     this.range = modelState.range
-
-    /** @todo Refactor define those in ViewScale init */
     this.hasNegative = modelState.hasNegative
     this.scaleVisible = modelState.options.scale.isVisible
 
@@ -32,7 +30,7 @@ class View {
     /** Store Scale component */
     this._scale = this.createScale()
 
-    //** Link Runners objects with parent wrapper HTMLelement  */
+    /** Link Runners objects with parent wrapper HTMLelement  */
     this.$runners.$runners.forEach((runner) => {
       runner.$scaleWrapper = this._scale.$scaleWrapper
       runner.moveRunner(runner.position)
@@ -44,9 +42,7 @@ class View {
     /** Control Panel component */
     this.$controlPanel = this.createPanel()
 
-    /** Register events
-     * @todo Refactor
-     */
+    /** Register events */
     /** Link Child Events to same name Parent Events */
     this.clickScaleEvent = this._scale.clickScaleEvent
     this.moveRunnerEvent = this.$runners.moveRunnerEvent
@@ -59,16 +55,7 @@ class View {
     this.runnerChosenEvent = this.$controlPanel.runnersIdPanelEvent
     this.positionChangedEvent = this.$controlPanel.positionPanelEvent
     this.tooltipChangedEvent = this.$controlPanel.tooltipPanelEvent
-
-    this.render()
   }
-
-  /** Render methods */
-  /** Creates DOM nodes
-   * @todo Refactor receive options object with runners inside
-   * @param {Object} runners
-   */
-  render() {}
 
   /** Slider methods */
   createSliderWrapper() {
@@ -110,26 +97,6 @@ class View {
     return scale
   }
 
-  /** Tooltip methods */
-  /** Sets tooltips value and visibility classes
-   * @param {HTMLElement} $runners
-   * @todo Refactor tooltip visibility is handled by CSS (by setting data-attr value)
-   * consider if this method with ViewTooltip class still needed
-   */
-  setTooltips($runners = []) {
-    $runners.forEach(($runner) => {
-      if (typeof $runner.dataset !== 'undefined') {
-        const showTooltip = this.runners[$runner.dataset.id - 1].showTooltip
-        // USE OF TOOLTIP CLASS
-        const tooltipArgs = {
-          $el: $runner,
-          state: showTooltip,
-        }
-        new ViewTooltip(tooltipArgs)
-      }
-    })
-  }
-
   /** Bar methods  */
   /** Creates Bar element and appends to $parentEl
    * @param {Object} options
@@ -159,7 +126,6 @@ class View {
       runners: this.runners,
       orientation: this.orientation,
       range: this.range,
-      // $scaleWrapper: this._scale.$scaleWrapper,
       hasNegative: this.hasNegative,
       min: this.scale.min,
       step: this.step,
@@ -184,7 +150,6 @@ class View {
     }
 
     this.$controlPanel = new ViewPanel(panelOptions)
-    console.log('panelOptions', panelOptions)
     return this.$controlPanel
   }
 

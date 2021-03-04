@@ -2,16 +2,14 @@ import defaultOptions from './defaultOptions'
 import Event from './Event'
 
 class Slider {
-  constructor(options) {
+  constructor(options = {}) {
     /** Validate incoming Options array
-     *  @todo Remove to utils
+     *  @param {Object} options
      */
     if (options) {
       this.options = options
     } else if (typeof defaultOptions !== 'undefined') {
       this.options = { ...defaultOptions }
-    } else {
-      this.options = {}
     }
 
     /** Set initial options */
@@ -26,23 +24,11 @@ class Slider {
     this.range = this.calculateRange()
     this.runners = this.setupRunners(this.options.runners)
     this.bar = this.createBar()
-
-    /** Register events collection
-     * @todo Refactor
-     */
   }
 
-  // ------------ CLASS METHODS --------------
+  /** ------------ CLASS METHODS -------------- */
 
-  /** Tests if  Model.Options are set and Presenters.Listeners are ready
-   *  @method init()
-   *  @todo Delegate all initial tests to Jest test instead of console
-   */
-  init() {
-    console.log('Model. Initiated and ready: ', this)
-  }
-
-  // RUNNERS -------------------------------------------------
+  /** RUNNERS -------------------------------------------------*/
 
   setupRunners(arr = []) {
     arr.forEach((runner) => {
@@ -67,9 +53,7 @@ class Slider {
     )
   }
 
-  /** Returns Bar object, calculated  startPoint, length, passed orientation
-   * @todo Refactor with use of variable instead of this.runners[lastIndex].position
-   */
+  /** Returns Bar object, calculated  startPoint, length, passed orientation */
   createBar() {
     let length
     let startPoint = 0
@@ -82,11 +66,10 @@ class Slider {
     })
 
     if (this.runners.length >= 2) {
-      length = maxRunner.position - minRunner.position 
-      startPoint = minRunner.position 
-      
+      length = maxRunner.position - minRunner.position
+      startPoint = minRunner.position
     } else if (this.runners.length < 2) {
-      length = minRunner.position  - this.options.scale.min
+      length = minRunner.position - this.options.scale.min
     } else if (typeof this.bar === 'undefined') {
       length = 200
     }
@@ -97,11 +80,9 @@ class Slider {
     }
   }
 
-  //SCALE -------------------------------------------------
+  /** SCALE ------------------------------------------------- */
 
-  /** Returns true if scale has negative values
-   * @todo Refactor change name to scaleHasNegative
-   */
+  /** Returns true if scale has negative values */
   scaleHasNegative() {
     return this.options.scale.min < 0 || this.options.scale.max < 0
   }
