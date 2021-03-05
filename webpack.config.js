@@ -28,11 +28,14 @@ const htmlPluginEntries = templateFiles.map(
 
 module.exports = {
   entry: {
-    app: path.resolve(environment.paths.source, 'js', 'app.js'),
+    app: path.resolve(environment.paths.source, 'js', 'app.ts'),
   },
   output: {
     filename: 'js/[name].js',
     path: environment.paths.output,
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
   },
   module: {
     rules: [

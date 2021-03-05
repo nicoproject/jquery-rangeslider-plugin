@@ -2,7 +2,7 @@ import Presenter from './Presenter'
 import '../scss/app.scss'
 import 'bootstrap'
 
-const mockSliderInitialState = {
+const mockSliderInitialState: object = {
   id: 1,
   step: 10,
   scale: {
