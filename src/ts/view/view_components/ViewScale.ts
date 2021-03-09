@@ -1,13 +1,39 @@
 import { drawRuler } from './ViewScale.functions'
-import Event from '../Event'
-import { createElement, setAttributes } from '../core/dom'
-import { convertRange } from '../core/utils'
+import Event from '../../Event'
+import { createElement, setAttributes } from '../../core/dom'
+import { convertRange } from '../../core/utils'
+import { IViewScale, IScaleOptions } from '../ViewInterfaces'
 
-class ViewScale {
+class ViewScale implements IViewScale {
+  clickScaleEvent: any
+  $el: HTMLElement
+  min: number
+  max: number
+  isVisible: boolean
+  step: number
+  orientation: string
+  range: number
+  hasNegative: boolean
+  $canvas: HTMLCanvasElement
+  lineWidth: number
+  context: CanvasRenderingContext2D
+  runnerPxSize: number
+  scaleLength: number
+  intervalCount: number
+  spacing: string
+  $scaleWrapper: HTMLElement
+  clientCoordsArgs: {
+    max: number,
+    pixels: number,
+    direction: string
+  }
+  drawRuler: any
+
+
   /** Creates scale with canvas ruler from options object
    * @param {Object} options
    */
-  constructor(options) {
+  constructor(options: IScaleOptions) {
     if (!options) {
       throw new Error(
         'ViewScale component critical error: Options Object has to be provided'
@@ -72,7 +98,7 @@ class ViewScale {
     this.$scaleWrapper.append(this.$canvas)
   }
 
-  getScaleLength($parentEl) {
+  getScaleLength($parentEl: HTMLElement) {
     return this.orientation === 'vertical'
       ? $parentEl.offsetHeight
       : $parentEl.offsetWidth
@@ -103,7 +129,9 @@ class ViewScale {
           ? Math.abs(event.offsetY - this.clientCoordsArgs.pixels)
           : event.offsetX
 
-      let clickPoint = +this.min + +(convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
+      let clickPoint =
+        +this.min +
+        +(convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
 
       this.clickScaleEvent.trigger(clickPoint)
     })

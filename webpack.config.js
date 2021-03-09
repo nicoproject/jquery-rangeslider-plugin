@@ -15,6 +15,7 @@ const environment = require('./configuration/environment')
 const templateFiles = fs.readdirSync(
   path.resolve(__dirname, environment.paths.source, 'templates')
 )
+
 const htmlPluginEntries = templateFiles.map(
   (template) =>
     new HTMLWebpackPlugin({
@@ -28,7 +29,7 @@ const htmlPluginEntries = templateFiles.map(
 
 module.exports = {
   entry: {
-    app: path.resolve(environment.paths.source, 'js', 'app.ts'),
+    app: path.resolve(environment.paths.source, 'ts', 'app.ts'),
   },
   output: {
     filename: 'js/[name].js',

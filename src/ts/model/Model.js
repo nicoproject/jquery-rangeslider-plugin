@@ -1,5 +1,5 @@
-import defaultOptions from './defaultOptions'
-import Event from './Event'
+import defaultOptions from '../defaultOptions'
+import Event from '../Event'
 
 class Slider {
   constructor(options = {}) {

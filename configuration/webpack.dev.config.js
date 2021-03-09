@@ -7,7 +7,7 @@ const environment = require('./environment')
 module.exports = merge(webpackConfiguration, {
   mode: 'development',
 
-  /* Manage source maps generation process */
+  /** Manage source maps generation process */
   // devtool: 'eval-source-map',
   devtool: 'inline-source-map',
 

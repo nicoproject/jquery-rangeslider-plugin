@@ -1,5 +1,5 @@
-import { createElement, setAttributes } from '../core/dom'
-import { convertRange } from '../core/utils'
+import { createElement, setAttributes } from '../../core/dom'
+import { convertRange } from '../../core/utils'
 
 class ViewBar {
   constructor(args) {

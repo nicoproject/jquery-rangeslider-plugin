@@ -1,7 +1,7 @@
-import { getClosest } from './core/utils'
+import { getClosest } from '../core/utils'
 
-import Slider from './Model'
-import View from './View'
+import Slider from '../model/Model'
+import View from '../view/View'
 
 class Presenter {
   constructor(modelState = {}) {

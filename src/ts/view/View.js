@@ -1,9 +1,7 @@
-import { convertRange } from './core/utils'
-import { setAttributes, createElement } from './core/dom'
+import { createElement } from '../core/dom'
 
 import ViewScale from './view_components/ViewScale'
 import ViewBar from './view_components/ViewBar'
-import ViewTooltip from './view_components/ViewTooltip'
 import ViewRunners from './view_components/ViewRunners'
 import ViewPanel from './view_components/ViewPanel'
 
@@ -43,7 +41,6 @@ class View {
     this.$controlPanel = this.createPanel()
 
     /** Register events */
-    /** Link Child Events to same name Parent Events */
     this.clickScaleEvent = this._scale.clickScaleEvent
     this.moveRunnerEvent = this.$runners.moveRunnerEvent
     this.skinSelectedEvent = this.$controlPanel.skinPanelEvent

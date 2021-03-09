@@ -1,6 +1,6 @@
-import { createElement, setAttributes } from '../core/dom'
-import { debounce, convertRange } from '../core/utils'
-import Event from '../Event'
+import { createElement, setAttributes } from '../../core/dom'
+import { debounce, convertRange } from '../../core/utils'
+import Event from '../../Event'
 
 class ViewRunner {
   constructor(args = {}) {

@@ -1,4 +1,4 @@
-import Presenter from './Presenter'
+import Presenter from './presenter/Presenter'
 import '../scss/app.scss'
 import 'bootstrap'
 

@@ -1,6 +1,6 @@
-import Event from '../Event'
-import { createElement, setAttributes } from '../core/dom'
-import { validateInRange } from '../core/utils'
+import Event from '../../Event'
+import { createElement, setAttributes } from '../../core/dom'
+import { validateInRange } from '../../core/utils'
 
 class ViewPanel {
   /** Create HTML form with values set from Model object
