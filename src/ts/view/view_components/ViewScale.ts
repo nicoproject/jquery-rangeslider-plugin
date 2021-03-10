@@ -2,9 +2,9 @@ import { drawRuler } from './ViewScale.functions'
 import Event from '../../Event'
 import { createElement, setAttributes } from '../../core/dom'
 import { convertRange } from '../../core/utils'
-import { IViewScale, IScaleOptions } from '../ViewInterfaces'
+import { IScaleOptions } from '../ViewInterfaces'
 
-class ViewScale implements IViewScale {
+class ViewScale {
   clickScaleEvent: any
   $el: HTMLElement
   min: number
@@ -23,16 +23,13 @@ class ViewScale implements IViewScale {
   spacing: string
   $scaleWrapper: HTMLElement
   clientCoordsArgs: {
-    max: number,
-    pixels: number,
+    max: number
+    pixels: number
     direction: string
   }
   drawRuler: any
 
-
-  /** Creates scale with canvas ruler from options object
-   * @param {Object} options
-   */
+  /** Creates scale with canvas ruler from options object */
   constructor(options: IScaleOptions) {
     if (!options) {
       throw new Error(
@@ -128,7 +125,7 @@ class ViewScale implements IViewScale {
         this.orientation === 'vertical'
           ? Math.abs(event.offsetY - this.clientCoordsArgs.pixels)
           : event.offsetX
-
+/** @todo Remove implicit type */
       let clickPoint =
         +this.min +
         +(convertRange(this.clientCoordsArgs) * clientCoords).toFixed()

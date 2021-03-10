@@ -1,20 +1,32 @@
 import { createElement, setAttributes } from '../../core/dom'
 import { convertRange } from '../../core/utils'
+import { IBarOptions } from '../ViewInterfaces'
 
 class ViewBar {
-  constructor(args) {
+  $el: any
+  $scaleWrapper: any
+  barLength: number
+  barStartPoint: number
+  orientation: string
+  range: number
+  hasNegative: boolean
+  min: number
+  barLengthInPx: number
+  barStartFromLeft: number
+
+  constructor(args: IBarOptions) {
     /** Set initial values */
-    this.$el = args.$el || HTMLElement
+    this.$el = args.$el
     this.$scaleWrapper = args.$scaleWrapper
     this.barLength = args.barLength
-    this.startPoint = args.barStartPoint
+    this.barStartPoint = args.barStartPoint
     this.orientation = args.orientation
     this.range = args.range
     this.hasNegative = args.hasNegative
     this.min = args.min
 
     if (this.hasNegative) {
-      this.startPoint = Math.abs(this.min - this.startPoint)
+      this.barStartPoint = Math.abs(this.min - this.barStartPoint)
     }
 
     /** Set calculated values */
@@ -22,10 +34,10 @@ class ViewBar {
     this.barStartFromLeft
     if (this.min > 0) {
       this.barStartFromLeft =
-        convertRange(this.getRangeToConvert()) * (this.startPoint - this.min)
+        convertRange(this.getRangeToConvert()) * (this.barStartPoint - this.min)
     } else {
       this.barStartFromLeft =
-        convertRange(this.getRangeToConvert()) * this.startPoint
+        convertRange(this.getRangeToConvert()) * this.barStartPoint
     }
 
     this.createBar()
@@ -53,7 +65,7 @@ class ViewBar {
     let lengthStyleParam = this.orientation === 'vertical' ? 'height' : 'width'
     let positionStyleParam = this.orientation === 'vertical' ? 'bottom' : 'left'
     setAttributes($progressBar, {
-      'data-start-point': this.startPoint,
+      'data-start-point': this.barStartPoint,
       'data-length': this.barLength,
       style:
         lengthStyleParam +
@@ -69,9 +81,8 @@ class ViewBar {
     this.$el.$progressBar = $progressBar
 
     this.$el.appendChild($progressBar)
+    
   }
-
-  updateBar() {}
 }
 
 export default ViewBar

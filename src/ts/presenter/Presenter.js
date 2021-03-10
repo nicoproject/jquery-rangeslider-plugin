@@ -55,45 +55,45 @@ class Presenter {
 
     /** Skin has been selected */
     this.view.skinSelectedEvent.addListener((selectSkinPanel) => {
-      this.model.options.skin = selectSkinPanel
+      this.model.options.skin = selectSkinPanel.skin
       this.render()
     })
 
     /** Orientation has been changed */
     this.view.orientationChangedEvent.addListener((selectOrientationPanel) => {
-      this.model.options.orientation = selectOrientationPanel
+      this.model.options.orientation = selectOrientationPanel.orientation
       this.render()
     })
 
     /** Min has been changed */
     this.view.minChangedEvent.addListener((changeMinPanel) => {
-      this.model.options.scale.min = +changeMinPanel
-      this.model.scale.min = +changeMinPanel
+      this.model.options.scale.min = Number(changeMinPanel.scaleMin)
+      this.model.scale.min = Number(changeMinPanel.scaleMin)
       this.render()
     })
 
     /** Min has been changed */
     this.view.maxChangedEvent.addListener((changeMaxPanel) => {
-      this.model.options.scale.max = +changeMaxPanel
-      this.model.scale.max = +changeMaxPanel
+      this.model.options.scale.max = Number(changeMaxPanel.scaleMax)
+      this.model.scale.max = Number(changeMaxPanel.scaleMax)
       this.render()
     })
 
     /** Step has been changed */
     this.view.stepChangedEvent.addListener((changeStepPanel) => {
-      this.model.options.step = changeStepPanel
+      this.model.options.step = changeStepPanel.scaleStep
       this.render()
     })
 
     /** Scale visibility has been changed */
     this.view.visibilityChangedEvent.addListener((changeVisibilityPanel) => {
-      this.model.options.scale.isVisible = changeVisibilityPanel
+      this.model.options.scale.isVisible = changeVisibilityPanel.scaleVisible
       this.render()
     })
 
     /** Runner chosen by id in panel */
     this.view.runnerChosenEvent.addListener((changeRunnerPanel) => {
-      this.view.$controlPanel.setCurrentRunner(changeRunnerPanel)
+      this.view.$controlPanel.setCurrentRunner(changeRunnerPanel.runnerId)
     })
 
     /** Runner position has been changed */
@@ -130,7 +130,6 @@ class Presenter {
 
       this.view.$controlPanel.setCurrentRunner(changeTooltipPanel.id)
     })
-
   }
 
   /** Render */

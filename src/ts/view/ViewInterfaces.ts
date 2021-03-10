@@ -1,16 +1,3 @@
-interface IViewScale {
-  clickScaleEvent: object
-  $el: HTMLElement
-  min: number
-  max: number
-  isVisible: boolean
-  step: number
-  orientation: string
-  range: number
-  hasNegative: boolean
-  $canvas: HTMLCanvasElement
-}
-
 interface IScaleOptions {
   $el: HTMLElement
   min: number
@@ -26,4 +13,44 @@ interface IScaleOptions {
   }
 }
 
-export { IViewScale, IScaleOptions }
+interface IBarOptions {
+  $el: HTMLElement
+  $scaleWrapper: HTMLElement
+  barLength: number
+  barStartPoint: number
+  orientation: string
+  range: number
+  hasNegative: boolean
+  min: number
+}
+
+interface IPanelOptions {
+  $el: HTMLElement
+  skin: string
+  orientation: string
+  step: number
+  min: number
+  max: number
+  scaleVisible: boolean
+  runners: object
+}
+
+interface IEvent {
+  listeners: Array<(params: object) => void>
+  trigger(params: object): void
+  addListener(listener: () => void): void
+}
+
+interface IRunnerOptions {
+  orientation: string
+  id: number
+  position: number
+  tooltip: boolean
+  range: number
+  $scaleWrapper: HTMLDivElement
+  hasNegative: boolean
+  min: number
+  step: number
+}
+
+export { IScaleOptions, IBarOptions, IPanelOptions, IEvent, IRunnerOptions }

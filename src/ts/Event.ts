@@ -1,5 +1,5 @@
 class Event {
-  private listeners: Array<(params: object) => void>
+  listeners: Array<(params: object) => void>
   // listeners: any[]
   constructor() {
     this.listeners = []

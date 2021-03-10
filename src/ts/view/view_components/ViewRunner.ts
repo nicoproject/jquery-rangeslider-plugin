@@ -1,9 +1,24 @@
 import { createElement, setAttributes } from '../../core/dom'
 import { debounce, convertRange } from '../../core/utils'
 import Event from '../../Event'
+import { IEvent, IRunnerOptions } from '../ViewInterfaces'
 
 class ViewRunner {
-  constructor(args = {}) {
+  $el: HTMLDivElement
+  moveRunnerEvent: IEvent
+  orientation: string
+  id: number
+  position: number
+  showTooltip: boolean
+  range: number
+  $scaleWrapper: HTMLDivElement
+  hasNegative: boolean
+  min: number
+  step: number
+  isStepped: boolean
+  runnerPxDimension: number
+
+  constructor(args: IRunnerOptions) {
     /** Set initial values */
     this.orientation = args.orientation
     this.id = args.id
@@ -41,7 +56,7 @@ class ViewRunner {
     this.$el = $runner
   }
 
-  moveRunner(runnerPosition) {
+  moveRunner(runnerPosition: number) {
     const movePropArgs = {
       max: this.range,
       pixels:
@@ -75,17 +90,17 @@ class ViewRunner {
     }
 
     /** Set runner position */
-    this.$el.dataset.position = runnerPosition
+    this.$el.dataset.position = String(runnerPosition)
   }
 
   /** event listeners, with arrow functions */
-  onmousedown = (event) => {
+  onmousedown = (event: MouseEvent) => {
     document.addEventListener('mousemove', this.onmousemove)
     document.addEventListener('mouseup', this.onmouseup)
   }
 
   /** Drag and Drop */
-  onmousemove = (event) => {
+  onmousemove = (event: MouseEvent) => {
     /** Remove browser selection action */
     event.preventDefault()
 
@@ -190,26 +205,27 @@ class ViewRunner {
       ) {
         let stepsCount = Math.ceil(newRunnerPosition / stepPx)
 
-        this.$el.style[$elMarginProp] =
+        this.$el.style[<any>$elMarginProp] =
           stepsCount * stepPx - $elLength / 2 + 'px'
 
         /** Calculate and set data-position of runner depending on negative values */
         if (this.hasNegative) {
           this.$el.dataset.position =
-            stepsCount * this.step - Math.abs(this.min)
+            String(stepsCount * this.step - Math.abs(this.min))
         } else {
-          this.$el.dataset.position = this.min + stepsCount * this.step
+          this.$el.dataset.position = String(this.min + stepsCount * this.step)
         }
       }
     } else {
       /** If !isStepped use convertRange for detailed position */
-      this.$el.style[$elMarginProp] = newRunnerPosition + 'px'
+      this.$el.style[<any>$elMarginProp] = newRunnerPosition + 'px'
       if (this.hasNegative) {
-        this.$el.dataset.position =
-          (
-            (newRunnerPosition + $elLength / 2) *
-            convertRange(runnerPropArgs)
-          ).toFixed() - Math.abs(this.min)
+        const position =
+        Number((
+          (newRunnerPosition + $elLength / 2) *
+          convertRange(runnerPropArgs)
+        ).toFixed()) - Math.abs(this.min)
+        this.$el.dataset.position = String(position)
       } else {
         this.$el.dataset.position = (
           (newRunnerPosition + $elLength / 2) *
