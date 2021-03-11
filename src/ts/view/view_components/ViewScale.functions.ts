@@ -1,4 +1,6 @@
-function drawRuler(args) {
+import { IDrawRulerArgs } from "../ViewInterfaces"
+
+function drawRuler(args: IDrawRulerArgs) {
   if (args.orientation === 'vertical') {
     /** ---------------------- START VERTICAL -----------------------  */
     this.context.canvas.height = this.scaleLength
@@ -16,9 +18,12 @@ function drawRuler(args) {
       this.context.moveTo(0, 0)
 
       /**  Draw horizontal line on each step */
-      const intervalValue =
-        ((this.intervalCount - interval) * this.range).toFixed() /
-        this.intervalCount
+
+      let intervalNumber = (
+        (this.intervalCount - interval) *
+        this.range
+      ).toFixed()
+      const intervalValue = Number(intervalNumber) / this.intervalCount
       if (intervalValue !== 0) {
         this.context.moveTo(0, interval * this.spacing + this.lineWidth)
         this.context.lineTo(75, interval * this.spacing + this.lineWidth)

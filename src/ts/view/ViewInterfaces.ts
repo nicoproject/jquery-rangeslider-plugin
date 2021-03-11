@@ -42,15 +42,100 @@ interface IEvent {
 }
 
 interface IRunnerOptions {
-  orientation: string
   id: number
+  $scaleWrapper: HTMLDivElement
+  orientation: string
   position: number
   tooltip: boolean
   range: number
-  $scaleWrapper: HTMLDivElement
+  hasNegative: boolean
+  min: number
+  step: number
+  showTooltip?: boolean
+  moveRunner?: (arg: number) => void
+}
+
+interface IRunnersOptions {
+  $el: HTMLDivElement
+  $scaleWrapper?: HTMLDivElement
+  runners: Array<object>
+  orientation: string
+  range: number
   hasNegative: boolean
   min: number
   step: number
 }
 
-export { IScaleOptions, IBarOptions, IPanelOptions, IEvent, IRunnerOptions }
+interface IDrawRulerArgs {
+  $el: HTMLDivElement
+  orientation: string
+}
+
+interface IModelStateOptions {
+  options: {
+    scale: { isVisible: boolean }
+    skin: string
+    step: number
+    runners: Array<object>
+    orientation: string
+    isVisible: boolean
+  }
+  bar: object
+  range: number
+  hasNegative: boolean
+}
+
+interface IModelOptions {
+  id: number
+  step: number
+  scale: {
+    min: number
+    max: number
+    isVisible: boolean
+  }
+  orientation: string
+  skin: string
+  runners: Array<{
+    id: number
+    position: number
+    showTooltip: boolean
+  }>
+}
+
+interface IConvertRange {
+  max: number
+  pixels: number
+  direction: string
+}
+
+interface IValidateRunner {
+  min: number
+  max: number
+  position: number
+}
+
+interface IRunnersArray {
+    id: number
+    position: number
+    showTooltip: boolean
+}
+
+interface IListenerObject {
+  [key: string]: Record<string, number> 
+}
+
+export {
+  IScaleOptions,
+  IRunnersOptions,
+  IBarOptions,
+  IPanelOptions,
+  IEvent,
+  IRunnerOptions,
+  IDrawRulerArgs,
+  IModelStateOptions,
+  IConvertRange,
+  IValidateRunner,
+  IModelOptions,
+  IRunnersArray,
+  IListenerObject,
+}

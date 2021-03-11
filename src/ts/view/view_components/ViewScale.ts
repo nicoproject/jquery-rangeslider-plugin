@@ -127,10 +127,10 @@ class ViewScale {
           : event.offsetX
 /** @todo Remove implicit type */
       let clickPoint =
-        +this.min +
-        +(convertRange(this.clientCoordsArgs) * clientCoords).toFixed()
+        this.min +
+        Number((convertRange(this.clientCoordsArgs) * clientCoords).toFixed())
 
-      this.clickScaleEvent.trigger(clickPoint)
+      this.clickScaleEvent.trigger({clickPoint})
     })
   }
 }

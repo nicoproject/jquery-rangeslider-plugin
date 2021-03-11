@@ -2,9 +2,12 @@ import { getClosest } from '../core/utils'
 
 import Slider from '../model/Model'
 import View from '../view/View'
+import { IListenerObject, IModelOptions } from '../view/ViewInterfaces'
 
 class Presenter {
-  constructor(modelState = {}) {
+  model: any
+  view: any
+  constructor(modelState: IModelOptions) {
     this.model = new Slider(modelState)
     this.view = new View(this.model)
 
@@ -54,45 +57,45 @@ class Presenter {
     })
 
     /** Skin has been selected */
-    this.view.skinSelectedEvent.addListener((selectSkinPanel) => {
+    this.view.skinSelectedEvent.addListener((selectSkinPanel: IListenerObject) => {
       this.model.options.skin = selectSkinPanel.skin
       this.render()
     })
 
     /** Orientation has been changed */
-    this.view.orientationChangedEvent.addListener((selectOrientationPanel) => {
+    this.view.orientationChangedEvent.addListener((selectOrientationPanel: IListenerObject) => {
       this.model.options.orientation = selectOrientationPanel.orientation
       this.render()
     })
 
     /** Min has been changed */
-    this.view.minChangedEvent.addListener((changeMinPanel) => {
+    this.view.minChangedEvent.addListener((changeMinPanel: IListenerObject) => {
       this.model.options.scale.min = Number(changeMinPanel.scaleMin)
       this.model.scale.min = Number(changeMinPanel.scaleMin)
       this.render()
     })
 
     /** Min has been changed */
-    this.view.maxChangedEvent.addListener((changeMaxPanel) => {
+    this.view.maxChangedEvent.addListener((changeMaxPanel: IListenerObject) => {
       this.model.options.scale.max = Number(changeMaxPanel.scaleMax)
       this.model.scale.max = Number(changeMaxPanel.scaleMax)
       this.render()
     })
 
     /** Step has been changed */
-    this.view.stepChangedEvent.addListener((changeStepPanel) => {
+    this.view.stepChangedEvent.addListener((changeStepPanel: IListenerObject) => {
       this.model.options.step = changeStepPanel.scaleStep
       this.render()
     })
 
     /** Scale visibility has been changed */
-    this.view.visibilityChangedEvent.addListener((changeVisibilityPanel) => {
+    this.view.visibilityChangedEvent.addListener((changeVisibilityPanel: IListenerObject) => {
       this.model.options.scale.isVisible = changeVisibilityPanel.scaleVisible
       this.render()
     })
 
     /** Runner chosen by id in panel */
-    this.view.runnerChosenEvent.addListener((changeRunnerPanel) => {
+    this.view.runnerChosenEvent.addListener((changeRunnerPanel: IListenerObject) => {
       this.view.$controlPanel.setCurrentRunner(changeRunnerPanel.runnerId)
     })
 

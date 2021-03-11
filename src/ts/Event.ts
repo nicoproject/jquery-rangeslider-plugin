@@ -10,7 +10,6 @@ class Event {
   }
 
   trigger(params: object = {}) {
-    console.log(typeof params, params, 'params')
 
     this.listeners.forEach((listener) => {
       listener(params)

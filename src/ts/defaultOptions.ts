@@ -1,11 +1,13 @@
-const defaultOptions = {
+import { IModelOptions } from './view/ViewInterfaces'
+
+const defaultOptions: IModelOptions = {
   id: 0,
   step: 10,
   scale: {
     min: 0,
     max: 150,
+    isVisible: true,
   },
-  type: 'single',
   orientation: 'horizontal',
   skin: 'city',
   runners: [
@@ -18,7 +20,7 @@ const defaultOptions = {
       id: 2,
       position: 180,
       showTooltip: true,
-    }
+    },
   ],
 }
 
