@@ -1,8 +1,25 @@
-import defaultOptions from './defaultOptions'
-import Event from './Event'
+import defaultOptions from '../defaultOptions'
+import { IModelOptions, IRunnersArray } from '../view/ViewInterfaces'
 
 class Slider {
-  constructor(options = {}) {
+  options: IModelOptions
+  id: number
+  step: number
+  scale: {
+    min: number
+    max: number
+  }
+  orientation: string
+  skin: string
+  hasNegative: boolean
+  range: number
+  runners: Array<IRunnersArray>
+  bar: {
+    length: number
+    startPoint: number
+    orientation: string
+  }
+  constructor(options: IModelOptions) {
     /** Validate incoming Options array
      *  @param {Object} options
      */
@@ -30,7 +47,7 @@ class Slider {
 
   /** RUNNERS -------------------------------------------------*/
 
-  setupRunners(arr = []) {
+  setupRunners(arr: Array<IRunnersArray>) {
     arr.forEach((runner) => {
       this.validateRunnerPosition(runner)
     })
@@ -38,7 +55,7 @@ class Slider {
     return arr
   }
 
-  validateRunnerPosition(obj = {}) {
+  validateRunnerPosition(obj: {position: number}) {
     const isRunnerOnScale =
       obj.position <= this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
@@ -47,8 +64,8 @@ class Slider {
     }
   }
 
-  sortRunnersByPosition(arr) {
-    return arr.sort((a, b) =>
+  sortRunnersByPosition(arr: Array<IRunnersArray>) {
+    return arr.sort((a: IRunnersArray, b: IRunnersArray) =>
       a.position > b.position ? 1 : b.position > a.position ? -1 : 0
     )
   }
@@ -91,9 +108,12 @@ class Slider {
   calculateRange() {
     const min = this.options.scale.min
     const max = this.options.scale.max
-    return this.hasNegative === 'true'
-      ? Math.abs(min) + Math.abs(max)
-      : max - min
+    switch (this.hasNegative) {
+      case true:
+        return Math.abs(min) + Math.abs(max)
+      case false:
+        return max - min
+    }
   }
 }
 

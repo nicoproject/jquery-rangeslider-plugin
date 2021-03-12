@@ -1,14 +1,40 @@
-import { convertRange } from './core/utils'
-import { setAttributes, createElement } from './core/dom'
+import { createElement } from '../core/dom'
 
 import ViewScale from './view_components/ViewScale'
 import ViewBar from './view_components/ViewBar'
-import ViewTooltip from './view_components/ViewTooltip'
 import ViewRunners from './view_components/ViewRunners'
 import ViewPanel from './view_components/ViewPanel'
+import { IEvent, IModelStateOptions, IRunnerOptions } from './ViewInterfaces'
 
 class View {
-  constructor(modelState = {}) {
+  skin: string
+  scale: any
+  step: number
+  runners: Array<object>
+  bar: any
+  orientation: string
+  range: number
+  hasNegative: boolean
+  scaleVisible: boolean
+  $mainWrapper: HTMLDivElement
+  $runners: any
+  _scale: any
+  _bar: object
+  $controlPanel: any
+
+  clickScaleEvent: IEvent
+  moveRunnerEvent: IEvent
+  skinSelectedEvent: IEvent
+  orientationChangedEvent: IEvent
+  stepChangedEvent: IEvent
+  minChangedEvent: IEvent
+  maxChangedEvent: IEvent
+  visibilityChangedEvent: IEvent
+  runnerChosenEvent: IEvent
+  positionChangedEvent: IEvent
+  tooltipChangedEvent: IEvent
+
+  constructor(modelState: IModelStateOptions) {
     /** Options */
     this.skin = modelState.options.skin
     this.scale = modelState.options.scale
@@ -31,7 +57,7 @@ class View {
     this._scale = this.createScale()
 
     /** Link Runners objects with parent wrapper HTMLelement  */
-    this.$runners.$runners.forEach((runner) => {
+    this.$runners.$runners.forEach((runner: IRunnerOptions) => {
       runner.$scaleWrapper = this._scale.$scaleWrapper
       runner.moveRunner(runner.position)
     })
@@ -43,7 +69,6 @@ class View {
     this.$controlPanel = this.createPanel()
 
     /** Register events */
-    /** Link Child Events to same name Parent Events */
     this.clickScaleEvent = this._scale.clickScaleEvent
     this.moveRunnerEvent = this.$runners.moveRunnerEvent
     this.skinSelectedEvent = this.$controlPanel.skinPanelEvent

@@ -1,8 +1,21 @@
-import Event from '../Event'
+import Event from '../../Event'
+import { IEvent, IRunnersOptions, IRunnerOptions } from '../ViewInterfaces'
 import ViewRunner from './ViewRunner'
 
 class ViewRunners {
-  constructor(options) {
+  $el: HTMLDivElement
+  runners: Array<any>
+  orientation: string
+  range: number
+  $scaleWrapper: HTMLDivElement
+  $runners: Array<any>
+  hasNegative: boolean
+  min: number
+  step: number
+  moveRunnerEvent: IEvent
+
+
+  constructor(options: IRunnersOptions) {
     if (!options) {
       throw new Error(
         'ViewRunners component critical error: Options Object has to be provided'
@@ -27,7 +40,7 @@ class ViewRunners {
 
     /** Register listeners for runners */
     this.$runners.forEach(($runner) => {
-      $runner.moveRunnerEvent.addListener((ViewRunnerClickEvent) => {
+      $runner.moveRunnerEvent.addListener((ViewRunnerClickEvent: () => void) => {
         this.moveRunnerEvent.trigger(ViewRunnerClickEvent)
       })
     })
@@ -47,7 +60,7 @@ class ViewRunners {
   /** Creates and returns Runners DOM nodes in array
    * @param {Object} runners
    */
-  createRunners(runners = []) {
+  createRunners(runners: Array<IRunnerOptions>) {
     runners.forEach(($runner) => {
       let runnerArgs = {
         orientation: this.orientation,

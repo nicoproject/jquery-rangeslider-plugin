@@ -1,12 +1,42 @@
-import Event from '../Event'
-import { createElement, setAttributes } from '../core/dom'
-import { validateInRange } from '../core/utils'
+import Event from '../../Event'
+import { createElement, setAttributes } from '../../core/dom'
+import { validateInRange } from '../../core/utils'
+import { IEvent, IPanelOptions } from '../ViewInterfaces'
 
 class ViewPanel {
-  /** Create HTML form with values set from Model object
-   * @param {Object} options
-   */
-  constructor(options) {
+  skinPanelEvent: IEvent
+  orientationPanelEvent: IEvent
+  stepPanelEvent: IEvent
+  minPanelEvent: IEvent
+  maxPanelEvent: IEvent
+  visibilityPanelEvent: IEvent
+  runnersIdPanelEvent: IEvent
+  positionPanelEvent: IEvent
+  tooltipPanelEvent: IEvent
+
+  /** Set initial received modelState values */
+  $scaleWrapper: HTMLElement
+  currentSkin: string
+  orientation: string
+
+  step: number
+  min: number
+  max: number
+  scaleVisible: boolean
+
+  runners: any
+
+  /** Set calculated and constant values */
+  skins: Array<string>
+  orientations: Array<string>
+  headers: Array<string>
+
+  /** Prepare namespaces */
+  $runnersDropdown: HTMLSelectElement
+  $positionInput: HTMLInputElement
+  $tooltipVisible: HTMLInputElement
+  /** Create HTML form with values set from Model object  */
+  constructor(options: IPanelOptions) {
     if (!options) {
       throw new Error(
         'ViewPanel component critical error: options Objects has to be provided'
@@ -84,8 +114,10 @@ class ViewPanel {
 
     $skinDropdown.value = this.currentSkin
 
-    $skinDropdown.addEventListener('change', (event) => {
-      this.skinPanelEvent.trigger(event.target.value)
+    $skinDropdown.addEventListener('change', (event: MouseEvent) => {
+      this.skinPanelEvent.trigger({
+        skin: (<HTMLSelectElement>event.target).value,
+      })
     })
 
     /** Orientation dropdown */
@@ -110,8 +142,10 @@ class ViewPanel {
         ? this.orientations[1]
         : this.orientations[0]
 
-    $orientationDropdown.addEventListener('change', (event) => {
-      this.orientationPanelEvent.trigger(event.target.value)
+    $orientationDropdown.addEventListener('change', (event: MouseEvent) => {
+      this.orientationPanelEvent.trigger({
+        orientation: (<HTMLSelectElement>event.target).value,
+      })
     })
 
     /** Scale min input */
@@ -126,8 +160,10 @@ class ViewPanel {
       'data-title': 'Минимум',
     })
 
-    $scaleMinInput.addEventListener('change', (event) => {
-      this.minPanelEvent.trigger(event.target.value)
+    $scaleMinInput.addEventListener('change', (event: MouseEvent) => {
+      this.minPanelEvent.trigger({
+        scaleMin: (<HTMLInputElement>event.target).value,
+      })
     })
 
     /** Scale max input */
@@ -142,8 +178,10 @@ class ViewPanel {
       'data-title': 'Максимум',
     })
 
-    $scaleMaxInput.addEventListener('change', (event) => {
-      this.maxPanelEvent.trigger(event.target.value)
+    $scaleMaxInput.addEventListener('change', (event: MouseEvent) => {
+      this.maxPanelEvent.trigger({
+        scaleMax: (<HTMLInputElement>event.target).value,
+      })
     })
 
     /** Scale step input */
@@ -158,12 +196,14 @@ class ViewPanel {
       'data-title': 'Шаг',
     })
 
-    $scaleStepInput.addEventListener('change', (event) => {
-      this.stepPanelEvent.trigger(event.target.value)
+    $scaleStepInput.addEventListener('change', (event: MouseEvent) => {
+      this.stepPanelEvent.trigger({
+        scaleStep: (<HTMLInputElement>event.target).value,
+      })
     })
 
     /** Scale visibility checkbox */
-    let $scaleVisible = createElement(
+    let $scaleVisible: HTMLInputElement = createElement(
       'input',
       'input scaleVisible-input form-check'
     )
@@ -176,8 +216,8 @@ class ViewPanel {
 
     $scaleVisible.checked = this.scaleVisible
 
-    $scaleVisible.addEventListener('click', (event) => {
-      this.visibilityPanelEvent.trigger($scaleVisible.checked)
+    $scaleVisible.addEventListener('click', (event: MouseEvent) => {
+      this.visibilityPanelEvent.trigger({ scaleVisible: $scaleVisible.checked })
     })
 
     this.$runnersDropdown = createElement(
@@ -198,13 +238,15 @@ class ViewPanel {
 
     this.$runnersDropdown.value = this.runners[0].id
 
-    this.$runnersDropdown.addEventListener('change', (event) => {
-      this.runnersIdPanelEvent.trigger(event.target.value)
+    this.$runnersDropdown.addEventListener('change', (event: MouseEvent) => {
+      this.runnersIdPanelEvent.trigger({
+        runnerId: (<HTMLSelectElement>event.target).value,
+      })
     })
 
     /** Find runner by chosen id */
     const runnerData = this.runners[
-      this.runners.findIndex((x) => x.id == this.$runnersDropdown.value)
+      this.runners.findIndex((x: any) => x.id == this.$runnersDropdown.value)
     ]
     /** Runner position input */
     this.$positionInput = createElement(
@@ -219,9 +261,9 @@ class ViewPanel {
       'data-title': 'Позиция',
     })
 
-    this.$positionInput.addEventListener('change', (event) => {
+    this.$positionInput.addEventListener('change', (event: MouseEvent) => {
       let validatedPosition = validateInRange({
-        position: +event.target.value,
+        position: Number((<HTMLSelectElement>event.target).value),
         min: this.min,
         max: this.max,
       })
@@ -288,7 +330,7 @@ class ViewPanel {
     this.$scaleWrapper.append($panelWrapper)
   }
 
-  wrapFormGroup($el) {
+  wrapFormGroup($el: HTMLFontElement) {
     const $wrappedElement = createElement('div', 'form-group')
     const label = createElement('label', 'label')
     label.textContent = $el.dataset.title
@@ -297,10 +339,10 @@ class ViewPanel {
     return $wrappedElement
   }
 
-  setCurrentRunner(runnerId) {
+  setCurrentRunner(runnerId: number) {
     /** Find runner by chosen id */
     const runnerData = this.runners[
-      this.runners.findIndex((x) => x.id == runnerId)
+      this.runners.findIndex((x:any) => x.id == runnerId)
     ]
 
     /** Runners id dropdown */

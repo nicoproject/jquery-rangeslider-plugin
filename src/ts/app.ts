@@ -1,8 +1,9 @@
-import Presenter from './Presenter'
+import Presenter from './presenter/Presenter'
 import '../scss/app.scss'
 import 'bootstrap'
+import { IModelOptions } from './view/ViewInterfaces'
 
-const mockSliderInitialState = {
+const mockSliderInitialState: IModelOptions = {
   id: 1,
   step: 10,
   scale: {
@@ -10,7 +11,6 @@ const mockSliderInitialState = {
     max: 400,
     isVisible: true,
   },
-  type: 'single',
   orientation: '',
   skin: 'city',
   runners: [
