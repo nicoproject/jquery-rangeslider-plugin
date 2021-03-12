@@ -24,6 +24,7 @@
     "@babel/plugin-syntax-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-typescript": "^7.13.0",
+    "@types/jest": "^26.0.20",
     "ajv": "^6.12.6",
     "autoprefixer": "^10.0.0",
     "babel-loader": "^8.1.0",
@@ -74,6 +75,7 @@
     "watch": "webpack --config configuration/webpack.dev.config.js --mode=development --watch",
     "dev": "webpack serve --config configuration/webpack.dev.config.js --mode=development",
     "production": "webpack --config configuration/webpack.prod.config.js --mode=production",
+    "test": "jest",
     "lint:sass": "sass-lint 'src/scss/*' -v -q",
     "lint:js": "eslint --ext .js src/js/"
   },

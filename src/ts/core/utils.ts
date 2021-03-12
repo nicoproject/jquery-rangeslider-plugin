@@ -1,4 +1,4 @@
-import { IValidateRunner } from '../view/ViewInterfaces'
+import { IRunnersArray, IValidateRunner } from '../view/ViewInterfaces'
 
 function convertRange(args: any) {
   if (args.direction === 'range2pix') {
@@ -20,9 +20,9 @@ function debounce(fn: any, wait: number) {
   }
 }
 
-function getClosest(arr: Array<number>, goal: number) {
+function getClosest(arr: Array<IRunnersArray>, goal: number) {
   const output = arr.reduce((prev, curr) =>
-    Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
+    Math.abs(Number(curr) - goal) < Math.abs(Number(prev) - goal) ? curr : prev
   )
 
   return output

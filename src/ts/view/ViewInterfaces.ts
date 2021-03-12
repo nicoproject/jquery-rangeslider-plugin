@@ -121,7 +121,8 @@ interface IRunnersArray {
 }
 
 interface IListenerObject {
-  [key: string]: Record<string, number> 
+  // [key: string]: Record<string, number> 
+  [x: string]: ()=>void
 }
 
 export {
