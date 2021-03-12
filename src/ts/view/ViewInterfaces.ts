@@ -106,6 +106,7 @@ interface IConvertRange {
   max: number
   pixels: number
   direction: string
+  
 }
 
 interface IValidateRunner {

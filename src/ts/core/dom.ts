@@ -1,4 +1,4 @@
-function createElement(tag: any, className = '') {
+function createElement(tag: any, className: string = '') {
   const element = document.createElement(tag)
   element.className = className
   return element

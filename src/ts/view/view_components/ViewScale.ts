@@ -2,10 +2,10 @@ import { drawRuler } from './ViewScale.functions'
 import Event from '../../Event'
 import { createElement, setAttributes } from '../../core/dom'
 import { convertRange } from '../../core/utils'
-import { IScaleOptions } from '../ViewInterfaces'
+import { IEvent, IScaleOptions } from '../ViewInterfaces'
 
 class ViewScale {
-  clickScaleEvent: any
+  clickScaleEvent: IEvent
   $el: HTMLElement
   min: number
   max: number

@@ -55,7 +55,7 @@ class Slider {
     return arr
   }
 
-  validateRunnerPosition(obj: any) {
+  validateRunnerPosition(obj: {position: number}) {
     const isRunnerOnScale =
       obj.position <= this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
@@ -64,8 +64,8 @@ class Slider {
     }
   }
 
-  sortRunnersByPosition(arr: any) {
-    return arr.sort((a: any, b: any) =>
+  sortRunnersByPosition(arr: Array<IRunnersArray>) {
+    return arr.sort((a: IRunnersArray, b: IRunnersArray) =>
       a.position > b.position ? 1 : b.position > a.position ? -1 : 0
     )
   }

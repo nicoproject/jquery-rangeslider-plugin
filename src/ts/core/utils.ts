@@ -1,6 +1,6 @@
-import { IRunnersArray, IValidateRunner } from '../view/ViewInterfaces'
+import { IConvertRange, IRunnersArray, IValidateRunner } from '../view/ViewInterfaces'
 
-function convertRange(args: any) {
+function convertRange(args: IConvertRange) {
   if (args.direction === 'range2pix') {
     return args.pixels / args.max
   } else {
@@ -28,7 +28,7 @@ function getClosest(arr: Array<IRunnersArray>, goal: number) {
   return output
 }
 
-function startBackgroundLoop($mainWrapper: HTMLElement) {
+function startBackgroundLoop($mainWrapper: HTMLDivElement) {
   let x = 0
   setInterval(function () {
     x -= 1
