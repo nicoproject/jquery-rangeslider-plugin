@@ -7,7 +7,7 @@ const mockSliderInitialState: IModelOptions = {
   id: 1,
   step: 10,
   scale: {
-    min: 0,
+    min: -200,
     max: 400,
     isVisible: true,
   },
@@ -21,7 +21,7 @@ const mockSliderInitialState: IModelOptions = {
     },
     {
       id: 2,
-      position: 210,
+      position: -210,
       showTooltip: true,
     },
     {
