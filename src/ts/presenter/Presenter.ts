@@ -36,7 +36,6 @@ class Presenter {
         closestRunner = this.model.runners.find(
           (runner: any) => runner.position === closestRunner
         )
-        console.log(runnersPositionsArray, 'runnersPositionsArray')
         closestRunner.position = clickViewScale.clickPoint
         let activeRunner = this.view.$runners.$runners[
           this.view.$runners.$runners.findIndex(

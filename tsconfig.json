@@ -9,6 +9,7 @@
     "allowJs": true
   },
   "include": [
-    "./globals.d.ts"
+    "./globals.d.ts", 
+    "./jest-setup.ts"
   ],
 }
