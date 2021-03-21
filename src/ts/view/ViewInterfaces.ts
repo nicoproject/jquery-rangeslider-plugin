@@ -78,7 +78,7 @@ interface IModelStateOptions {
     step: number
     runners: Array<object>
     orientation: string
-    isVisible: boolean
+    isVisible?: boolean
   }
   bar: object
   range: number
@@ -100,6 +100,7 @@ interface IModelOptions {
     position: number
     showTooltip: boolean
   }>
+  isVisible?: boolean
 }
 
 interface IConvertRange {
