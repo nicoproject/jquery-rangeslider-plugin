@@ -59,8 +59,8 @@ class Slider {
     const isRunnerOnScale =
       obj.position <= this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
-      obj.position = 0
-      return
+      obj.position = this.scale.min
+      return obj.position
     }
   }
 
@@ -87,8 +87,8 @@ class Slider {
       startPoint = minRunner.position
     } else if (this.runners.length < 2) {
       length = minRunner.position - this.options.scale.min
-    } else if (typeof this.bar === 'undefined') {
-      length = 200
+    // } else if (typeof this.bar === 'undefined') {
+      // length = 200
     }
     return {
       length,

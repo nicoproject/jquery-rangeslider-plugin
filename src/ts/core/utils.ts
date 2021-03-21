@@ -1,4 +1,8 @@
-import { IConvertRange, IRunnersArray, IValidateRunner } from '../view/ViewInterfaces'
+import {
+  IConvertRange,
+  IRunnersArray,
+  IValidateRunner,
+} from '../view/ViewInterfaces'
 
 function convertRange(args: IConvertRange) {
   if (args.direction === 'range2pix') {
@@ -8,7 +12,7 @@ function convertRange(args: IConvertRange) {
   }
 }
 
-function debounce(fn: any, wait: number) {
+function debounce(fn: Function, wait: number) {
   let timeout: ReturnType<typeof setTimeout>
   return function (...args: Array<object>) {
     const later = () => {
@@ -20,20 +24,12 @@ function debounce(fn: any, wait: number) {
   }
 }
 
-function getClosest(arr: Array<IRunnersArray>, goal: number) {
+function getClosest(arr: Array<number>, goal: number) {
   const output = arr.reduce((prev, curr) =>
     Math.abs(Number(curr) - goal) < Math.abs(Number(prev) - goal) ? curr : prev
   )
 
   return output
-}
-
-function startBackgroundLoop($mainWrapper: HTMLDivElement) {
-  let x = 0
-  setInterval(function () {
-    x -= 1
-    $mainWrapper.style.backgroundPosition = x + 'px 0'
-  }, 10)
 }
 
 function validateInRange(args: IValidateRunner) {
@@ -50,7 +46,6 @@ function validateInRange(args: IValidateRunner) {
 
 export {
   convertRange,
-  startBackgroundLoop,
   getClosest,
   debounce,
   validateInRange,

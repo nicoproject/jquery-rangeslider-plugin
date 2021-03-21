@@ -29,14 +29,13 @@ class Presenter {
           (element: IRunnersArray) => element.position
         )
 
-        let closestRunner = getClosest(
+        let closestRunnerPosition = getClosest(
           runnersPositionsArray,
           clickViewScale.clickPoint
         )
-        closestRunner = this.model.runners.find(
-          (runner: any) => runner.position === closestRunner
+        let closestRunner = this.model.runners.find(
+          (runner: any) => runner.position === closestRunnerPosition
         )
-        console.log(runnersPositionsArray, 'runnersPositionsArray')
         closestRunner.position = clickViewScale.clickPoint
         let activeRunner = this.view.$runners.$runners[
           this.view.$runners.$runners.findIndex(
