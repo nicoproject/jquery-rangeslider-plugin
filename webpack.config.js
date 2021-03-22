@@ -4,6 +4,7 @@
 
 const path = require('path')
 const fs = require('fs')
+const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const ImageMinPlugin = require('imagemin-webpack-plugin').default
@@ -106,6 +107,10 @@ module.exports = {
           },
         },
       ],
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
     }),
   ].concat(htmlPluginEntries),
   target: 'web',

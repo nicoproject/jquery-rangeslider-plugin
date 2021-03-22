@@ -358,7 +358,6 @@ class ViewPanel {
   }
 
   destroy() {
-    console.log('Panel wrapper destroyed')
   }
 }
 
