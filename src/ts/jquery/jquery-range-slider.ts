@@ -52,35 +52,22 @@ import { IModelOptions, IRunnersArray } from '../view/ViewInterfaces'
         },
       }
 
-      // default return for each slider
       return $(this).each((...args: any) => {
         // @ts-ignore
         if (methods[method]) {
-          // если запрашиваемый метод существует, мы его вызываем
-          // все параметры, кроме имени метода придут в метод
-          // this так же перекочует в метод
           // @ts-ignore
-
           return methods[method].apply(
             this,
             Array.prototype.slice.call(args, 1) as []
           )
         }
         if (typeof method === 'object' || !method) {
-          // если первым параметром идет объект, либо совсем пусто
-          // выполняем метод init
-
           return methods.init.call(this)
         }
-        // если ничего не получилось
         return $.error(
           `Метод "${method}" не найден в плагине jQuery.rangeSlider`
         )
       })
-      //   return this.each(function () {
-      //     new Presenter(settings)
-      //     return this
-      //   })
     },
   })
 })(jQuery)
