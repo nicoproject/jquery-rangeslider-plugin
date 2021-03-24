@@ -11,9 +11,9 @@ import {
 class Presenter {
   private model: any
   private view: any
-  constructor(modelState: IModelOptions) {
+  constructor(modelState: IModelOptions, $parentEl: HTMLElement) {
     this.model = new Slider(modelState)
-    this.view = new View(this.model)
+    this.view = new View(this.model, $parentEl)
 
     /** Setup listeners */
     this.setupListeners()
@@ -87,6 +87,8 @@ class Presenter {
     this.view.minChangedEvent.addListener((changeMinPanel: IListenerObject) => {
       this.model.options.scale.min = Number(changeMinPanel.scaleMin)
       this.model.scale.min = Number(changeMinPanel.scaleMin)
+      this.model.setupRunners(this.model.runners)
+      console.log(this.model)
       this.render()
     })
 
@@ -164,10 +166,11 @@ class Presenter {
 
   /** Render */
   private render() {
+    let $parentEl = this.view.$mainWrapper.parentElement
     this.view.destroy()
     this.model.hasNegative = this.model.scaleHasNegative()
     this.model.range = this.model.calculateRange()
-    this.view = new View(this.model)
+    this.view = new View(this.model, $parentEl)
     this.setupListeners()
     this.renderBar()
   }

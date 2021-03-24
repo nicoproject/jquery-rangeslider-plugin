@@ -39,16 +39,18 @@ import { IModelOptions, IRunnersArray } from '../view/ViewInterfaces'
         options
       )
 
+      /* Define parent HTMLElement of plugin call */
+        let $parentEl = $(this)[0] as HTMLElement
+
       /* Expose public methods */
       let methods = {
         init: function (options: IModelOptions) {
-          new Presenter(settings)
+          new Presenter(settings, $parentEl)
         },
         renderBar: () => {
-          let slider = new Presenter(settings)
+          let slider = new Presenter(settings, $parentEl)
           slider.renderBar()
           console.log('Bar has been rendered')
-          
         },
       }
 

@@ -35,6 +35,12 @@ class ViewBar {
     if (this.min > 0) {
       this.barStartFromLeft =
         convertRange(this.getRangeToConvert()) * (this.barStartPoint - this.min)
+        console.log(this.getRangeToConvert(), 'this.getRangeToConvert()' )
+        console.log(convertRange(this.getRangeToConvert()), 'convertRange(this.getRangeToConvert())' )
+        console.log(this.min, 'this.min' )
+        console.log(this.barStartPoint, 'this.barStartPoint' )
+        console.log(this.barStartFromLeft, 'this.barStartFromLeft' )
+        
     } else {
       this.barStartFromLeft =
         convertRange(this.getRangeToConvert()) * this.barStartPoint
@@ -70,11 +76,11 @@ class ViewBar {
       style:
         lengthStyleParam +
         ': ' +
-        +this.barLengthInPx +
+        Number(+this.barLengthInPx) +
         'px; ' +
         positionStyleParam +
         ': ' +
-        +this.barStartFromLeft +
+        Number(this.barStartFromLeft) +
         'px',
     })
 

@@ -330,7 +330,7 @@ class ViewPanel {
     this.$scaleWrapper.append($panelWrapper)
   }
 
-  private wrapFormGroup($el: HTMLFontElement) {
+  private wrapFormGroup($el: HTMLElement) {
     const $wrappedElement = createElement('div', 'form-group')
     const label = createElement('label', 'label')
     label.textContent = $el.dataset.title

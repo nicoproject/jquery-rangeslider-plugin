@@ -7,6 +7,7 @@ import ViewPanel from './view_components/ViewPanel'
 import { IEvent, IModelStateOptions, IRunnerOptions } from './ViewInterfaces'
 
 class View {
+  private $parentEl: HTMLElement
   private skin: string
   private scale: any
   private step: number
@@ -34,8 +35,9 @@ class View {
   private positionChangedEvent: IEvent
   private tooltipChangedEvent: IEvent
 
-  constructor(modelState: IModelStateOptions) {
+  constructor(modelState: IModelStateOptions, $parentEl: HTMLElement) {
     /** Options */
+    this.$parentEl = $parentEl
     this.skin = modelState.options.skin
     this.scale = modelState.options.scale
     this.step = modelState.options.step
@@ -92,7 +94,7 @@ class View {
       'div',
       `range-slider__main-wrapper ${verticalClass} ${this.skin}`
     )
-    document.body.appendChild($mainWrapper)
+    this.$parentEl.appendChild($mainWrapper)
     return $mainWrapper
   }
 
