@@ -5,12 +5,12 @@ $('body').rangeSlider({
   runners: [
     {
       id: 1,
-      position: 300,
+      position: 250,
       showTooltip: true,
     },
     {
       id: 2,
-      position: 300,
+      position: 350,
       showTooltip: true,
     },
   ],

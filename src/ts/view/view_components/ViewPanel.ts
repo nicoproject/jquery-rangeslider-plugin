@@ -1,40 +1,40 @@
-import Event from '../../Event'
+import Event from '../../Event/Event'
 import { createElement, setAttributes } from '../../core/dom'
 import { validateInRange } from '../../core/utils'
 import { IEvent, IPanelOptions } from '../ViewInterfaces'
 
 class ViewPanel {
-  skinPanelEvent: IEvent
-  orientationPanelEvent: IEvent
-  stepPanelEvent: IEvent
-  minPanelEvent: IEvent
-  maxPanelEvent: IEvent
-  visibilityPanelEvent: IEvent
-  runnersIdPanelEvent: IEvent
-  positionPanelEvent: IEvent
-  tooltipPanelEvent: IEvent
+  private skinPanelEvent: IEvent
+  private orientationPanelEvent: IEvent
+  private stepPanelEvent: IEvent
+  private minPanelEvent: IEvent
+  private maxPanelEvent: IEvent
+  private visibilityPanelEvent: IEvent
+  private runnersIdPanelEvent: IEvent
+  private positionPanelEvent: IEvent
+  private tooltipPanelEvent: IEvent
 
   /** Set initial received modelState values */
-  $scaleWrapper: HTMLElement
-  currentSkin: string
-  orientation: string
+  private $scaleWrapper: HTMLElement
+  private currentSkin: string
+  private orientation: string
 
-  step: number
-  min: number
-  max: number
-  scaleVisible: boolean
+  private step: number
+  private min: number
+  private max: number
+  private scaleVisible: boolean
 
-  runners: any
+  private runners: any
 
   /** Set calculated and constant values */
-  skins: Array<string>
-  orientations: Array<string>
-  headers: Array<string>
+  private skins: Array<string>
+  private orientations: Array<string>
+  private headers: Array<string>
 
   /** Prepare namespaces */
-  $runnersDropdown: HTMLSelectElement
-  $positionInput: HTMLInputElement
-  $tooltipVisible: HTMLInputElement
+  private $runnersDropdown: HTMLSelectElement
+  private $positionInput: HTMLInputElement
+  private $tooltipVisible: HTMLInputElement
   /** Create HTML form with values set from Model object  */
   constructor(options: IPanelOptions) {
     if (!options) {
@@ -80,7 +80,7 @@ class ViewPanel {
     this.createPanel()
   }
 
-  createPanel() {
+  private createPanel() {
     const $panelWrapper = createElement('form', 'panel__wrapper')
     const $formElements = []
 
@@ -330,7 +330,7 @@ class ViewPanel {
     this.$scaleWrapper.append($panelWrapper)
   }
 
-  wrapFormGroup($el: HTMLFontElement) {
+  private wrapFormGroup($el: HTMLFontElement) {
     const $wrappedElement = createElement('div', 'form-group')
     const label = createElement('label', 'label')
     label.textContent = $el.dataset.title
@@ -339,7 +339,7 @@ class ViewPanel {
     return $wrappedElement
   }
 
-  setCurrentRunner(runnerId: number) {
+  private setCurrentRunner(runnerId: number) {
     /** Find runner by chosen id */
     const runnerData = this.runners[
       this.runners.findIndex((x:any) => x.id == runnerId)
@@ -357,7 +357,7 @@ class ViewPanel {
     return this.$runnersDropdown, this.$positionInput, this.$tooltipVisible
   }
 
-  destroy() {
+  private destroy() {
   }
 }
 

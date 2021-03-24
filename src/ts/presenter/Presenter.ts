@@ -9,8 +9,8 @@ import {
 } from '../view/ViewInterfaces'
 
 class Presenter {
-  model: any
-  view: any
+  private model: any
+  private view: any
   constructor(modelState: IModelOptions) {
     this.model = new Slider(modelState)
     this.view = new View(this.model)
@@ -20,7 +20,7 @@ class Presenter {
   }
 
   /** View user events listeners */
-  setupListeners() {
+  private setupListeners() {
     /** Scale has been clicked on */
     this.view.clickScaleEvent.addListener(
       (clickViewScale: { clickPoint: number }) => {
@@ -163,7 +163,7 @@ class Presenter {
   }
 
   /** Render */
-  render() {
+  private render() {
     this.view.destroy()
     this.model.hasNegative = this.model.scaleHasNegative()
     this.model.range = this.model.calculateRange()
@@ -178,7 +178,7 @@ class Presenter {
     this.view.createBar()
   }
 
-  destroy() {}
+  private destroy() {}
 }
 
 export default Presenter

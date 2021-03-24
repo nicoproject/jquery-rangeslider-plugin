@@ -1,22 +1,22 @@
 import { createElement, setAttributes } from '../../core/dom'
 import { debounce, convertRange } from '../../core/utils'
-import Event from '../../Event'
+import Event from '../../Event/Event'
 import { IEvent, IRunnerOptions } from '../ViewInterfaces'
 
 class ViewRunner {
-  $el: HTMLDivElement
-  moveRunnerEvent: IEvent
-  orientation: string
-  id: number
-  position: number
-  showTooltip: boolean
-  range: number
-  $scaleWrapper: HTMLDivElement
-  hasNegative: boolean
-  min: number
-  step: number
-  isStepped: boolean
-  runnerPxDimension: number
+  private $el: HTMLDivElement
+  private moveRunnerEvent: IEvent
+  private orientation: string
+  private id: number
+  private position: number
+  private showTooltip: boolean
+  private range: number
+  private $scaleWrapper: HTMLDivElement
+  private hasNegative: boolean
+  private min: number
+  private step: number
+  private isStepped: boolean
+  private runnerPxDimension: number
 
   constructor(args: IRunnerOptions) {
     /** Set initial values */
@@ -44,7 +44,7 @@ class ViewRunner {
     this.onmousemove = debounce(this.onmousemove, 7)
   }
 
-  createRunner() {
+  private createRunner() {
     /** Creates div, sets data-attributes */
     const $runner = createElement('div', `runner runner-id-${this.id}`)
     setAttributes($runner, {
@@ -56,7 +56,7 @@ class ViewRunner {
     this.$el = $runner
   }
 
-  moveRunner(runnerPosition: number) {
+  private moveRunner(runnerPosition: number) {
     const movePropArgs = {
       max: this.range,
       pixels:
@@ -94,13 +94,13 @@ class ViewRunner {
   }
 
   /** event listeners, with arrow functions */
-  onmousedown = (event: MouseEvent) => {
+  private onmousedown = (event: MouseEvent) => {
     document.addEventListener('mousemove', this.onmousemove)
     document.addEventListener('mouseup', this.onmouseup)
   }
 
   /** Drag and Drop */
-  onmousemove = (event: MouseEvent) => {
+  private onmousemove = (event: MouseEvent) => {
     /** Remove browser selection action */
     event.preventDefault()
 
@@ -235,7 +235,7 @@ class ViewRunner {
     }
   }
 
-  onmouseup = () => {
+  private onmouseup = () => {
     let $runnerParams = {
       Event: this.moveRunnerEvent,
       id: this.id,

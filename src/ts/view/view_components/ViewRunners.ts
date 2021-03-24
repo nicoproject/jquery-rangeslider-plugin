@@ -1,18 +1,18 @@
-import Event from '../../Event'
+import Event from '../../Event/Event'
 import { IEvent, IRunnersOptions, IRunnerOptions } from '../ViewInterfaces'
 import ViewRunner from './ViewRunner'
 
 class ViewRunners {
-  $el: HTMLDivElement
-  runners: Array<any>
-  orientation: string
-  range: number
-  $scaleWrapper: HTMLDivElement
-  $runners: Array<any>
-  hasNegative: boolean
-  min: number
-  step: number
-  moveRunnerEvent: IEvent
+  private $el: HTMLDivElement
+  private runners: Array<any>
+  private orientation: string
+  private range: number
+  private $scaleWrapper: HTMLDivElement
+  private $runners: Array<any>
+  private hasNegative: boolean
+  private min: number
+  private step: number
+  private moveRunnerEvent: IEvent
 
 
   constructor(options: IRunnersOptions) {
@@ -51,7 +51,7 @@ class ViewRunners {
   /** Appends runners DOM nodes to wrapper
    * @param {Object} runners
    */
-  render() {
+  private render() {
     this.$runners.forEach(($runner) => {
       this.$el.appendChild($runner.$el)
     })
@@ -60,7 +60,7 @@ class ViewRunners {
   /** Creates and returns Runners DOM nodes in array
    * @param {Object} runners
    */
-  createRunners(runners: Array<IRunnerOptions>) {
+  private createRunners(runners: Array<IRunnerOptions>) {
     runners.forEach(($runner) => {
       let runnerArgs = {
         orientation: this.orientation,
