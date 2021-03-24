@@ -87,8 +87,9 @@ class Slider {
       startPoint = minRunner.position
     } else if (this.runners.length < 2) {
       length = minRunner.position - this.options.scale.min
-    // } else if (typeof this.bar === 'undefined') {
-      // length = 200
+      startPoint = this.scale.min
+    } else if (typeof this.bar === 'undefined') {
+      length = 200
     }
     return {
       length,
