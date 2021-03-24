@@ -17,6 +17,11 @@ class Presenter {
 
     /** Setup listeners */
     this.setupListeners()
+
+    /** Rerender on resize to be responsive */
+    window.addEventListener('resize', () => {
+      this.render()
+    })
   }
 
   /** View user events listeners */
@@ -85,24 +90,32 @@ class Presenter {
 
     /** Min has been changed */
     this.view.minChangedEvent.addListener((changeMinPanel: IListenerObject) => {
-      this.model.options.scale.min = Number(changeMinPanel.scaleMin)
-      this.model.scale.min = Number(changeMinPanel.scaleMin)
+      const min = Number(changeMinPanel.scaleMin)
+      const max = this.model.scale.max
+      const validatedScale = this.model.validateScale(min, max)
+      this.model.options.scale.min = validatedScale.min
+      this.model.scale.min = validatedScale.min
       this.model.setupRunners(this.model.runners)
-      console.log(this.model)
       this.render()
     })
 
     /** Min has been changed */
     this.view.maxChangedEvent.addListener((changeMaxPanel: IListenerObject) => {
-      this.model.options.scale.max = Number(changeMaxPanel.scaleMax)
-      this.model.scale.max = Number(changeMaxPanel.scaleMax)
+      const min = this.model.scale.min
+      const max = Number(changeMaxPanel.scaleMax)
+      const validatedScale = this.model.validateScale(min, max)
+      this.model.options.scale.max = validatedScale.max
+      this.model.scale.max = validatedScale.max
+      this.model.setupRunners(this.model.runners)
       this.render()
     })
 
     /** Step has been changed */
     this.view.stepChangedEvent.addListener(
       (changeStepPanel: IListenerObject) => {
-        this.model.options.step = changeStepPanel.scaleStep
+        this.model.options.step = this.model.validateStep(
+          Number(changeStepPanel.scaleStep)
+        )
         this.render()
       }
     )
@@ -173,6 +186,7 @@ class Presenter {
     this.view = new View(this.model, $parentEl)
     this.setupListeners()
     this.renderBar()
+    console.log('render called')
   }
 
   renderBar() {

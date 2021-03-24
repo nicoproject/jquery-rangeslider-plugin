@@ -31,7 +31,7 @@ class Slider {
 
     /** Set initial options */
     this.id = this.options.id
-    this.step = this.options.step
+    this.step = this.validateStep(this.options.step)
     this.scale = this.options.scale
     this.skin = this.options.skin
     this.orientation = this.options.orientation
@@ -55,7 +55,7 @@ class Slider {
     return arr
   }
 
-  private validateRunnerPosition(obj: {position: number}) {
+  private validateRunnerPosition(obj: { position: number }) {
     const isRunnerOnScale =
       obj.position <= this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
@@ -68,6 +68,23 @@ class Slider {
     return arr.sort((a: IRunnersArray, b: IRunnersArray) =>
       a.position > b.position ? 1 : b.position > a.position ? -1 : 0
     )
+  }
+
+  private validateStep(step: number) {
+    if (isNaN(step) || step <= 0 ) {
+      return (step = 1)
+    } else {
+      return step
+    }
+  }
+
+  private validateScale(min: number, max: number) {
+    if (min > this.scale.max) min = this.scale.min
+    if (max < this.scale.min) max = this.scale.max
+    return {
+      min,
+      max
+    }
   }
 
   /** Returns Bar object, calculated  startPoint, length, passed orientation */
