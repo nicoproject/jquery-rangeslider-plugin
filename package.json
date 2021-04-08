@@ -11,7 +11,6 @@
   "dependencies": {
     "@types/bootstrap": "^5.0.8",
     "@types/html-webpack-plugin": "^3.2.4",
-    "@types/jquery": "^3.5.5",
     "@types/lodash": "^4.14.168",
     "@types/testing-library__jest-dom": "^5.9.5",
     "bootstrap": "^4.6.0",
@@ -28,6 +27,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@types/jest": "^26.0.21",
+    "@types/jquery": "^3.5.5",
     "ajv": "^6.12.6",
     "autoprefixer": "^10.0.0",
     "babel-loader": "^8.1.0",
@@ -39,6 +39,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "file-loader": "^6.2.0",
+    "gh-pages": "^3.1.0",
     "html-webpack-plugin": "^4.5.0",
     "imagemin-webpack-plugin": "^2.4.2",
     "jest": "^26.6.3",
@@ -81,13 +82,13 @@
     ]
   },
   "scripts": {
-    "build": "webpack --config configuration/webpack.dev.config.js --mode=development",
-    "watch": "webpack --config configuration/webpack.dev.config.js --mode=development --watch",
     "dev": "webpack serve --config configuration/webpack.dev.config.js --mode=development",
+    "build": "webpack --config configuration/webpack.dev.config.js --mode=development",
     "production": "webpack --config configuration/webpack.prod.config.js --mode=production",
     "test": "jest",
     "lint:sass": "sass-lint 'src/scss/*' -v -q",
-    "lint:js": "eslint --ext .js src/js/"
+    "lint:js": "eslint --ext .js src/js/",
+    "deploy": "gh-pages -d dist"
   },
   "target": "web"
 }

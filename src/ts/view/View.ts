@@ -7,35 +7,37 @@ import ViewPanel from './view_components/ViewPanel'
 import { IEvent, IModelStateOptions, IRunnerOptions } from './ViewInterfaces'
 
 class View {
-  skin: string
-  scale: any
-  step: number
-  runners: Array<object>
-  bar: any
-  orientation: string
-  range: number
-  hasNegative: boolean
-  scaleVisible: boolean
-  $mainWrapper: HTMLDivElement
-  $runners: any
-  _scale: any
-  _bar: object
-  $controlPanel: any
+  private $parentEl: HTMLElement
+  private skin: string
+  private scale: any
+  private step: number
+  private runners: Array<object>
+  private bar: any
+  private orientation: string
+  private range: number
+  private hasNegative: boolean
+  private scaleVisible: boolean
+  private $mainWrapper: HTMLDivElement
+  private $runners: any
+  private _scale: any
+  private _bar: object
+  private $controlPanel: any
 
-  clickScaleEvent: IEvent
-  moveRunnerEvent: IEvent
-  skinSelectedEvent: IEvent
-  orientationChangedEvent: IEvent
-  stepChangedEvent: IEvent
-  minChangedEvent: IEvent
-  maxChangedEvent: IEvent
-  visibilityChangedEvent: IEvent
-  runnerChosenEvent: IEvent
-  positionChangedEvent: IEvent
-  tooltipChangedEvent: IEvent
+  private clickScaleEvent: IEvent
+  private moveRunnerEvent: IEvent
+  private skinSelectedEvent: IEvent
+  private orientationChangedEvent: IEvent
+  private stepChangedEvent: IEvent
+  private minChangedEvent: IEvent
+  private maxChangedEvent: IEvent
+  private visibilityChangedEvent: IEvent
+  private runnerChosenEvent: IEvent
+  private positionChangedEvent: IEvent
+  private tooltipChangedEvent: IEvent
 
-  constructor(modelState: IModelStateOptions) {
+  constructor(modelState: IModelStateOptions, $parentEl: HTMLElement) {
     /** Options */
+    this.$parentEl = $parentEl
     this.skin = modelState.options.skin
     this.scale = modelState.options.scale
     this.step = modelState.options.step
@@ -83,7 +85,7 @@ class View {
   }
 
   /** Slider methods */
-  createSliderWrapper() {
+  private createSliderWrapper() {
     let verticalClass = ''
     if (this.orientation === 'vertical') {
       verticalClass = 'range-slider_vertical'
@@ -92,7 +94,7 @@ class View {
       'div',
       `range-slider__main-wrapper ${verticalClass} ${this.skin}`
     )
-    document.body.appendChild($mainWrapper)
+    this.$parentEl.appendChild($mainWrapper)
     return $mainWrapper
   }
 
@@ -100,7 +102,7 @@ class View {
   /** Creates scale element and appends to $parentEl
    * @param {Object} options
    */
-  createScale() {
+  private createScale() {
     /** Prepare options obj for Scale render */
     const scaleOptions = {
       $el: this.$mainWrapper,
@@ -126,7 +128,7 @@ class View {
   /** Creates Bar element and appends to $parentEl
    * @param {Object} options
    */
-  createBar() {
+  private createBar() {
     /** Prepare options obj for Bar render */
     const barOptions = {
       $el: this.$mainWrapper,
@@ -144,7 +146,7 @@ class View {
   }
 
   /** Runners */
-  createRunners() {
+  private createRunners() {
     /** Prepare options obj for Runners render */
     const runnersOptions = {
       $el: this.$mainWrapper,
@@ -162,7 +164,7 @@ class View {
   }
 
   /** Control Panel */
-  createPanel() {
+  private createPanel() {
     const panelOptions = {
       $el: this.$mainWrapper,
       skin: this.skin,
@@ -179,7 +181,7 @@ class View {
   }
 
   /** Destroy Slider View  */
-  destroy() {
+  private destroy() {
     this.$mainWrapper.remove()
   }
 }

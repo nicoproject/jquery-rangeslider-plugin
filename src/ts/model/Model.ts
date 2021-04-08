@@ -2,19 +2,19 @@ import defaultOptions from '../defaultOptions'
 import { IModelOptions, IRunnersArray } from '../view/ViewInterfaces'
 
 class Slider {
-  options: IModelOptions
-  id: number
-  step: number
-  scale: {
+  private options: IModelOptions
+  private id: number
+  private step: number
+  private scale: {
     min: number
     max: number
   }
-  orientation: string
-  skin: string
-  hasNegative: boolean
-  range: number
-  runners: Array<IRunnersArray>
-  bar: {
+  private orientation: string
+  private skin: string
+  private hasNegative: boolean
+  private range: number
+  private runners: Array<IRunnersArray>
+  private bar: {
     length: number
     startPoint: number
     orientation: string
@@ -31,7 +31,7 @@ class Slider {
 
     /** Set initial options */
     this.id = this.options.id
-    this.step = this.options.step
+    this.step = this.validateStep(this.options.step)
     this.scale = this.options.scale
     this.skin = this.options.skin
     this.orientation = this.options.orientation
@@ -47,7 +47,7 @@ class Slider {
 
   /** RUNNERS -------------------------------------------------*/
 
-  setupRunners(arr: Array<IRunnersArray>) {
+  private setupRunners(arr: Array<IRunnersArray>) {
     arr.forEach((runner) => {
       this.validateRunnerPosition(runner)
     })
@@ -55,7 +55,7 @@ class Slider {
     return arr
   }
 
-  validateRunnerPosition(obj: {position: number}) {
+  private validateRunnerPosition(obj: { position: number }) {
     const isRunnerOnScale =
       obj.position <= this.scale.max && obj.position > this.scale.min
     if (!isRunnerOnScale) {
@@ -64,14 +64,31 @@ class Slider {
     }
   }
 
-  sortRunnersByPosition(arr: Array<IRunnersArray>) {
+  private sortRunnersByPosition(arr: Array<IRunnersArray>) {
     return arr.sort((a: IRunnersArray, b: IRunnersArray) =>
       a.position > b.position ? 1 : b.position > a.position ? -1 : 0
     )
   }
 
+  private validateStep(step: number) {
+    if (isNaN(step) || step <= 0 ) {
+      return (step = 1)
+    } else {
+      return step
+    }
+  }
+
+  private validateScale(min: number, max: number) {
+    if (min > this.scale.max) min = this.scale.min
+    if (max < this.scale.min) max = this.scale.max
+    return {
+      min,
+      max
+    }
+  }
+
   /** Returns Bar object, calculated  startPoint, length, passed orientation */
-  createBar() {
+  private createBar() {
     let length
     let startPoint = 0
 
@@ -87,8 +104,9 @@ class Slider {
       startPoint = minRunner.position
     } else if (this.runners.length < 2) {
       length = minRunner.position - this.options.scale.min
-    // } else if (typeof this.bar === 'undefined') {
-      // length = 200
+      startPoint = this.scale.min
+    } else if (typeof this.bar === 'undefined') {
+      length = 200
     }
     return {
       length,
@@ -100,12 +118,12 @@ class Slider {
   /** SCALE ------------------------------------------------- */
 
   /** Returns true if scale has negative values */
-  scaleHasNegative() {
+  private scaleHasNegative() {
     return this.options.scale.min < 0 || this.options.scale.max < 0
   }
 
   /** Returns range value */
-  calculateRange() {
+  private calculateRange() {
     const min = this.options.scale.min
     const max = this.options.scale.max
     switch (this.hasNegative) {

@@ -1,33 +1,33 @@
 import { drawRuler } from './ViewScale.functions'
-import Event from '../../Event'
+import Event from '../../Event/Event'
 import { createElement, setAttributes } from '../../core/dom'
 import { convertRange } from '../../core/utils'
 import { IEvent, IScaleOptions } from '../ViewInterfaces'
 
 class ViewScale {
-  clickScaleEvent: IEvent
-  $el: HTMLElement
-  min: number
-  max: number
-  isVisible: boolean
-  step: number
-  orientation: string
-  range: number
-  hasNegative: boolean
-  $canvas: HTMLCanvasElement
-  lineWidth: number
-  context: CanvasRenderingContext2D
-  runnerPxSize: number
-  scaleLength: number
-  intervalCount: number
-  spacing: string
+  private clickScaleEvent: IEvent
+  private $el: HTMLElement
+  private min: number
+  private max: number
+  private isVisible: boolean
+  private step: number
+  private orientation: string
+  private range: number
+  private hasNegative: boolean
+  private $canvas: HTMLCanvasElement
+  private lineWidth: number
+  private context: CanvasRenderingContext2D
+  private runnerPxSize: number
+  private scaleLength: number
+  private intervalCount: number
+  private spacing: string
   $scaleWrapper: HTMLElement
-  clientCoordsArgs: {
+  private clientCoordsArgs: {
     max: number
     pixels: number
     direction: string
   }
-  drawRuler: any
+  private drawRuler: any
 
   /** Creates scale with canvas ruler from options object */
   constructor(options: IScaleOptions) {
@@ -82,7 +82,7 @@ class ViewScale {
     this.init()
   }
 
-  init() {
+  private init() {
     if (this.$el.tagName !== 'DIV') {
       throw new Error('Scale parent element should be provided')
     } else if (this.isVisible) {
@@ -90,23 +90,23 @@ class ViewScale {
     }
   }
 
-  render() {
+  private render() {
     this.drawRuler({ $el: this.$el, orientation: this.orientation })
     this.$scaleWrapper.append(this.$canvas)
   }
 
-  getScaleLength($parentEl: HTMLElement) {
+  private getScaleLength($parentEl: HTMLElement) {
     return this.orientation === 'vertical'
       ? $parentEl.offsetHeight
       : $parentEl.offsetWidth
   }
 
-  getIntervalCount() {
+  private getIntervalCount() {
     let intervalCount = this.range / this.step
     return intervalCount >= 20 ? (intervalCount = 20) : intervalCount
   }
 
-  createScaleWrapper() {
+  private createScaleWrapper() {
     let $scaleWrapper = createElement('div', 'scale__wrapper')
 
     setAttributes($scaleWrapper, {
@@ -118,7 +118,7 @@ class ViewScale {
     return $scaleWrapper
   }
 
-  bindScaleWrapperClick() {
+  private bindScaleWrapperClick() {
     this.$scaleWrapper.addEventListener('click', (event) => {
       /** For vertical orientation make scale Y coords upside down (inverted) */
       const clientCoords =

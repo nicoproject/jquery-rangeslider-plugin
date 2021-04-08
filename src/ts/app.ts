@@ -1,35 +1,66 @@
-import Presenter from './presenter/Presenter'
-import '../scss/app.scss'
-import 'bootstrap'
-import { IModelOptions } from './view/ViewInterfaces'
+import './jquery/jquery-range-slider'
 
-const mockSliderInitialState: IModelOptions = {
-  id: 1,
-  step: 10,
+$('.slider-id-1').rangeSlider({
+  scale: {
+    min: 0,
+    max: 400,
+    isVisible: true,
+  },
+  runners: [
+    {
+      id: 1,
+      position: 250,
+      showTooltip: true,
+    },
+  ],
+})
+
+$('.slider-id-2').rangeSlider({
+  runners: [
+    {
+      id: 1,
+      position: 250,
+      showTooltip: true,
+    },
+  ],
+  orientation: 'vertical',
+})
+
+$('.slider-id-3').rangeSlider({
   scale: {
     min: -200,
     max: 400,
     isVisible: true,
   },
-  orientation: '',
-  skin: 'city',
   runners: [
     {
-      id: 50123,
-      position: 201,
+      id: 1,
+      position: -200,
       showTooltip: true,
     },
     {
       id: 2,
-      position: -210,
-      showTooltip: true,
-    },
-    {
-      id: 3,
-      position: 220,
+      position: 350,
       showTooltip: true,
     },
   ],
-}
+  step: 1,
+  skin: 'sonic'
+})
 
-new Presenter(mockSliderInitialState)
+$('.slider-id-4').rangeSlider({
+  step: 25,
+  runners: [
+    {
+      id: 1,
+      position: 250,
+      showTooltip: true,
+    },
+    {
+      id: 2,
+      position: 350,
+      showTooltip: true,
+    },
+  ],
+  orientation: 'vertical',
+})

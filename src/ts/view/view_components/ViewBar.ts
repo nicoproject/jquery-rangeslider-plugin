@@ -3,16 +3,16 @@ import { convertRange } from '../../core/utils'
 import { IBarOptions } from '../ViewInterfaces'
 
 class ViewBar {
-  $el: any
-  $scaleWrapper: any
-  barLength: number
-  barStartPoint: number
-  orientation: string
-  range: number
-  hasNegative: boolean
-  min: number
-  barLengthInPx: number
-  barStartFromLeft: number
+  private $el: any
+  private $scaleWrapper: any
+  private barLength: number
+  private barStartPoint: number
+  private orientation: string
+  private range: number
+  private hasNegative: boolean
+  private min: number
+  private barLengthInPx: number
+  private barStartFromLeft: number
 
   constructor(args: IBarOptions) {
     /** Set initial values */
@@ -35,6 +35,7 @@ class ViewBar {
     if (this.min > 0) {
       this.barStartFromLeft =
         convertRange(this.getRangeToConvert()) * (this.barStartPoint - this.min)
+        
     } else {
       this.barStartFromLeft =
         convertRange(this.getRangeToConvert()) * this.barStartPoint
@@ -43,7 +44,7 @@ class ViewBar {
     this.createBar()
   }
 
-  getRangeToConvert() {
+  private getRangeToConvert() {
     return {
       max: this.range,
       pixels:
@@ -54,7 +55,7 @@ class ViewBar {
     }
   }
 
-  createBar() {
+  private createBar() {
     /** Delete existing progress bar before creating new DOM element */
     if (this.$el.$progressBar) {
       this.$el.removeChild(this.$el.$progressBar)
@@ -70,11 +71,11 @@ class ViewBar {
       style:
         lengthStyleParam +
         ': ' +
-        +this.barLengthInPx +
+        Number(+this.barLengthInPx) +
         'px; ' +
         positionStyleParam +
         ': ' +
-        +this.barStartFromLeft +
+        Number(this.barStartFromLeft) +
         'px',
     })
 
