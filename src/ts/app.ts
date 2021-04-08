@@ -15,16 +15,16 @@ $('.slider-id-1').rangeSlider({
   ],
 })
 
-// $('.slider-id-2').rangeSlider({
-//   runners: [
-//     {
-//       id: 1,
-//       position: 250,
-//       showTooltip: true,
-//     },
-//   ],
-//   orientation: 'vertical',
-// })
+$('.slider-id-2').rangeSlider({
+  runners: [
+    {
+      id: 1,
+      position: 250,
+      showTooltip: true,
+    },
+  ],
+  orientation: 'vertical',
+})
 
 $('.slider-id-3').rangeSlider({
   scale: {
@@ -45,21 +45,22 @@ $('.slider-id-3').rangeSlider({
     },
   ],
   step: 1,
+  skin: 'sonic'
 })
 
-// $('.slider-id-4').rangeSlider({
-//   step: 25,
-//   runners: [
-//     {
-//       id: 1,
-//       position: 250,
-//       showTooltip: true,
-//     },
-//     {
-//       id: 2,
-//       position: 350,
-//       showTooltip: true,
-//     },
-//   ],
-//   orientation: 'vertical',
-// })
+$('.slider-id-4').rangeSlider({
+  step: 25,
+  runners: [
+    {
+      id: 1,
+      position: 250,
+      showTooltip: true,
+    },
+    {
+      id: 2,
+      position: 350,
+      showTooltip: true,
+    },
+  ],
+  orientation: 'vertical',
+})
