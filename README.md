@@ -46,8 +46,8 @@
 
 `<div class="slider"></div>;`
 
-- `$(sliderId).rangeSlider()` - инициализация слайдера с настройками по умолчанию;<br/>
-- `$(sliderId).rangeSlider(options)` - инициализация слайдера с настройками пользователя, где:<br/>
+- `$('.slider').rangeSlider()` - инициализация слайдера с настройками по умолчанию;<br/>
+- `$('.slider').rangeSlider(options)` - инициализация слайдера с настройками пользователя, где:<br/>
 
 ```javascript
 options = {
